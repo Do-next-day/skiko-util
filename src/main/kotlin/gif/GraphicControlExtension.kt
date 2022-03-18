@@ -43,7 +43,7 @@ object GraphicControlExtension {
         block(
             buffer = buffer,
             flags = flags.asUnsignedByte(),
-            duration = (duration / 100).asUnsignedShort(),
+            duration = (duration / 10).asUnsignedShort(),
             transparencyIndex = (transparencyIndex ?: 0).asUnsignedByte()
         )
     }

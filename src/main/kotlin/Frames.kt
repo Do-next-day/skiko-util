@@ -34,7 +34,7 @@ fun ByteArray.decodeToFrames(): List<Frame> {
 fun List<Frame>.encodeToBytes(): ByteArray {
     return when (size) {
         0 -> throw IllegalArgumentException("gif帧数必须大于0")
-        1 -> get(0).asBytes(EncodedImageFormat.PNG)
+        1 -> get(0).bytes(EncodedImageFormat.PNG)
         else -> {
             val bitmap = get(0).bitmap
             buildGif(bitmap.width, bitmap.height) {
@@ -44,6 +44,7 @@ fun List<Frame>.encodeToBytes(): ByteArray {
                 }
                 forEach {
                     frame(it.bitmap) {
+                        it.transparency?.let { t -> transparency = t }
                         duration = it.duration
                     }
                 }
@@ -61,16 +62,19 @@ fun List<Frame>.encodeToBytes(): ByteArray {
 class Frame(
     var duration: Int,
     var bitmap: Bitmap,
+    var transparency: Boolean? = null,
 ) {
-    fun asImage() = Image.makeFromBitmap(bitmap)
-    fun asBytes(format: EncodedImageFormat = EncodedImageFormat.PNG) = asImage().bytes(format)
-    fun handleAsImage(
+    fun image() = Image.makeFromBitmap(bitmap)
+    fun bytes(format: EncodedImageFormat = EncodedImageFormat.PNG) = image().bytes(format)
+    suspend fun handleAsImage(
         index: Int,
         count: Int,
-        data: HandlerData?,
-        block: (Int, Int, Image, HandlerData?) -> Image,
+        data: ExtraData?,
+        block: suspend (Int, Int, Image, ExtraData?, Frame) -> Image,
     ) {
-        val image = block(index, count, Image.makeFromBitmap(bitmap), data)
+        val image = block(index, count, Image.makeFromBitmap(bitmap), data, this)
         bitmap = Bitmap.makeFromImage(image)
     }
+
+    fun clone() = Frame(duration, bitmap.makeClone(), transparency)
 }

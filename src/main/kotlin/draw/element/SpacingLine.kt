@@ -2,12 +2,12 @@
 
 package top.e404.skiko.draw.element
 
-import top.e404.skiko.draw.DrawElement
-import top.e404.skiko.draw.Pointer
-import top.e404.skiko.draw.WHITE
 import org.jetbrains.skia.Canvas
 import org.jetbrains.skia.Paint
 import org.jetbrains.skia.RRect
+import top.e404.skiko.Colors
+import top.e404.skiko.draw.DrawElement
+import top.e404.skiko.draw.Pointer
 
 /**
  * 分割线
@@ -21,7 +21,7 @@ open class SpacingLine(
     var lineWeight: Int,
     var udSpacing: Int,
     var lrSpacing: Int,
-    var spacingColor: Int = WHITE,
+    var spacingColor: Int = Colors.WHITE.value,
 ) : DrawElement {
     override fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int> {
         return Pair(0, lineWeight + udSpacing * 2)

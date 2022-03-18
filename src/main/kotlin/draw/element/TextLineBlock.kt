@@ -2,9 +2,11 @@
 
 package top.e404.skiko.draw.element
 
-import top.e404.skiko.draw.*
-import top.e404.skiko.draw.DrawElement
 import org.jetbrains.skia.*
+import top.e404.skiko.Colors
+import top.e404.skiko.draw.DrawElement
+import top.e404.skiko.draw.Pointer
+import top.e404.skiko.draw.splitByWidth
 
 /**
  * 代表一个带背景的文本对象
@@ -24,8 +26,8 @@ open class TextLineBlock(
     var content: String,
     var lineSpace: Int = 20,
     var font: Font,
-    var color: Int = WHITE,
-    val bgColor: Int = LIGHT_BLUE,
+    var color: Int = Colors.WHITE.value,
+    val bgColor: Int = Colors.LIGHT_BLUE.value,
     val bgRadius: Float = 20F,
     var padding: Int = 20,
     var margin: Int = 20,

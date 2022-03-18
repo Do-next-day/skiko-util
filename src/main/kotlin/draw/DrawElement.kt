@@ -3,6 +3,7 @@
 package top.e404.skiko.draw
 
 import org.jetbrains.skia.*
+import top.e404.skiko.Colors
 import top.e404.skiko.bytes
 import kotlin.math.max
 
@@ -23,7 +24,7 @@ interface DrawElement {
  */
 fun List<DrawElement>.toImage(
     imagePadding: Int = 50,
-    bgColor: Int = BG,
+    bgColor: Int = Colors.BG.value,
     minWidth: Int = 500,
     maxWidth: Int = 1000,
     radius: Float = 50F,
@@ -128,13 +129,3 @@ fun String.toLine(maxWidth: Int, font: Font): TextLine {
     } while (width > maxWidth)
     return line
 }
-
-const val BG = 0xff1F1B1D.toInt()
-const val WHITE = 0xffffffff.toInt()
-const val PINK = 0xffff66aa.toInt()
-const val LIGHT_GRAY = 0xffaaaaaa.toInt()
-const val GRAY = 0xff555555.toInt()
-const val BLACK = 0xff000000.toInt()
-const val LIGHT_BLUE = 0xff00A6B3.toInt()
-const val RED = 0xffff0000.toInt()
-const val YELLOW = 0xffffff00.toInt()

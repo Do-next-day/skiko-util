@@ -2,14 +2,14 @@
 
 package top.e404.skiko.draw.element
 
-import top.e404.skiko.draw.DrawElement
-import top.e404.skiko.draw.Pointer
-import top.e404.skiko.draw.WHITE
-import top.e404.skiko.draw.splitByWidth
 import org.jetbrains.skia.Canvas
 import org.jetbrains.skia.Font
 import org.jetbrains.skia.Paint
 import org.jetbrains.skia.TextLine
+import top.e404.skiko.Colors
+import top.e404.skiko.draw.DrawElement
+import top.e404.skiko.draw.Pointer
+import top.e404.skiko.draw.splitByWidth
 
 /**
  * 代表一个文本对象
@@ -26,7 +26,7 @@ import org.jetbrains.skia.TextLine
 open class Text(
     var content: String,
     var font: Font,
-    var color: Int = WHITE,
+    var color: Int = Colors.WHITE.value,
     var udPadding: Int = 20,
     var left: Int = 0,
     var textIndent: Boolean = false,

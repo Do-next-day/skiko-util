@@ -2,11 +2,10 @@
 
 package top.e404.skiko.draw.element
 
-import top.e404.skiko.draw.DrawElement
-import top.e404.skiko.draw.LIGHT_BLUE
-import top.e404.skiko.draw.Pointer
-import top.e404.skiko.draw.WHITE
 import org.jetbrains.skia.*
+import top.e404.skiko.Colors
+import top.e404.skiko.draw.DrawElement
+import top.e404.skiko.draw.Pointer
 
 /**
  * 代表一行左侧有标记的文本, 为了显示效果, 此组件仅限1行, 超出部分会压缩并留下`...`
@@ -21,8 +20,8 @@ import org.jetbrains.skia.*
 class TextWithIcon(
     var content: String,
     var font: Font,
-    var color: Int = WHITE,
-    var iconColor: Int = LIGHT_BLUE,
+    var color: Int = Colors.WHITE.value,
+    var iconColor: Int = Colors.LIGHT_BLUE.value,
     var udPadding: Int = 20,
     var left: Int = 0,
     var offset: Int = 14,

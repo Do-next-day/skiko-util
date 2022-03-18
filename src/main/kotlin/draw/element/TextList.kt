@@ -2,14 +2,14 @@
 
 package top.e404.skiko.draw.element
 
-import top.e404.skiko.draw.DrawElement
-import top.e404.skiko.draw.Pointer
-import top.e404.skiko.draw.WHITE
-import top.e404.skiko.draw.splitByWidth
 import org.jetbrains.skia.Canvas
 import org.jetbrains.skia.Font
 import org.jetbrains.skia.Paint
 import org.jetbrains.skia.TextLine
+import top.e404.skiko.Colors
+import top.e404.skiko.draw.DrawElement
+import top.e404.skiko.draw.Pointer
+import top.e404.skiko.draw.splitByWidth
 
 /**
  * 代表一个文本列表, 计算间距时不计算与下方块之间的间距
@@ -26,7 +26,7 @@ import org.jetbrains.skia.TextLine
 open class TextList(
     var contents: List<String>,
     var font: Font,
-    var color: Int = WHITE,
+    var color: Int = Colors.WHITE.value,
     var udPadding: Int = 10,
     var lineSpacing: Int = 10,
     var left: Int = 0,

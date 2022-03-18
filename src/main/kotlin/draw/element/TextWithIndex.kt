@@ -2,11 +2,10 @@
 
 package top.e404.skiko.draw.element
 
-import top.e404.skiko.draw.DrawElement
-import top.e404.skiko.draw.LIGHT_BLUE
-import top.e404.skiko.draw.Pointer
-import top.e404.skiko.draw.WHITE
 import org.jetbrains.skia.*
+import top.e404.skiko.Colors
+import top.e404.skiko.draw.DrawElement
+import top.e404.skiko.draw.Pointer
 
 /**
  * 代表一行高亮序号的文本, 为了显示效果, 此组件仅限1行, 超出部分会压缩并留下`...`
@@ -21,12 +20,12 @@ import org.jetbrains.skia.*
 class TextWithIndex(
     var content: String,
     var font: Font,
-    var color: Int = WHITE,
+    var color: Int = Colors.WHITE.value,
     var index: String,
     var indexMargin: Float = font.size / 3,
     var indexLength: Int = 2,
-    var indexTextColor: Int = WHITE,
-    var indexBgColor: Int = LIGHT_BLUE,
+    var indexTextColor: Int = Colors.WHITE.value,
+    var indexBgColor: Int = Colors.LIGHT_BLUE.value,
     var contentLeft: Int = 40,
     var udPadding: Int = 20,
     var left: Int = 0,

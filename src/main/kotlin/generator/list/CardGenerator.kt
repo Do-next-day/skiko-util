@@ -1,9 +1,12 @@
 package top.e404.skiko.generator.list
 
 import org.jetbrains.skia.*
-import top.e404.skiko.*
+import top.e404.skiko.Colors
+import top.e404.skiko.ExtraData
+import top.e404.skiko.FontType
 import top.e404.skiko.generator.ImageGenerator
 import top.e404.skiko.handler.StringPairData
+import top.e404.skiko.util.bytes
 import kotlin.math.max
 
 object CardGenerator : ImageGenerator {
@@ -35,7 +38,7 @@ object CardGenerator : ImageGenerator {
     private val bgFont = FontType.ZHONG_SONG.getSkijaFont(bgFontSize)
 
     // 小字颜色
-    private val fontColor = Colors.WHITE.value
+    private val fontColor = Colors.WHITE.argb
 
     // 小字尺寸
     private const val focusFontSize = 180F
@@ -43,7 +46,7 @@ object CardGenerator : ImageGenerator {
     // 小字字体
     private val font = FontType.LI_HEI.getSkijaFont(focusFontSize)
 
-    override suspend fun generate(data: ExtraData?): Image {
+    override suspend fun generate(data: ExtraData?): ByteArray {
         val (s1, s2) = data as StringPairData
         val line = TextLine.make(s1, font)
         val bgLine = TextLine.make(s2, bgFont)
@@ -61,7 +64,7 @@ object CardGenerator : ImageGenerator {
                 // 绘制小字
                 drawFont(w, h, line)
             }
-            makeImageSnapshot()
+            makeImageSnapshot().bytes()
         }
     }
 
@@ -86,7 +89,8 @@ object CardGenerator : ImageGenerator {
         val xStart = (w - wAmount * pointSpacing) / 2
         val yStart = (h - hAmount * pointSpacing) / 2
         for (x in 0..wAmount) for (y in 0..hAmount) {
-            drawOval(Rect.makeXYWH(xStart + x * pointSpacing, yStart + y * pointSpacing, pointSize, pointSize), pointPaint)
+            drawOval(Rect.makeXYWH(xStart + x * pointSpacing, yStart + y * pointSpacing, pointSize, pointSize),
+                pointPaint)
         }
     }
 

@@ -7,9 +7,7 @@ import org.jetbrains.skia.Font
 import org.jetbrains.skia.FontMgr
 import org.jetbrains.skia.Typeface
 
-enum class FontType(
-    path: String,
-) {
+enum class FontType(name: String) {
     LW_LIGHT("LXGWWenKai-Light.ttf"),
     LW("LXGWWenKai-Regular.ttf"),
     LW_BOLD("LXGWWenKai-Bold.ttf"),
@@ -27,9 +25,7 @@ enum class FontType(
     ZHONG_SONG("STZHONGS.TTF"),
     LI_HEI("力黑体.otf");
 
-    val bytes = lazy {
-        this::class.java.classLoader.getResourceAsStream("font/$path")!!.readBytes()
-    }
+    val bytes = lazy { getJarFile("font/$name") }
 
     fun getSkijaTypeface(): Typeface {
         return FontMgr.default.makeFromData(Data.makeFromBytes(bytes.value))!!

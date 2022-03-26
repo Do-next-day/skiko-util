@@ -4,7 +4,7 @@ package top.e404.skiko.draw
 
 import org.jetbrains.skia.*
 import top.e404.skiko.Colors
-import top.e404.skiko.bytes
+import top.e404.skiko.util.bytes
 import kotlin.math.max
 
 interface DrawElement {
@@ -24,7 +24,7 @@ interface DrawElement {
  */
 fun List<DrawElement>.toImage(
     imagePadding: Int = 50,
-    bgColor: Int = Colors.BG.value,
+    bgColor: Int = Colors.BG.argb,
     minWidth: Int = 500,
     maxWidth: Int = 1000,
     radius: Float = 50F,

@@ -1,18 +1,22 @@
 package top.e404.skiko.generator.list
 
-import org.jetbrains.skia.*
+import org.jetbrains.skia.Paint
+import org.jetbrains.skia.RRect
+import org.jetbrains.skia.Surface
+import org.jetbrains.skia.TextLine
 import top.e404.skiko.Colors
 import top.e404.skiko.ExtraData
 import top.e404.skiko.FontType
 import top.e404.skiko.generator.ImageGenerator
 import top.e404.skiko.handler.StringPairData
+import top.e404.skiko.util.bytes
 
 object PornhubGenerator : ImageGenerator {
     private const val space = 30F
     private const val height = 170
     private const val radius = 20F
     private val font = FontType.MI_BOLD.getSkijaFont(70F)
-    override suspend fun generate(data: ExtraData?): Image {
+    override suspend fun generate(data: ExtraData?): ByteArray {
         val (s1, s2) = data as StringPairData
 
         val lineLeft = TextLine.make(s1, font)
@@ -26,7 +30,7 @@ object PornhubGenerator : ImageGenerator {
                 // bg
                 drawRRect(
                     RRect.makeXYWH(0f, 0f, width.toFloat(), height.toFloat(), radius),
-                    paint.apply { color = Colors.BLACK.value }
+                    paint.apply { color = Colors.BLACK.argb }
                 )
                 // left
                 paint.color = 0xffffffff.toInt()
@@ -38,10 +42,10 @@ object PornhubGenerator : ImageGenerator {
                     paint
                 )
                 // right line
-                paint.color = Colors.BLACK.value
+                paint.color = Colors.BLACK.argb
                 drawTextLine(lineRight, space * 2 + lenLeft, 108F, paint)
             }
-            makeImageSnapshot()
+            makeImageSnapshot().bytes()
         }
     }
 }

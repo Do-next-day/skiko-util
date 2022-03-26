@@ -1,17 +1,20 @@
-// 参考自 Mirai Skija Plugin by cssxsh https://github.com/cssxsh/mirai-skija-plugin
-@file:Suppress("UNUSED")
-
 package top.e404.skiko.gif
 
 import org.jetbrains.skia.Bitmap
+import top.e404.skiko.forEachColor
+import top.e404.skiko.rgb
 
 /**
  * Implements qct-tree quantization.
  *
- * The principle of algorithm: http://www.microsoft.com/msj/archive/S3F1.aspx
+ *
+ * The principle of algorithm: [http://www.microsoft.com/msj/archive/S3F1.aspx]
+ *
  */
-object OctTreeQuantizer {
-    private val mask = intArrayOf(0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01)
+class OctTreeQuantizer {
+    companion object {
+        private val mask = intArrayOf(0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01)
+    }
 
     private var leafCount = 0
     private var inIndex = 0
@@ -19,42 +22,32 @@ object OctTreeQuantizer {
 
     fun quantize(bitmap: Bitmap, maxColorCount: Int = 256): IntArray {
         val node = createNode(0)
-        for (x in 0 until bitmap.width) {
-            for (y in 0 until bitmap.height) {
-                val color = bitmap.getColor(x, y)
-                addColor(node, color, 0)
-                while (leafCount > maxColorCount) {
-                    reduceTree()
-                }
-            }
+        bitmap.forEachColor { color ->
+            addColor(node, color, 0)
+            while (leafCount > maxColorCount) reduceTree()
+            false
         }
-        val colors: MutableSet<Int> = HashSet()
-        getColorPalette(node, colors)
-        leafCount = 0
-        inIndex = 0
-        for (i in 0..7) {
-            nodeList[i] = null
+        return HashSet<Int>().run {
+            getColorPalette(node, this)
+            toIntArray()
         }
-        return colors.toIntArray() + IntArray(maxColorCount - colors.size)
     }
 
     private fun addColor(node_: Node?, color: Int, inLevel: Int): Boolean {
         val node = node_ ?: createNode(inLevel)
         val nIndex: Int
         val shift: Int
-        val red = (color shr 16) and 0xFF
-        val green = (color shr 8) and 0xFF
-        val blue = color and 0xFF
+        val (r, g, b) = color.rgb()
         if (node.isLeaf) {
             node.pixelCount++
-            node.redSum += red
-            node.greenSum += green
-            node.blueSum += blue
+            node.redSum += r
+            node.greenSum += g
+            node.blueSum += b
         } else {
             shift = 7 - inLevel
-            nIndex = (red and mask[inLevel] shr shift shl 2
-                    or (green and mask[inLevel] shr shift shl 1)
-                    or (blue and mask[inLevel] shr shift))
+            nIndex = (r and mask[inLevel] shr shift shl 2
+                    or (g and mask[inLevel] shr shift shl 1)
+                    or (b and mask[inLevel] shr shift))
             var tmpNode = node.child[nIndex]
             if (tmpNode == null) {
                 tmpNode = createNode(inLevel + 1)

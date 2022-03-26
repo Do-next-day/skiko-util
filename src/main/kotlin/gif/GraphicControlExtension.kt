@@ -1,9 +1,7 @@
-// 参考自 Mirai Skija Plugin by cssxsh https://github.com/cssxsh/mirai-skija-plugin
-@file:Suppress("UNUSED")
-
 package top.e404.skiko.gif
 
-import java.nio.*
+import org.jetbrains.skia.AnimationDisposalMode
+import java.nio.ByteBuffer
 
 object GraphicControlExtension {
     private const val INTRODUCER = 0x21
@@ -14,36 +12,41 @@ object GraphicControlExtension {
     private fun block(
         buffer: ByteBuffer,
         flags: Byte,
-        duration: Short,
+        delay: Short,
         transparencyIndex: Byte,
     ) {
         buffer.put(INTRODUCER.asUnsignedByte())
         buffer.put(LABEL.asUnsignedByte())
         buffer.put(BLOCK_SIZE.asUnsignedByte())
         buffer.put(flags)
-        buffer.putShort(duration)
+        buffer.putShort(delay)
         buffer.put(transparencyIndex)
         buffer.put(TERMINATOR.asUnsignedByte())
     }
 
     fun write(
         buffer: ByteBuffer,
-        disposalMethod: DisposalMethod,
+        disposalMethod: AnimationDisposalMode,
         userInput: Boolean,
         transparencyIndex: Int?,
-        duration: Int
+        millisecond: Int,
     ) {
         // Not Interlaced Images
         var flags = 0x0000
 
-        flags = flags or disposalMethod.flag
-        if (userInput) flags = flags or 0x0002
-        if (transparencyIndex in 0 until 256) flags = flags or 0x0001
+        flags = flags or when (disposalMethod) {
+            AnimationDisposalMode.UNUSED -> 0x00
+            AnimationDisposalMode.KEEP -> 0x04
+            AnimationDisposalMode.RESTORE_BG_COLOR -> 0x08
+            AnimationDisposalMode.RESTORE_PREVIOUS -> 0x0C
+        }
+        if (userInput) flags = flags or 0x02
+        if (transparencyIndex in 0..0xFF) flags = flags or 0x01
 
         block(
             buffer = buffer,
             flags = flags.asUnsignedByte(),
-            duration = (duration / 10).asUnsignedShort(),
+            delay = (millisecond / 10).asUnsignedShort(),
             transparencyIndex = (transparencyIndex ?: 0).asUnsignedByte()
         )
     }

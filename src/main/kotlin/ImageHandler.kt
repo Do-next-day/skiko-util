@@ -26,28 +26,31 @@ interface ImageHandler {
      * @param bytes
      * @return
      */
-    suspend fun handle(bytes: ByteArray, data: ExtraData?): HandlerResult {
+    suspend fun handle(bytes: ByteArray, data: ExtraData?, duration: Int? = null): HandlerResult {
         val frames = bytes.decodeToFrames()
-        val result = kotlin.runCatching {
-            if (frames.size == 1) {
-                frames[0].apply {
-                    handleAsImage(0, frames.size, data, ::handleFrame)
-                }.bytes()
-            } else frames.apply {
-                runBlocking {
-                    forEachIndexed { index, frame ->
-                        launch {
-                            frame.handleAsImage(index, frames.size, data, ::handleFrame)
-                        }
+        return handleFrames(frames, data, duration)
+    }
+
+    suspend fun handleFrames(frames: List<Frame>, data: ExtraData?, duration: Int? = null) = kotlin.runCatching {
+        if (frames.size == 1) frames[0].apply {
+            handleAsImage(0, frames.size, data, ::handleFrame)
+        }.bytes()
+        else frames.apply {
+            runBlocking {
+                forEachIndexed { index, frame ->
+                    duration?.let { frame.duration = it }
+                    launch {
+                        frame.handleAsImage(index, frames.size, data, ::handleFrame)
                     }
                 }
-            }.encodeToBytes()
-        }
-        return HandlerResult(
+            }
+        }.encodeToBytes()
+    }.run {
+        HandlerResult(
             frames.size > 1,
-            result.isSuccess,
-            result.getOrNull(),
-            result.exceptionOrNull()
+            isSuccess,
+            getOrNull(),
+            exceptionOrNull()
         )
     }
 }

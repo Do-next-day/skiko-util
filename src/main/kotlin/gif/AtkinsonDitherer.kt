@@ -1,9 +1,7 @@
-// 参考自 Mirai Skija Plugin by cssxsh https://github.com/cssxsh/mirai-skija-plugin
-@file:Suppress("UNUSED")
-
 package top.e404.skiko.gif
 
-import org.jetbrains.skia.Bitmap
+import org.jetbrains.skia.*
+import top.e404.skiko.rgb
 
 object AtkinsonDitherer {
     private val DISTRIBUTION: List<ErrorComponent> = listOf(
@@ -20,7 +18,7 @@ object AtkinsonDitherer {
     private data class ErrorComponent(
         val deltaX: Int,
         val deltaY: Int,
-        val power: Double
+        val power: Double,
     )
 
     private data class Color(val red: Int, val green: Int, val blue: Int) {
@@ -42,43 +40,33 @@ object AtkinsonDitherer {
 
     private fun Color.nearest(): Int = red * red + green * green + blue * blue
 
-    public fun dither(bitmap: Bitmap, table: IntArray): IntArray {
+    fun dither(bitmap: Bitmap, table: IntArray): IntArray {
         val width = bitmap.width
         val height = bitmap.height
         val colors = Array(height) { y -> Array(width) { x -> Color(rgb = bitmap.getColor(x, y)) } }
         val tableColors = List(table.size) { index -> Color(rgb = table[index]) }
 
-        for (y in 0 until height) {
-            for (x in 0 until width) {
-                val original = colors[y][x]
-                val replacement = tableColors.minByOrNull { (it - original).nearest() }!!
-                colors[y][x] = replacement
-                val error = original - replacement
-                for (component in DISTRIBUTION) {
-                    val siblingX = x + component.deltaX
-                    val siblingY = y + component.deltaY
-                    if (siblingX in 0 until width && siblingY in 0 until height) {
-                        val offset = error * component.power
-                        colors[siblingY][siblingX] = colors[siblingY][siblingX] + offset
-                    }
+        for (y in 0 until height) for (x in 0 until width) {
+            val original = colors[y][x]
+            val replacement = tableColors.minByOrNull { (it - original).nearest() }!!
+            colors[y][x] = replacement
+            val error = original - replacement
+            for (component in DISTRIBUTION) {
+                val siblingX = x + component.deltaX
+                val siblingY = y + component.deltaY
+                if (siblingX in 0 until width && siblingY in 0 until height) {
+                    val offset = error * component.power
+                    colors[siblingY][siblingX] = colors[siblingY][siblingX] + offset
                 }
             }
         }
 
         val new = IntArray(bitmap.width * bitmap.height)
 
-        for ((y, lines) in colors.withIndex()) {
-            for ((x, cell) in lines.withIndex()) {
-                // XXX Alpha
-                new[y * width + x] = if (bitmap.getAlphaf(x, y) < 0.5F) {
-                    Int.MIN_VALUE
-                } else {
-                    var rgb = cell.red shl 8
-                    rgb = (rgb or cell.green) shl 8
-                    rgb = (rgb or cell.blue)
-                    rgb
-                }
-            }
+        for ((y, lines) in colors.withIndex()) for ((x, cell) in lines.withIndex()) {
+            // XXX Alpha
+            new[y * width + x] = if (bitmap.getAlphaf(x, y) < 0.5F) Int.MIN_VALUE
+            else cell.run { rgb(red, green, blue) }
         }
 
         return new

@@ -1,10 +1,7 @@
-// 参考自 Mirai Skija Plugin by cssxsh https://github.com/cssxsh/mirai-skija-plugin
-@file:Suppress("UNUSED")
-
 package top.e404.skiko.gif
 
 import org.jetbrains.skia.IRect
-import java.nio.*
+import java.nio.ByteBuffer
 
 object ImageDescriptor {
     private const val SEPARATOR = 0x002C
@@ -29,7 +26,7 @@ object ImageDescriptor {
     private fun data(
         buffer: ByteBuffer,
         min: Int,
-        data: ByteArray
+        data: ByteArray,
     ) {
         buffer.put(min.asUnsignedByte())
         for (index in data.indices step 255) {

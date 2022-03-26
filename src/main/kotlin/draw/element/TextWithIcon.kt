@@ -20,8 +20,8 @@ import top.e404.skiko.draw.Pointer
 class TextWithIcon(
     var content: String,
     var font: Font,
-    var color: Int = Colors.WHITE.value,
-    var iconColor: Int = Colors.LIGHT_BLUE.value,
+    var color: Int = Colors.WHITE.argb,
+    var iconColor: Int = Colors.LIGHT_BLUE.argb,
     var udPadding: Int = 20,
     var left: Int = 0,
     var offset: Int = 14,

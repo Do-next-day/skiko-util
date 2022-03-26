@@ -26,7 +26,7 @@ import top.e404.skiko.draw.splitByWidth
 open class Text(
     var content: String,
     var font: Font,
-    var color: Int = Colors.WHITE.value,
+    var color: Int = Colors.WHITE.argb,
     var udPadding: Int = 20,
     var left: Int = 0,
     var textIndent: Boolean = false,

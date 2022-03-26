@@ -1,9 +1,6 @@
-// 参考自 Mirai Skija Plugin by cssxsh https://github.com/cssxsh/mirai-skija-plugin
-@file:Suppress("UNUSED")
-
 package top.e404.skiko.gif
 
-import java.nio.*
+import java.nio.ByteBuffer
 
 object ApplicationExtension {
     private const val INTRODUCER = 0x21
@@ -27,7 +24,7 @@ object ApplicationExtension {
         buffer.put(TERMINATOR.asUnsignedByte())
     }
 
-    internal fun write(buffer: ByteBuffer, identifier: String, authentication: String, data: ByteArray) {
+    private fun write(buffer: ByteBuffer, identifier: String, authentication: String, data: ByteArray) {
         block(
             buffer = buffer,
             identifier = identifier.toByteArray(Charsets.US_ASCII),

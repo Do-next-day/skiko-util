@@ -26,7 +26,7 @@ import top.e404.skiko.draw.splitByWidth
 open class TextList(
     var contents: List<String>,
     var font: Font,
-    var color: Int = Colors.WHITE.value,
+    var color: Int = Colors.WHITE.argb,
     var udPadding: Int = 10,
     var lineSpacing: Int = 10,
     var left: Int = 0,

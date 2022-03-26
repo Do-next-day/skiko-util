@@ -1,18 +1,16 @@
-// 参考自 Mirai Skija Plugin by cssxsh https://github.com/cssxsh/mirai-skija-plugin
-@file:Suppress("UNUSED")
-
 package top.e404.skiko.gif
 
-import java.nio.*
+import java.nio.ByteBuffer
 
 internal object LogicalScreenDescriptor {
+
     private fun block(
         buffer: ByteBuffer,
         width: Short,
         height: Short,
         flags: Byte,
         backgroundColorIndex: Byte,
-        pixelAspectRatio: Byte
+        pixelAspectRatio: Byte,
     ) {
         buffer.putShort(width)
         buffer.putShort(height)
@@ -26,7 +24,7 @@ internal object LogicalScreenDescriptor {
         width: Int,
         height: Int,
         table: ColorTable,
-        ratio: Int
+        ratio: Int,
     ) {
         // Color Resolution Use 7
         var flags = 0x70

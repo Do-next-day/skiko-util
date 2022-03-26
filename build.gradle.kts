@@ -22,6 +22,10 @@ dependencies {
     api(skiko("macos-arm64"))
     api(skiko("linux-x64"))
     api(skiko("linux-arm64"))
+    // serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.2")
+    // kaml
+    implementation("com.charleskorn.kaml:kaml:0.42.0")
     // test
     testImplementation(kotlin("test", "1.6.20-M1"))
 }

@@ -7,8 +7,8 @@ import org.jetbrains.skia.Image
 import org.jetbrains.skia.Paint
 import top.e404.skiko.draw.DrawElement
 import top.e404.skiko.draw.Pointer
-import top.e404.skiko.drawImageRRect
-import top.e404.skiko.resize
+import top.e404.skiko.util.drawImageRRect
+import top.e404.skiko.util.resize
 
 /**
  * 代表一个图片元素

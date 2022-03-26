@@ -21,7 +21,7 @@ open class SpacingLine(
     var lineWeight: Int,
     var udSpacing: Int,
     var lrSpacing: Int,
-    var spacingColor: Int = Colors.WHITE.value,
+    var spacingColor: Int = Colors.WHITE.argb,
 ) : DrawElement {
     override fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int> {
         return Pair(0, lineWeight + udSpacing * 2)

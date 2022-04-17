@@ -1,8 +1,9 @@
 @file:Suppress("UNUSED")
 
-package top.e404.skiko
+package top.e404.skiko.util
 
 import org.jetbrains.skia.*
+import top.e404.skiko.FontType
 import kotlin.math.PI
 import kotlin.random.Random
 
@@ -27,6 +28,7 @@ fun Font.height() = metrics.run { size + descent }
 
 fun Bitmap.toImage() = Image.makeFromBitmap(this)
 fun Image.toBitmap() = Bitmap.makeFromImage(this)
+fun Image.toSurface() = Surface.makeRaster(imageInfo)
 
 fun Bitmap.forEach(block: (x: Int, y: Int) -> Boolean) {
     for (x in 0 until width) for (y in 0 until height) {
@@ -73,5 +75,19 @@ fun autoSize(
         if (line.width >= maxWidth) return size.toInt() - unit
         size += unit
         line = TextLine.make(text, Font(tf, size))
+    }
+}
+
+fun String.asColor() = removePrefix("#").run {
+    return@run when (length) {
+        3 -> buildString {
+            for (c in this@run) repeat(2) { append(c) }
+        }.toIntOrNull(16)?.let {
+            (it + 0xff000000).toInt()
+        }
+        6 -> toIntOrNull(16)?.let {
+            (it + 0xff000000).toInt()
+        }
+        else -> null
     }
 }

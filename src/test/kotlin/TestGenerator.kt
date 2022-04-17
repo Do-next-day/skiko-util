@@ -2,13 +2,12 @@ package top.e404.skiko
 
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
+import top.e404.skiko.frame.encodeToBytes
 import top.e404.skiko.generator.ImageGenerator
 import top.e404.skiko.generator.list.CardGenerator
 import top.e404.skiko.generator.list.GoodNewsGenerator
 import top.e404.skiko.generator.list.PornhubGenerator
 import top.e404.skiko.generator.list.ShakeTextGenerator
-import top.e404.skiko.handler.StringPairData
-import top.e404.skiko.handler.TextData
 import java.io.File
 
 class TestGenerator {
@@ -16,36 +15,40 @@ class TestGenerator {
     private val inGif = File("run/in.gif").readBytes()
     private val outPng = File("run/out/out.png")
     private val outGif = File("run/out/out.gif")
-    private fun testGenerator(generator: ImageGenerator, data: ExtraData?) {
+    private fun testGenerator(generator: ImageGenerator, args: MutableMap<String, String>) {
         runBlocking {
-            this@TestGenerator.outGif.writeBytes(generator.generate(data))
+            val frames = generator.generate(args)
+            val f = if (frames.size == 1) outPng else outGif
+            f.writeBytes(generator.generate(args).encodeToBytes())
         }
     }
 
     @Test
     fun testShakeTextGenerator() {
-        testGenerator(ShakeTextGenerator,
-            ShakeTextGenerator.ShakeTextData(
-                "哼哼哼啊啊啊啊啊啊啊啊啊啊啊啊",
-                Colors.BLUE_GREEN.argb,
-                Colors.BG.argb,
-                50,
-                12
-            ))
+        testGenerator(ShakeTextGenerator, mutableMapOf(
+            "text" to "哼哼哼啊啊啊啊啊啊啊啊啊啊啊啊",
+            "color" to "#0f7",
+            "bg" to "#1F1B1D",
+            "size" to "50",
+            "count" to "12"
+        ))
     }
 
     @Test
     fun testCardGenerator() {
-        testGenerator(CardGenerator, StringPairData("awa", "QwQ"))
+        testGenerator(CardGenerator, mutableMapOf("b" to "awa", "s" to "QwQ"))
     }
 
     @Test
     fun testPornhubGenerator() {
-        testGenerator(PornhubGenerator, StringPairData("awa", "QwQ"))
+        testGenerator(PornhubGenerator, mutableMapOf("s1" to "awa", "s2" to "QwQ"))
     }
 
     @Test
     fun testGoodNewsGenerator() {
-        testGenerator(GoodNewsGenerator, TextData("你的账号被风控了", null, null))
+        testGenerator(GoodNewsGenerator, mutableMapOf(
+            "text" to "你的账号被风控了\n你的账号被风控了\n你的账号被风控了",
+            "size" to "100"
+        ))
     }
 }

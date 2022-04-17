@@ -1,26 +1,46 @@
-package top.e404.skiko.handler.filter
+package top.e404.skiko.handler.list
 
 import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.IRect
-import org.jetbrains.skia.Image
-import top.e404.skiko.*
+import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.argb
+import top.e404.skiko.frame.Frame
+import top.e404.skiko.frame.FramesHandler
+import top.e404.skiko.frame.HandleResult.Companion.result
+import top.e404.skiko.frame.common
+import top.e404.skiko.limit
+import top.e404.skiko.rgb
+import top.e404.skiko.util.toBitmap
+import top.e404.skiko.util.toImage
 
-object EmbossHandler : ImageHandler {
-    override suspend fun handleFrame(index: Int, count: Int, image: Image, data: ExtraData?, frame: Frame): Image {
-        val old = Bitmap.makeFromImage(image)
-        val new = Bitmap.makeFromImage(image)
-        for (x in 1 until old.width - 1) for (y in 1 until old.height - 1) {
-            new.erase(old.fd(x, y), IRect.makeXYWH(x, y, 1, 1))
+/**
+ * 浮雕效果
+ */
+@ImageHandler
+object EmbossHandler : FramesHandler {
+    override val name = "浮雕"
+    override val regex = Regex("(?i)浮雕|fd")
+
+    override suspend fun handleFrames(
+        frames: MutableList<Frame>,
+        args: MutableMap<String, String>,
+    ) = frames.result {
+        common(args).onEach {
+            val old = it.image.toBitmap()
+            val new = it.image.toBitmap()
+            for (x in 1 until old.width - 1) for (y in 1 until old.height - 1) {
+                new.erase(old.fd(x, y), IRect.makeXYWH(x, y, 1, 1))
+            }
+            it.image = new.toImage()
         }
-        return Image.makeFromBitmap(new)
     }
 
     private fun Bitmap.fd(x: Int, y: Int): Int {
         val c = getColor(x, y)
         val a = c shr 24
         if (a == 0) return c
-        val (_, pr, pg, pb) = getColor(x - 1, y - 1).argb()
-        val (_, nr, ng, nb) = getColor(x + 1, y + 1).argb()
+        val (pr, pg, pb) = getColor(x - 1, y - 1).rgb()
+        val (nr, ng, nb) = getColor(x + 1, y + 1).rgb()
         return argb(
             a,
             (nr - pr + 128).limit(),

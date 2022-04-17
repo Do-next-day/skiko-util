@@ -1,7 +1,7 @@
 package top.e404.skiko.generator
 
-import top.e404.skiko.ExtraData
+import top.e404.skiko.frame.Frame
 
 fun interface ImageGenerator {
-    suspend fun generate(data: ExtraData?): ByteArray
+    suspend fun generate(args: MutableMap<String, String>): MutableList<Frame>
 }

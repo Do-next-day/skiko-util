@@ -1,23 +1,22 @@
 package top.e404.skiko.handler.list
 
-import org.jetbrains.skia.Image
-import top.e404.skiko.ExtraData
-import top.e404.skiko.Frame
-import top.e404.skiko.ImageHandler
-import top.e404.skiko.handler.FloatData
+import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.frame.*
+import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.util.rotate
 
-object RotateHandler : ImageHandler {
-    override suspend fun handleFrame(
-        index: Int,
-        count: Int,
-        image: Image,
-        data: ExtraData?,
-        frame: Frame,
-    ): Image {
-        var angel = (data as FloatData).data % 360
-        if (angel < 0) angel += 360
-        // 计算旋转后的零点坐标和图片尺寸
-        return image.rotate(angel)
+/**
+ * 旋转图片
+ */
+@ImageHandler
+object RotateHandler : FramesHandler {
+    override val name = "旋转"
+    override val regex = Regex("(?i)旋转|xz|rotate")
+    override suspend fun handleFrames(
+        frames: MutableList<Frame>,
+        args: MutableMap<String, String>,
+    ): HandleResult {
+        val angel = args["angel"]?.toFloatOrNull() ?: return HandleResult.fail("旋转角度应为数字")
+        return frames.result { common(args).handle { rotate(angel) } }
     }
 }

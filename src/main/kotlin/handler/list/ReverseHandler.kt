@@ -1,18 +1,32 @@
-package top.e404.skiko.handler.filter
+package top.e404.skiko.handler.list
 
-import org.jetbrains.skia.Image
-import top.e404.skiko.*
+import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.argb
+import top.e404.skiko.frame.Frame
+import top.e404.skiko.frame.FramesHandler
+import top.e404.skiko.frame.HandleResult.Companion.result
+import top.e404.skiko.frame.common
+import top.e404.skiko.handlePixel
 
-object ReverseHandler : ImageHandler {
-    override suspend fun handleFrame(
-        index: Int,
-        count: Int,
-        image: Image,
-        data: ExtraData?,
-        frame: Frame,
-    ) = image.handlePixel(data, handler)
+/**
+ * 反相
+ */
+@ImageHandler
+object ReverseHandler : FramesHandler {
+    override val name = "反相"
+    override val regex = Regex("(?i)反相|fx|reverse")
+    override suspend fun handleFrames(
+        frames: MutableList<Frame>,
+        args: MutableMap<String, String>,
+    ) = frames.result {
+        common(args).onEach {
+            it.handle {
+                handlePixel(::handle)
+            }
+        }
+    }
 
-    private val handler = fun(pixel: Int, _: ExtraData?) = pixel.argb().run {
+    fun handle(pixel: Int) = pixel.argb().run {
         argb(a, 255 - r, 255 - g, 255 - b)
     }
 }

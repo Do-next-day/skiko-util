@@ -1,26 +1,20 @@
-package top.e404.skiko.handler.filter
+package top.e404.skiko.handler.list
 
-import org.jetbrains.skia.Image
-import top.e404.skiko.ExtraData
-import top.e404.skiko.Frame
-import top.e404.skiko.ImageHandler
-import top.e404.skiko.handler.IntPairData
-import top.e404.skiko.util.resize
+import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.frame.Frame
+import top.e404.skiko.frame.FramesHandler
+import top.e404.skiko.frame.HandleResult.Companion.result
+import top.e404.skiko.frame.common
 
 /**
- * 若数字为负数则作为百分比处理
+ * 缩放图片, 若数字为负数则作为百分比处理
  */
-object ResizeHandler : ImageHandler {
-    override suspend fun handleFrame(
-        index: Int,
-        count: Int,
-        image: Image,
-        data: ExtraData?,
-        frame: Frame,
-    ): Image {
-        var (w, h) = data as IntPairData
-        if (w < 0) w = (w / -100.0 * image.width).toInt()
-        if (h < 0) h = (h / -100.0 * image.height).toInt()
-        return image.resize(w, h)
-    }
+@ImageHandler
+object ResizeHandler : FramesHandler {
+    override val name = "缩放"
+    override val regex = Regex("(?i)缩放|resize|sf")
+    override suspend fun handleFrames(
+        frames: MutableList<Frame>,
+        args: MutableMap<String, String>,
+    ) = frames.result { common(args) }
 }

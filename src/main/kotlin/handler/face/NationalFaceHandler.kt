@@ -1,41 +1,40 @@
 package top.e404.skiko.handler.face
 
-import org.jetbrains.skia.Image
-import org.jetbrains.skia.Paint
 import org.jetbrains.skia.Rect
-import org.jetbrains.skia.Surface
-import top.e404.skiko.*
-import top.e404.skiko.handler.IntData
-import top.e404.skiko.util.subCenter
+import top.e404.skiko.Colors
+import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.frame.*
+import top.e404.skiko.frame.HandleResult.Companion.result
+import top.e404.skiko.util.*
 
-object NationalFaceHandler : ImageHandler {
+@ImageHandler
+object NationalFaceHandler : FramesHandler {
     private val range = 0..5
-    private val bgList = range.map { getJarImage("statistic/national/$it.png") }
-    private val paint = Paint().apply {
-        color = Colors.WHITE.argb
-    }
+    private val coverList = range.map { getJarImage("statistic/national/$it.png") }
 
-    override suspend fun handleFrame(
-        index: Int,
-        count: Int,
-        image: Image,
-        data: ExtraData?,
-        frame: Frame,
-    ) = image.subCenter().let { center ->
-        Surface.makeRaster(center.imageInfo).run {
-            val (id) = data as IntData
-            require(id in range) { "invalid id $id" }
-            canvas.apply {
-                val w = center.width.toFloat()
-                val h = center.height.toFloat()
-                drawRect(Rect.makeWH(w, h), paint)
-                drawImage(center, 0F, 0F)
-                val cover = bgList[id]
-                drawImageRect(cover,
-                    Rect.makeWH(cover.width.toFloat(), cover.height.toFloat()),
-                    Rect.makeWH(w, h))
+    override val name = "国庆头像"
+    override val regex = Regex("(?i)国庆头像|gqtx")
+
+    override suspend fun handleFrames(
+        frames: MutableList<Frame>,
+        args: MutableMap<String, String>,
+    ): HandleResult {
+        val i = args["index"]?.toIntOrNull() ?: 0
+        val cover = coverList[i]
+        return frames.result {
+            common(args).handle {
+                val center = subCenter()
+                center.toSurface().apply {
+                    fill(Colors.WHITE.argb)
+                }.withCanvas {
+                    val w = center.width.toFloat()
+                    val h = center.height.toFloat()
+                    drawImage(center, 0F, 0F)
+                    drawImageRect(cover,
+                        Rect.makeWH(cover.width.toFloat(), cover.height.toFloat()),
+                        Rect.makeWH(w, h))
+                }
             }
-            makeImageSnapshot()
         }
     }
 }

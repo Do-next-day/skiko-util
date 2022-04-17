@@ -1,31 +1,33 @@
 package top.e404.skiko.handler.face
 
-import org.jetbrains.skia.Image
 import org.jetbrains.skia.Rect
-import org.jetbrains.skia.Surface
-import top.e404.skiko.ExtraData
-import top.e404.skiko.Frame
-import top.e404.skiko.ImageHandler
-import top.e404.skiko.getJarImage
-import top.e404.skiko.util.rotate
-import top.e404.skiko.util.subCenter
+import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.frame.Frame
+import top.e404.skiko.frame.FramesHandler
+import top.e404.skiko.frame.HandleResult.Companion.result
+import top.e404.skiko.frame.common
+import top.e404.skiko.frame.handle
+import top.e404.skiko.util.*
 
-object JszzHandler : ImageHandler {
+@ImageHandler
+object JszzHandler : FramesHandler {
     private val bg = getJarImage("statistic/zz.png")
-    override suspend fun handleFrame(
-        index: Int,
-        count: Int,
-        image: Image,
-        data: ExtraData?,
-        frame: Frame,
-    ) = Surface.makeRaster(bg.imageInfo).run {
-        canvas.apply {
-            drawImage(bg, 0F, 0F)
-            val face = image.subCenter().rotate(337F)
-            drawImageRect(face,
-                Rect.makeWH(face.width.toFloat(), face.height.toFloat()),
-                Rect.makeXYWH(-174F, -22F, 1075F, 1075F))
+
+    override val name = "精神支柱"
+    override val regex = Regex("(?i)精神支柱|精神|支柱|jszz|js|zz")
+
+    override suspend fun handleFrames(
+        frames: MutableList<Frame>,
+        args: MutableMap<String, String>,
+    ) = frames.result {
+        common(args).handle {
+            bg.toSurface().withCanvas {
+                drawImage(bg, 0F, 0F)
+                val face = subCenter().rotate(337F)
+                drawImageRect(face,
+                    Rect.makeWH(face.width.toFloat(), face.height.toFloat()),
+                    Rect.makeXYWH(-174F, -22F, 1075F, 1075F))
+            }
         }
-        makeImageSnapshot()
     }
 }

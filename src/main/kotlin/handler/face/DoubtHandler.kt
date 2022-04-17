@@ -1,29 +1,39 @@
 package top.e404.skiko.handler.face
 
-import org.jetbrains.skia.Image
+import org.jetbrains.skia.Paint
 import org.jetbrains.skia.Rect
-import org.jetbrains.skia.Surface
-import top.e404.skiko.ExtraData
-import top.e404.skiko.Frame
-import top.e404.skiko.ImageHandler
-import top.e404.skiko.getJarImage
+import top.e404.skiko.Colors
+import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.frame.*
+import top.e404.skiko.frame.HandleResult.Companion.result
+import top.e404.skiko.util.getJarImage
 import top.e404.skiko.util.subCenter
+import top.e404.skiko.util.toSurface
+import top.e404.skiko.util.withCanvas
 
-object DoubtHandler : ImageHandler {
+@ImageHandler
+object DoubtHandler : FramesHandler {
     private val cover = getJarImage("statistic/doubt.png")
     private const val size = 167
     private val faceRect = Rect.makeXYWH(86F, 272F, size.toFloat(), size.toFloat())
-    override suspend fun handleFrame(
-        index: Int,
-        count: Int,
-        image: Image,
-        data: ExtraData?,
-        frame: Frame,
-    ) = Surface.makeRaster(cover.imageInfo).run {
-        canvas.apply {
-            drawImageRect(image.subCenter(size), faceRect)
-            drawImage(cover, 0F, 0F)
+    private val imgRect = Rect.makeWH(cover.width.toFloat(), cover.height.toFloat())
+    private val paint = Paint().apply {
+        color = Colors.WHITE.argb
+    }
+
+    override val name = "疑惑"
+    override val regex = Regex("(?i)疑惑|yh")
+
+    override suspend fun handleFrames(
+        frames: MutableList<Frame>,
+        args: MutableMap<String, String>,
+    ) = frames.result {
+        common(args).handle {
+            cover.toSurface().withCanvas {
+                drawRect(imgRect, paint)
+                drawImageRect(subCenter(), faceRect)
+                drawImage(cover, 0F, 0F)
+            }
         }
-        makeImageSnapshot()
     }
 }

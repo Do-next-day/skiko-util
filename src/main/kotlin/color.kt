@@ -5,6 +5,8 @@ package top.e404.skiko
 import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.IRect
 import org.jetbrains.skia.Image
+import top.e404.skiko.util.toBitmap
+import top.e404.skiko.util.toImage
 import java.awt.Color
 
 enum class Colors(val argb: Int) {
@@ -31,13 +33,13 @@ enum class Colors(val argb: Int) {
     PURPLE_RED(0xFFFF0077.toInt());
 }
 
-fun Image.handlePixel(data: ExtraData?, handler: (Int, ExtraData?) -> Int): Image {
-    val bitmap = Bitmap.makeFromImage(this)
+fun Image.handlePixel(block: (Int) -> Int): Image {
+    val bitmap = toBitmap()
     for (x in 0 until bitmap.width) for (y in 0 until bitmap.height) {
-        val color = handler.invoke(bitmap.getColor(x, y), data)
+        val color = block(bitmap.getColor(x, y))
         bitmap.erase(color, IRect.makeXYWH(x, y, 1, 1))
     }
-    return Image.makeFromBitmap(bitmap)
+    return bitmap.toImage()
 }
 
 private val range = 0..255
@@ -52,6 +54,8 @@ fun Int.alpha() = (toLong() shr 24).toInt()
 fun Int.red() = this and 0xff0000 shr 16
 fun Int.green() = this and 0xff00 shr 8
 fun Int.blue() = this and 0xff
+
+fun Triple<Int, Int, Int>.toFloat() = Triple(first.toFloat(), second.toFloat(), third.toFloat())
 
 fun rgb(r: Int, g: Int, b: Int) = (r shl 16) or (g shl 8) or b
 fun argb(a: Int, r: Int, g: Int, b: Int) = (a shl 24) or (r shl 16) or (g shl 8) or b

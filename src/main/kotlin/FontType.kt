@@ -6,6 +6,7 @@ import org.jetbrains.skia.Data
 import org.jetbrains.skia.Font
 import org.jetbrains.skia.FontMgr
 import org.jetbrains.skia.Typeface
+import top.e404.skiko.util.getJarFile
 
 enum class FontType(name: String) {
     LW_LIGHT("LXGWWenKai-Light.ttf"),

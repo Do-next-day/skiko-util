@@ -6,7 +6,7 @@ import kotlinx.serialization.decodeFromString
 import org.jetbrains.skia.Canvas
 import org.jetbrains.skia.Image
 import org.jetbrains.skia.Rect
-import top.e404.skiko.readJarFile
+import top.e404.skiko.util.readJarFile
 import top.e404.skiko.util.rotateKeepSize
 import java.io.File
 

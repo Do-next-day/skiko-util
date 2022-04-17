@@ -1,8 +1,8 @@
 package top.e404.skiko.gif
 
 import org.jetbrains.skia.Bitmap
-import top.e404.skiko.forEachColor
 import top.e404.skiko.rgb
+import top.e404.skiko.util.forEachColor
 
 /**
  * Implements qct-tree quantization.

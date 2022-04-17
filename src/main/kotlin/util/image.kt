@@ -1,7 +1,7 @@
 package top.e404.skiko.util
 
 import org.jetbrains.skia.*
-import top.e404.skiko.toRadian
+import top.e404.skiko.ahsb
 import kotlin.math.*
 
 fun Surface.bytes(format: EncodedImageFormat = EncodedImageFormat.PNG) = makeImageSnapshot().bytes(format)
@@ -48,21 +48,49 @@ fun Canvas.drawImageRectNearest(
 /**
  * 缩放
  *
- * @param w 新的宽度
- * @param h 新的高度
+ * @param w 新的宽度, 若小于0则作为百分比处理
+ * @param h 新的高度, 若小于0则作为百分比处理
  * @return 缩放后的图片
  */
-fun Image.resize(w: Int, h: Int, smooth: Boolean = true): Image =
-    Surface.makeRasterN32Premul(w, h).run {
-        canvas.apply {
-            scale(w / this@resize.width.toFloat(), h / this@resize.height.toFloat())
-            if (smooth) drawImageRectNearest(this@resize,
-                Rect.makeWH(this@resize.width.toFloat(), this@resize.height.toFloat()),
-                Rect.makeWH(this@resize.width.toFloat(), this@resize.height.toFloat())
-            ) else drawImage(this@resize, 0F, 0F)
-        }
-        makeImageSnapshot()
+fun Image.resize(w: Int, h: Int, smooth: Boolean = true): Image {
+    require(w != 0) { "图片宽度不可为0" }
+    require(h != 0) { "图片高度不可为0" }
+    val width = if (w > 0) w else (w / -100.0 * width).toInt()
+    val height = if (h > 0) h else (h / -100.0 * height).toInt()
+    return Surface.makeRasterN32Premul(width, height).withCanvas {
+        scale(width / this@resize.width.toFloat(), height / this@resize.height.toFloat())
+        if (smooth) drawImageRectNearest(this@resize,
+            Rect.makeWH(this@resize.width.toFloat(), this@resize.height.toFloat()),
+            Rect.makeWH(this@resize.width.toFloat(), this@resize.height.toFloat())
+        ) else drawImage(this@resize, 0F, 0F)
     }
+}
+
+fun Image.scaleAhsbS(rate: Float) = toBitmap().run {
+    forEach { x, y ->
+        val c = getColor(x, y)
+        val (a, h, s, b) = c.ahsb()
+        erase(
+            ahsb(a, h, (s * rate).coerceIn(0F..1F), b),
+            IRect.makeXYWH(x, y, 1, 1)
+        )
+        false
+    }
+    toImage()
+}
+
+fun Image.scaleAhsbB(rate: Float) = toBitmap().run {
+    forEach { x, y ->
+        val c = getColor(x, y)
+        val (a, h, s, b) = c.ahsb()
+        erase(
+            ahsb(a, h, s, (b * rate).coerceIn(0F..1F)),
+            IRect.makeXYWH(x, y, 1, 1)
+        )
+        false
+    }
+    toImage()
+}
 
 /**
  * 绘制圆角图片
@@ -212,3 +240,16 @@ fun Image.rotateKeepSize(angel: Float) =
             height
         )
     }
+
+fun Surface.fill(color: Int) = apply {
+    canvas.apply {
+        drawRect(Rect.makeWH(width.toFloat(), height.toFloat()), Paint().apply {
+            this.color = color
+        })
+    }
+}
+
+fun Surface.withCanvas(block: Canvas.() -> Unit): Image {
+    canvas.block()
+    return makeImageSnapshot()
+}

@@ -1,21 +1,25 @@
-package top.e404.skiko.handler.filter
+package top.e404.skiko.handler.list
 
-import org.jetbrains.skia.Image
 import org.jetbrains.skia.Matrix33
-import org.jetbrains.skia.Surface
-import top.e404.skiko.ExtraData
-import top.e404.skiko.Frame
-import top.e404.skiko.ImageHandler
+import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.frame.Frame
+import top.e404.skiko.frame.FramesHandler
+import top.e404.skiko.frame.HandleResult.Companion.result
+import top.e404.skiko.frame.common
+import top.e404.skiko.frame.withCanvas
 
-object FlipVerticalHandler : ImageHandler {
-    override suspend fun handleFrame(
-        index: Int,
-        count: Int,
-        image: Image,
-        data: ExtraData?,
-        frame: Frame,
-    ) = Surface.makeRaster(image.imageInfo).run {
-        canvas.apply {
+/**
+ * 垂直翻转 `b -> d`
+ */
+@ImageHandler
+object FlipVerticalHandler : FramesHandler {
+    override val name = "垂直翻转"
+    override val regex = Regex("(?i)垂直翻转|左右翻转|czfz|sxfz|szfz")
+    override suspend fun handleFrames(
+        frames: MutableList<Frame>,
+        args: MutableMap<String, String>,
+    ) = frames.result {
+        common(args).withCanvas { image ->
             setMatrix(Matrix33(
                 -1F, 0F, image.width.toFloat(),
                 0F, 1F, 0F,
@@ -23,6 +27,5 @@ object FlipVerticalHandler : ImageHandler {
             ))
             drawImage(image, 0F, 0F)
         }
-        makeImageSnapshot()
     }
 }

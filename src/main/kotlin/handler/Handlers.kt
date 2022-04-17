@@ -2,8 +2,9 @@
 
 package top.e404.skiko.handler
 
-import top.e404.skiko.ImageHandler
+import top.e404.skiko.frame.FramesHandler
+import top.e404.skiko.util.readJarFile
 
-enum class Handlers(alias: Regex, handler: ImageHandler) {
-    Blur(Regex("(?i)(高斯)?模糊|blur"), top.e404.skiko.handler.filter.BlurHandler),
-}
+val handlers = readJarFile("handlers.txt")
+    .split("\n")
+    .mapNotNull { Class.forName(it).kotlin.objectInstance as? FramesHandler }

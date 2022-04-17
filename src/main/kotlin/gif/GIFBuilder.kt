@@ -3,7 +3,7 @@ package top.e404.skiko.gif
 import org.jetbrains.skia.*
 import org.jetbrains.skia.impl.BufferUtil
 import top.e404.skiko.alpha
-import top.e404.skiko.any
+import top.e404.skiko.util.any
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 

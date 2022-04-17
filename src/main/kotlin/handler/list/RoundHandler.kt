@@ -1,17 +1,22 @@
 package top.e404.skiko.handler.list
 
-import org.jetbrains.skia.Image
-import top.e404.skiko.ExtraData
-import top.e404.skiko.Frame
-import top.e404.skiko.ImageHandler
+import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.frame.Frame
+import top.e404.skiko.frame.FramesHandler
+import top.e404.skiko.frame.HandleResult.Companion.result
+import top.e404.skiko.frame.common
 import top.e404.skiko.util.round
 
-object RoundHandler : ImageHandler {
-    override suspend fun handleFrame(
-        index: Int,
-        count: Int,
-        image: Image,
-        data: ExtraData?,
-        frame: Frame,
-    ) = image.round()
+@ImageHandler
+object RoundHandler : FramesHandler {
+    override val name = "Round"
+    override val regex = Regex("(?i)round")
+    override suspend fun handleFrames(
+        frames: MutableList<Frame>,
+        args: MutableMap<String, String>,
+    ) = frames.result {
+        common(args).onEach {
+            it.handle { round() }
+        }
+    }
 }

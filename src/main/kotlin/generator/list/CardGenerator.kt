@@ -2,11 +2,11 @@ package top.e404.skiko.generator.list
 
 import org.jetbrains.skia.*
 import top.e404.skiko.Colors
-import top.e404.skiko.ExtraData
 import top.e404.skiko.FontType
+import top.e404.skiko.frame.Frame
+import top.e404.skiko.frame.toFrames
 import top.e404.skiko.generator.ImageGenerator
-import top.e404.skiko.handler.StringPairData
-import top.e404.skiko.util.bytes
+import top.e404.skiko.util.withCanvas
 import kotlin.math.max
 
 object CardGenerator : ImageGenerator {
@@ -46,26 +46,24 @@ object CardGenerator : ImageGenerator {
     // 小字字体
     private val font = FontType.LI_HEI.getSkijaFont(focusFontSize)
 
-    override suspend fun generate(data: ExtraData?): ByteArray {
-        val (s1, s2) = data as StringPairData
-        val line = TextLine.make(s1, font)
-        val bgLine = TextLine.make(s2, bgFont)
+    override suspend fun generate(args: MutableMap<String, String>): MutableList<Frame> {
+        val b = args["b"]!!
+        val s = args["s"]!!
+        val line = TextLine.make(s, font)
+        val bgLine = TextLine.make(b, bgFont)
         // 计算图片尺寸
         val bgWidth = bgLine.width
         val width = line.width
         val w = max(bgWidth, width) + 2 * padding
         val h = bgFontSize + 2 * padding
-        return Surface.makeRasterN32Premul(w.toInt(), h.toInt()).run {
-            canvas.apply {
-                // 绘制背景和大字
-                drawBgFont(w, h, bgLine)
-                // 绘制点
-                drawPoints(w, h)
-                // 绘制小字
-                drawFont(w, h, line)
-            }
-            makeImageSnapshot().bytes()
-        }
+        return Surface.makeRasterN32Premul(w.toInt(), h.toInt()).withCanvas {
+            // 绘制背景和大字
+            drawBgFont(w, h, bgLine)
+            // 绘制点
+            drawPoints(w, h)
+            // 绘制小字
+            drawFont(w, h, line)
+        }.toFrames()
     }
 
     private val bgFontPaint = Paint().apply { color = bgFontColor }

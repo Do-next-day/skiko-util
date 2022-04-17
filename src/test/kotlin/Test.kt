@@ -2,6 +2,7 @@ package top.e404.skiko
 
 import org.jetbrains.skia.*
 import org.junit.Test
+import top.e404.skiko.handler.handlers
 import top.e404.skiko.util.bytes
 import top.e404.skiko.util.round
 import java.io.File
@@ -80,5 +81,12 @@ class Test {
     fun test() {
         val image = Image.makeFromEncoded(inPng)
         outPng.writeBytes(image.round().bytes())
+    }
+
+    @Test
+    fun list() {
+        handlers.forEach {
+            println("${it.name}: ${it.regex.pattern}")
+        }
     }
 }

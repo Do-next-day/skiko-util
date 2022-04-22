@@ -2,7 +2,6 @@
 
 package top.e404.skiko
 
-import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.IRect
 import org.jetbrains.skia.Image
 import top.e404.skiko.util.toBitmap
@@ -26,8 +25,8 @@ enum class Colors(val argb: Int) {
     GREEN(0xFF00FF00.toInt()),
     BLUE_GREEN(0xFF00FF77.toInt()),
     CYAN(0xFF00FFFF.toInt()),
-    LIGHT_BLUE(0xFF0077FF.toInt()),
-    BLUE(0xFF00FFFF.toInt()),
+    LIGHT_BLUE(0xFF00FFFF.toInt()),
+    BLUE(0xFF0000FF.toInt()),
     PURPLE(0xFF7700FF.toInt()),
     MAGENTA(0xFFFF00FF.toInt()),
     PURPLE_RED(0xFFFF0077.toInt());

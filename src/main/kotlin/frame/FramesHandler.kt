@@ -25,4 +25,13 @@ interface FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult
+
+    @Suppress("UNUSED")
+    suspend fun handleBytes(
+        bytes: ByteArray,
+        args: MutableMap<String, String>
+    ) = handleFrames(
+        bytes.decodeToFrames(),
+        args
+    ).getOrThrow().encodeToBytes()
 }

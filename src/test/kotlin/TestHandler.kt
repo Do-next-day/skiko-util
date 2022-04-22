@@ -232,4 +232,14 @@ class TestHandler {
             "c" to ""
         ))
     }
+
+    @Test
+    fun testSwapHandler() {
+        testHandler(SwapHandler, emptyArgs)
+    }
+
+    @Test
+    fun testHideHandler() {
+        testHandler(HideHandler, emptyArgs)
+    }
 }

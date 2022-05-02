@@ -2,13 +2,10 @@ package top.e404.skiko.handler.list
 
 import org.jetbrains.skia.Rect
 import org.jetbrains.skia.Surface
-import top.e404.bot.botutil.pmapIndexed
 import top.e404.skiko.apt.annotation.ImageHandler
-import top.e404.skiko.frame.Frame
-import top.e404.skiko.frame.FramesHandler
-import top.e404.skiko.frame.HandleResult
+import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result
-import top.e404.skiko.frame.common
+import top.e404.skiko.util.pmapIndexed
 import top.e404.skiko.util.withCanvas
 
 @ImageHandler
@@ -20,11 +17,10 @@ object ShakeHandler : FramesHandler {
         args: MutableMap<String, String>,
     ): HandleResult {
         val v = args["size"]?.toIntOrNull() ?: 20
+        val count = args["count"]?.toIntOrNull() ?: 10
+        frames.replenish(count, Frame::limitAsGif)
         return frames.result {
-            common(args).run {
-                if (size == 1) (1..10).map { frames[0].clone() }
-                else frames
-            }.pmapIndexed { index ->
+            common(args).pmapIndexed { index ->
                 handle {
                     val w = image.width.toFloat()
                     val h = image.height.toFloat()

@@ -8,8 +8,8 @@ import top.e404.skiko.generator.list.*
 import java.io.File
 
 class TestGenerator {
-    private val outPng = File("run/out/out.png")
-    private val outGif = File("run/out/out.gif")
+    private val outPng = File("out/out.png")
+    private val outGif = File("out/out.gif")
     private fun testGenerator(generator: ImageGenerator, args: MutableMap<String, String>) {
         runBlocking {
             val frames = generator.generate(args)

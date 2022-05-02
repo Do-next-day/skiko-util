@@ -4,15 +4,16 @@ package top.e404.skiko.util
 
 import org.jetbrains.skia.*
 import top.e404.skiko.FontType
+import java.awt.Color
 import kotlin.math.PI
 import kotlin.random.Random
 
-fun getJarFileStream(path: String) = FontType::class.java.classLoader.getResourceAsStream(path)
+internal fun getJarFileStream(path: String) = FontType::class.java.classLoader.getResourceAsStream(path)
     ?: throw IllegalArgumentException("Jar file: $path is null")
 
-fun getJarFile(path: String) = getJarFileStream(path).use { it.readBytes() }
-fun getJarImage(path: String) = Image.makeFromEncoded(getJarFile(path))
-fun readJarFile(path: String) = getJarFileStream(path).use { String(it.readBytes()) }
+internal fun getJarFile(path: String) = getJarFileStream(path).use { it.readBytes() }
+internal fun getJarImage(path: String) = Image.makeFromEncoded(getJarFile(path))
+internal fun readJarFile(path: String) = getJarFileStream(path).use { String(it.readBytes()) }
 
 fun Double.toRadian() = this * PI / 180
 fun Float.toRadian() = this * PI / 180
@@ -78,16 +79,47 @@ fun autoSize(
     }
 }
 
-fun String.asColor() = removePrefix("#").run {
-    return@run when (length) {
-        3 -> buildString {
-            for (c in this@run) repeat(2) { append(c) }
-        }.toIntOrNull(16)?.let {
-            (it + 0xff000000).toInt()
+fun String.asColor(): Int? {
+    if (startsWith("#")) {
+        return when (length) {
+            3 -> buildString {
+                for (c in this) repeat(2) { append(c) }
+            }.toIntOrNull(16)?.let {
+                (it + 0xff000000).toInt()
+            }
+            6 -> toIntOrNull(16)?.let {
+                (it + 0xff000000).toInt()
+            }
+            else -> null
         }
-        6 -> toIntOrNull(16)?.let {
-            (it + 0xff000000).toInt()
-        }
+    }
+    return when (this) {
+        "white" -> Color.WHITE.rgb
+        "白" -> Color.WHITE.rgb
+        "淡灰" -> Color.LIGHT_GRAY.rgb
+        "lightGray" -> Color.LIGHT_GRAY.rgb
+        "LIGHT_GRAY" -> Color.LIGHT_GRAY.rgb
+        "深灰" -> Color.DARK_GRAY.rgb
+        "darkGray" -> Color.DARK_GRAY.rgb
+        "DARK_GRAY" -> Color.DARK_GRAY.rgb
+        "黑" -> Color.BLACK.rgb
+        "BLACK" -> Color.BLACK.rgb
+        "红" -> Color.RED.rgb
+        "RED" -> Color.RED.rgb
+        "粉" -> Color.PINK.rgb
+        "PINK" -> Color.PINK.rgb
+        "橘黄" -> Color.ORANGE.rgb
+        "ORANGE" -> Color.ORANGE.rgb
+        "黄" -> Color.YELLOW.rgb
+        "YELLOW" -> Color.YELLOW.rgb
+        "绿" -> Color.GREEN.rgb
+        "GREEN" -> Color.GREEN.rgb
+        "品红" -> Color.MAGENTA.rgb
+        "MAGENTA" -> Color.MAGENTA.rgb
+        "青" -> Color.CYAN.rgb
+        "CYAN" -> Color.CYAN.rgb
+        "蓝" -> Color.BLUE.rgb
+        "BLUE" -> Color.BLUE.rgb
         else -> null
     }
 }

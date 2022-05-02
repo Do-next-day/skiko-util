@@ -3,8 +3,6 @@
 package top.e404.skiko.frame
 
 import org.jetbrains.skia.*
-import top.e404.bot.botutil.pmap
-import top.e404.bot.botutil.pmapIndexed
 import top.e404.skiko.gif.gif
 import top.e404.skiko.util.*
 import kotlin.math.max
@@ -23,7 +21,8 @@ fun ByteArray.decodeToFrames(): MutableList<Frame> {
             Bitmap().apply {
                 allocPixels(codec.imageInfo)
                 codec.readPixels(this, index)
-            }.toImage())
+            }.toImage()
+        )
     }.toMutableList()
 }
 
@@ -123,8 +122,9 @@ fun List<Frame>.withCanvas(block: Canvas.(Image) -> Unit) =
         }
     }
 
-fun MutableList<Frame>.replenish(count: Int) = apply {
-    if (size == 1) repeat(count - 1) { add(get(0).clone()) }
+fun MutableList<Frame>.replenish(count: Int, block: Frame.() -> Unit = {}) = apply {
+    val f = get(0).apply(block)
+    if (size == 1) repeat(count - 1) { add(f.clone()) }
 }
 
 fun Image.toFrame() = Frame(0, this)

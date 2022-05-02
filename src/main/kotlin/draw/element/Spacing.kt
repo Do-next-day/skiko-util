@@ -23,6 +23,7 @@ open class Spacing(var height: Int) : DrawElement {
         paint: Paint,
         width: Int,
         imagePadding: Int,
+        debug: Boolean
     ) {
         pointer.y += height
     }

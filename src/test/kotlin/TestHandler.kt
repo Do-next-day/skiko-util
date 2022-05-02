@@ -10,9 +10,9 @@ import top.e404.skiko.handler.list.*
 import java.io.File
 
 class TestHandler {
-    private val inPng = File("run/in.png").readBytes()
-    private val inGif = File("run/in.gif").readBytes()
-    private val out = File("run/out")
+    private val inPng = File("in.png").readBytes()
+    private val inGif = File("in.gif").readBytes()
+    private val out = File("out")
     private val emptyArgs = mutableMapOf<String, String>()
 
     private fun testHandler(handler: FramesHandler, args: MutableMap<String, String>) {
@@ -203,7 +203,7 @@ class TestHandler {
 
     @Test
     fun testWriteHandler() {
-        testHandler(WriteHandler, mutableMapOf("text" to "靐靐靐\n靐靐靐"))
+        testHandler(WriteHandler, mutableMapOf("text" to "400"))
     }
 
     @Test
@@ -218,7 +218,8 @@ class TestHandler {
 
     @Test
     fun testLatticeHandler() {
-        testHandler(LatticeHandler, mutableMapOf(
+        testHandler(
+            LatticeHandler, mutableMapOf(
             "rate" to "8",
             "spacing" to "3",
             "bg" to "#000")

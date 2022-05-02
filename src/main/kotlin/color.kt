@@ -25,7 +25,7 @@ enum class Colors(val argb: Int) {
     GREEN(0xFF00FF00.toInt()),
     BLUE_GREEN(0xFF00FF77.toInt()),
     CYAN(0xFF00FFFF.toInt()),
-    LIGHT_BLUE(0xFF00FFFF.toInt()),
+    LIGHT_BLUE(0xff00A6B3.toInt()),
     BLUE(0xFF0000FF.toInt()),
     PURPLE(0xFF7700FF.toInt()),
     MAGENTA(0xFFFF00FF.toInt()),
@@ -67,5 +67,23 @@ fun Int.ahsb(): Ahsb {
     val (a, r, g, b) = argb()
     return Color.RGBtoHSB(r, g, b, null).let {
         Ahsb(a, it[0], it[1], it[2])
+    }
+}
+
+fun genColor(start: Int, end: Int, count: Int): MutableList<Int> {
+    val (sr, sg, sb) = start.rgb()
+    val (er, eg, eb) = end.rgb()
+    val rUnit = (er - sr) / (count - 1)
+    val gUnit = (eg - sg) / (count - 1)
+    val bUnit = (eb - sb) / (count - 1)
+    return ArrayList<Int>(count).apply {
+        add(start)
+        for (i in 1..(count - 2)) {
+            val r = sr + rUnit * i
+            val g = sg + gUnit * i
+            val b = sb + bUnit * i
+            add(rgb(r, g, b))
+        }
+        add(end)
     }
 }

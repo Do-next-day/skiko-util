@@ -60,6 +60,7 @@ open class TextList(
         paint: Paint,
         width: Int,
         imagePadding: Int,
+        debug: Boolean
     ) {
         pointer.y += udPadding - offset
         for (line in lines) {
@@ -93,6 +94,7 @@ open class TextList(
             paint: Paint,
             width: Int,
             imagePadding: Int,
+            debug: Boolean
         ) {
             pointer.y += udPadding / 2 + fontSize.toInt()
             val indexLine = TextLine.make(index, font)

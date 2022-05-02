@@ -20,7 +20,7 @@ object CodeGenerator : ImageGenerator {
     private const val padding = 50
     private const val fontSize = 150
     private const val fontSpacing = 30
-    private val font = FontType.MINECRAFT.getSkijaFont(fontSize.toFloat())
+    private val font = FontType.MINECRAFT.getSkiaFont(fontSize.toFloat())
     private val chars = "qwertyuipadfghjkzxcvbnmWERTYUIPADFGHJKLZXCVBNM23478".toCharArray().toList()
 
     fun genCodeText(length: Int = 4): String {

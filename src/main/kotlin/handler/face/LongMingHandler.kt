@@ -36,9 +36,11 @@ object LongMingHandler : FramesHandler {
             bg.toSurface().withCanvas {
                 drawRect(bgRect, paint)
                 val face = subCenter()
-                drawImageRect(face,
+                drawImageRect(
+                    face,
                     Rect.makeWH(face.width.toFloat(), face.height.toFloat()),
-                    Rect.makeXYWH(228F, 126F, 234F, 234F))
+                    Rect.makeXYWH(228F, 126F, 234F, 234F)
+                )
                 drawImage(bg, 0F, 0F)
             }
         }

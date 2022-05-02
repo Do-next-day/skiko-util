@@ -51,7 +51,14 @@ class TextWithIndex(
         return Pair(width.toInt(), font.size.toInt() + (indexMargin.toInt() + udPadding) * 2)
     }
 
-    override fun drawToBoard(canvas: Canvas, pointer: Pointer, paint: Paint, width: Int, imagePadding: Int) {
+    override fun drawToBoard(
+        canvas: Canvas,
+        pointer: Pointer,
+        paint: Paint,
+        width: Int,
+        imagePadding: Int,
+        debug: Boolean
+    ) {
         // index bg
         pointer.y += udPadding
         canvas.drawRRect(RRect.makeXYWH(

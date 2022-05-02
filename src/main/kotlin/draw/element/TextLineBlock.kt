@@ -52,6 +52,7 @@ open class TextLineBlock(
         paint: Paint,
         width: Int,
         imagePadding: Int,
+        debug: Boolean
     ) {
         // bg
         canvas.drawRRect(RRect.makeXYWH(

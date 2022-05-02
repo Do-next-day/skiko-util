@@ -6,7 +6,8 @@ import org.jetbrains.skia.Data
 import org.jetbrains.skia.Font
 import org.jetbrains.skia.FontMgr
 import org.jetbrains.skia.Typeface
-import top.e404.skiko.util.getJarFile
+import java.io.File
+import java.awt.Font as AwtFont
 
 enum class FontType(name: String) {
     LW_LIGHT("LXGWWenKai-Light.ttf"),
@@ -26,13 +27,23 @@ enum class FontType(name: String) {
     ZHONG_SONG("STZHONGS.TTF"),
     LI_HEI("力黑体.otf");
 
-    val bytes = lazy { getJarFile("font/$name") }
+    val bytes by lazy { File("data/font/$name").readBytes() }
 
-    fun getSkijaTypeface(): Typeface {
-        return FontMgr.default.makeFromData(Data.makeFromBytes(bytes.value))!!
+    fun getSkiaTypeface(): Typeface {
+        return FontMgr.default.makeFromData(Data.makeFromBytes(bytes))!!
     }
 
-    fun getSkijaFont(size: Float): Font {
-        return Font(getSkijaTypeface(), size)
+    fun getSkiaFont(size: Float): Font {
+        return Font(getSkiaTypeface(), size)
+    }
+
+    fun getAwtFont(): AwtFont {
+        return bytes.inputStream().use {
+            AwtFont.createFont(AwtFont.TRUETYPE_FONT, it)
+        }
+    }
+
+    companion object {
+        fun Font.fullHeight() = metrics.run { descent - ascent }
     }
 }

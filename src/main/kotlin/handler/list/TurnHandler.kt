@@ -17,12 +17,15 @@ object TurnHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        val count = args["count"]?.toIntOrNull() ?: 10
-        return frames.common(args).replenish(count).result {
-            val v = 360F / size
-            handleIndexed { index ->
-                round().rotateKeepSize(index * v)
+        val count = args["text"]?.toIntOrNull() ?: 10
+        return frames
+            .common(args)
+            .replenish(count, Frame::limitAsGif)
+            .result {
+                val v = 360F / size
+                handleIndexed { index ->
+                    round().rotateKeepSize(index * v)
+                }
             }
-        }
     }
 }

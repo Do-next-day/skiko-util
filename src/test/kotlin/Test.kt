@@ -8,14 +8,12 @@ import top.e404.skiko.util.round
 import java.io.File
 
 class Test {
-    private val inPng = File("run/in.png").readBytes()
-    private val inGif = File("run/in.gif").readBytes()
-    private val outPng = File("run/out/out.png")
-    private val outGif = File("run/out/out.gif")
+    private val inPng = File("in.png").readBytes()
+    private val outPng = File("out/out.png")
 
     @Test
     fun drawText() {
-        val font = FontType.YAHEI.getSkijaFont(60F)
+        val font = FontType.YAHEI.getSkiaFont(60F)
         val bytes = Surface.makeRasterN32Premul(120, 150).run {
             canvas.apply {
                 drawRect(Rect.makeXYWH(0F, 0F, 120F, 150F), Paint().apply { color = Colors.WHITE.argb })
@@ -87,6 +85,14 @@ class Test {
     fun list() {
         handlers.forEach {
             println("${it.name}: ${it.regex.pattern}")
+        }
+    }
+
+    @Test
+    fun colorGen() {
+        val list = genColor(0x00ffcc, 0xffffff, 12)
+        list.forEach {
+            println("#${it.toString(16).padStart(6, '0')}")
         }
     }
 }

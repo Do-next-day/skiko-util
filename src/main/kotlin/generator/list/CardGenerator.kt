@@ -35,7 +35,7 @@ object CardGenerator : ImageGenerator {
     private const val bgFontSize = 800F
 
     // 大字字体
-    private val bgFont = FontType.ZHONG_SONG.getSkijaFont(bgFontSize)
+    private val bgFont = FontType.ZHONG_SONG.getSkiaFont(bgFontSize)
 
     // 小字颜色
     private val fontColor = Colors.WHITE.argb
@@ -44,7 +44,7 @@ object CardGenerator : ImageGenerator {
     private const val focusFontSize = 180F
 
     // 小字字体
-    private val font = FontType.LI_HEI.getSkijaFont(focusFontSize)
+    private val font = FontType.LI_HEI.getSkiaFont(focusFontSize)
 
     override suspend fun generate(args: MutableMap<String, String>): MutableList<Frame> {
         val b = args["b"]!!
@@ -87,8 +87,10 @@ object CardGenerator : ImageGenerator {
         val xStart = (w - wAmount * pointSpacing) / 2
         val yStart = (h - hAmount * pointSpacing) / 2
         for (x in 0..wAmount) for (y in 0..hAmount) {
-            drawOval(Rect.makeXYWH(xStart + x * pointSpacing, yStart + y * pointSpacing, pointSize, pointSize),
-                pointPaint)
+            drawOval(
+                Rect.makeXYWH(xStart + x * pointSpacing, yStart + y * pointSpacing, pointSize, pointSize),
+                pointPaint
+            )
         }
     }
 

@@ -4,8 +4,11 @@ import org.jetbrains.skia.Paint
 import org.jetbrains.skia.Rect
 import top.e404.skiko.Colors
 import top.e404.skiko.apt.annotation.ImageHandler
-import top.e404.skiko.frame.*
+import top.e404.skiko.frame.Frame
+import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.HandleResult.Companion.result
+import top.e404.skiko.frame.common
+import top.e404.skiko.frame.handle
 import top.e404.skiko.util.getJarImage
 import top.e404.skiko.util.subCenter
 import top.e404.skiko.util.toSurface
@@ -30,9 +33,11 @@ object KnockHandler : FramesHandler {
             bg.toSurface().withCanvas {
                 drawRect(bgRect, paint)
                 val face = subCenter()
-                drawImageRect(face,
+                drawImageRect(
+                    face,
                     Rect.makeWH(face.width.toFloat(), face.height.toFloat()),
-                    Rect.makeXYWH(20F, 114F, 100F, 100F))
+                    Rect.makeXYWH(20F, 114F, 100F, 100F)
+                )
                 drawImage(bg, 0F, 0F)
             }
         }

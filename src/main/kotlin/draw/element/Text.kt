@@ -54,6 +54,7 @@ open class Text(
         paint: Paint,
         width: Int,
         imagePadding: Int,
+        debug: Boolean
     ) {
         pointer.y -= offset
         pointer.y += udPadding / 2

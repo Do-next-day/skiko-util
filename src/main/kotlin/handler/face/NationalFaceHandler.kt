@@ -19,7 +19,7 @@ object NationalFaceHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        val i = args["index"]?.toIntOrNull() ?: 0
+        val i = args["text"]?.toIntOrNull() ?: 0
         val cover = coverList[i]
         return frames.result {
             common(args).handle {
@@ -30,9 +30,11 @@ object NationalFaceHandler : FramesHandler {
                     val w = center.width.toFloat()
                     val h = center.height.toFloat()
                     drawImage(center, 0F, 0F)
-                    drawImageRect(cover,
+                    drawImageRect(
+                        cover,
                         Rect.makeWH(cover.width.toFloat(), cover.height.toFloat()),
-                        Rect.makeWH(w, h))
+                        Rect.makeWH(w, h)
+                    )
                 }
             }
         }

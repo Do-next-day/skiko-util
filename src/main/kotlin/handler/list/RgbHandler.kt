@@ -1,13 +1,11 @@
 package top.e404.skiko.handler.list
 
-import top.e404.bot.botutil.pmapIndexed
 import top.e404.skiko.ahsb
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.handlePixel
-import top.e404.skiko.util.bytes
-import java.io.File
+import top.e404.skiko.util.pmapIndexed
 
 /**
  * RGB
@@ -20,7 +18,7 @@ object RgbHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        frames.replenish(10)
+        frames.replenish(10, Frame::limitAsGif)
         val v = 1F / frames.size
         return frames.result {
             common(args).pmapIndexed { index ->

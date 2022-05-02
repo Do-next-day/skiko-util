@@ -20,11 +20,13 @@ object FlipVerticalHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.result {
         common(args).withCanvas { image ->
-            setMatrix(Matrix33(
-                -1F, 0F, image.width.toFloat(),
-                0F, 1F, 0F,
-                0F, 0F, 1F
-            ))
+            setMatrix(
+                Matrix33(
+                    -1F, 0F, image.width.toFloat(),
+                    0F, 1F, 0F,
+                    0F, 0F, 1F
+                )
+            )
             drawImage(image, 0F, 0F)
         }
     }

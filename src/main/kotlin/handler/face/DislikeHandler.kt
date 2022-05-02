@@ -1,12 +1,12 @@
 package top.e404.skiko.handler.face
 
 import org.jetbrains.skia.Surface
-import top.e404.bot.botutil.pmapIndexed
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.handler.DrawData
 import top.e404.skiko.util.getJarImage
+import top.e404.skiko.util.pmapIndexed
 import top.e404.skiko.util.round
 import top.e404.skiko.util.withCanvas
 

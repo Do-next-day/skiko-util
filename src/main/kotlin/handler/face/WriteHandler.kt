@@ -18,7 +18,7 @@ object WriteHandler : FramesHandler {
     private const val minSize = 20
     private const val maxSize = 1000
     private const val unit = 10
-    private val tf = FontType.MI.getSkijaTypeface()
+    private val tf = FontType.MI.getSkiaTypeface()
 
     override val name = "write"
     override val regex = Regex("(?i)写|write")
@@ -110,24 +110,24 @@ object WriteHandler : FramesHandler {
                         this@handle.width,
                         this@handle.height + height
                     ).fill(bgColor).withCanvas {
-                            var y = 0F
-                            drawImage(this@handle, 0F, height.toFloat())
-                            for (line in lines) {
-                                val x = (this@handle.width - line.width) / 2
-                                y -= line.ascent
-                                drawTextLine(line, x, y, paint.apply {
-                                    color = strokeColor
-                                    strokeWidth = stroke.toFloat()
-                                    isAntiAlias = true
-                                    mode = PaintMode.STROKE_AND_FILL
-                                })
-                                drawTextLine(line, x, y, paint.apply {
-                                    mode = PaintMode.FILL
-                                    color = textColor
-                                })
-                                y += spacing + line.descent
-                            }
+                        var y = 0F
+                        drawImage(this@handle, 0F, height.toFloat())
+                        for (line in lines) {
+                            val x = (this@handle.width - line.width) / 2
+                            y -= line.ascent
+                            drawTextLine(line, x, y, paint.apply {
+                                color = strokeColor
+                                strokeWidth = stroke.toFloat()
+                                isAntiAlias = true
+                                mode = PaintMode.STROKE_AND_FILL
+                            })
+                            drawTextLine(line, x, y, paint.apply {
+                                mode = PaintMode.FILL
+                                color = textColor
+                            })
+                            y += spacing + line.descent
                         }
+                    }
                     OUTSIDE_BOTTOM -> Surface.makeRasterN32Premul(
                         this@handle.width,
                         this@handle.height + height
@@ -141,7 +141,7 @@ object WriteHandler : FramesHandler {
                                 color = strokeColor
                                 strokeWidth = stroke.toFloat()
                                 isAntiAlias = true
-                                mode = PaintMode.STROKE_AND_FILL
+                                mode = PaintMode.STROKE
                             })
                             drawTextLine(line, x, y, paint.apply {
                                 mode = PaintMode.FILL

@@ -5,7 +5,9 @@ package top.e404.skiko.draw.element
 import org.jetbrains.skia.Canvas
 import org.jetbrains.skia.Image
 import org.jetbrains.skia.Paint
+import org.jetbrains.skia.Rect
 import top.e404.skiko.draw.DrawElement
+import top.e404.skiko.draw.DrawElement.Companion.debugPaint
 import top.e404.skiko.draw.Pointer
 import top.e404.skiko.util.drawImageRRect
 import top.e404.skiko.util.resize
@@ -48,18 +50,27 @@ class Pic(
         paint: Paint,
         width: Int,
         imagePadding: Int,
+        debug: Boolean
     ) {
         val left = if (center) (width + 2 * imagePadding - picW) / 2F
         else pointer.x + left.toFloat()
         val t = pointer.y + top.toFloat()
-        canvas.drawImageRRect(pic, left, t, pic.width.toFloat(), pic.height.toFloat(), radius)
-
-        //canvas.drawRoundCorneredImage(
-        //    pic,
-        //    if (center) (width + 2 * imagePadding - picW) / 2F else pointer.x + left.toFloat(),
-        //    pointer.y + top.toFloat(),
-        //    radius
-        //)
+        if (debug) canvas.drawRect(
+            Rect.makeXYWH(
+                l = left,
+                t = t,
+                w = pic.width.toFloat(),
+                h = pic.height.toFloat(),
+            ), debugPaint
+        )
+        canvas.drawImageRRect(
+            image = pic,
+            x = left,
+            y = t,
+            w = pic.width.toFloat(),
+            h = pic.height.toFloat(),
+            radius = radius
+        )
         pointer.y += picH + top + bottom
     }
 }

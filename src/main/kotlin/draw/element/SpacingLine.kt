@@ -5,8 +5,10 @@ package top.e404.skiko.draw.element
 import org.jetbrains.skia.Canvas
 import org.jetbrains.skia.Paint
 import org.jetbrains.skia.RRect
+import org.jetbrains.skia.Rect
 import top.e404.skiko.Colors
 import top.e404.skiko.draw.DrawElement
+import top.e404.skiko.draw.DrawElement.Companion.debugPaint
 import top.e404.skiko.draw.Pointer
 
 /**
@@ -33,17 +35,26 @@ open class SpacingLine(
         paint: Paint,
         width: Int,
         imagePadding: Int,
+        debug: Boolean
     ) {
         canvas.drawRRect(
             RRect.makeXYWH(
-                imagePadding + lrSpacing.toFloat(),
-                pointer.y + udSpacing.toFloat(),
-                width - lrSpacing * 2F,
-                lineWeight.toFloat(),
-                udSpacing / 2F
+                l = imagePadding + lrSpacing.toFloat(),
+                t = pointer.y + udSpacing.toFloat(),
+                w = width - lrSpacing * 2F,
+                h = lineWeight.toFloat(),
+                radius = udSpacing / 2F
             ), paint.apply {
                 color = spacingColor
             }
+        )
+        if (debug) canvas.drawRect(
+            Rect.makeXYWH(
+                l = imagePadding + lrSpacing.toFloat(),
+                t = pointer.y + udSpacing.toFloat(),
+                w = width - lrSpacing * 2F,
+                h = lineWeight.toFloat(),
+            ), debugPaint
         )
         pointer.y += lineWeight + udSpacing * 2
     }

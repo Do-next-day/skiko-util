@@ -1,7 +1,6 @@
 package top.e404.skiko.util
 
 import org.jetbrains.skia.*
-import top.e404.skiko.ahsb
 import kotlin.math.*
 
 fun Surface.bytes(format: EncodedImageFormat = EncodedImageFormat.PNG) = makeImageSnapshot().bytes(format)
@@ -59,37 +58,12 @@ fun Image.resize(w: Int, h: Int, smooth: Boolean = true): Image {
     val height = if (h > 0) h else (h / -100.0 * height).toInt()
     return Surface.makeRasterN32Premul(width, height).withCanvas {
         scale(width / this@resize.width.toFloat(), height / this@resize.height.toFloat())
-        if (smooth) drawImageRectNearest(this@resize,
+        if (smooth) drawImageRectNearest(
+            this@resize,
             Rect.makeWH(this@resize.width.toFloat(), this@resize.height.toFloat()),
             Rect.makeWH(this@resize.width.toFloat(), this@resize.height.toFloat())
         ) else drawImage(this@resize, 0F, 0F)
     }
-}
-
-fun Image.scaleAhsbS(rate: Float) = toBitmap().run {
-    forEach { x, y ->
-        val c = getColor(x, y)
-        val (a, h, s, b) = c.ahsb()
-        erase(
-            ahsb(a, h, (s * rate).coerceIn(0F..1F), b),
-            IRect.makeXYWH(x, y, 1, 1)
-        )
-        false
-    }
-    toImage()
-}
-
-fun Image.scaleAhsbB(rate: Float) = toBitmap().run {
-    forEach { x, y ->
-        val c = getColor(x, y)
-        val (a, h, s, b) = c.ahsb()
-        erase(
-            ahsb(a, h, s, (b * rate).coerceIn(0F..1F)),
-            IRect.makeXYWH(x, y, 1, 1)
-        )
-        false
-    }
-    toImage()
 }
 
 /**

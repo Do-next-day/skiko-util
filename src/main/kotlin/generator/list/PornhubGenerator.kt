@@ -15,7 +15,7 @@ object PornhubGenerator : ImageGenerator {
     private const val space = 30F
     private const val height = 170
     private const val radius = 20F
-    private val font = FontType.MI_BOLD.getSkijaFont(70F)
+    private val font = FontType.MI_BOLD.getSkiaFont(70F)
     override suspend fun generate(args: MutableMap<String, String>): MutableList<Frame> {
         val s1 = args["s1"]!!
         val s2 = args["s2"]!!

@@ -40,7 +40,14 @@ class TextWithIcon(
         return Pair(width.toInt(), font.size.toInt() + 2 * udPadding)
     }
 
-    override fun drawToBoard(canvas: Canvas, pointer: Pointer, paint: Paint, width: Int, imagePadding: Int) {
+    override fun drawToBoard(
+        canvas: Canvas,
+        pointer: Pointer,
+        paint: Paint,
+        width: Int,
+        imagePadding: Int,
+        debug: Boolean
+    ) {
         // icon
         pointer.y += udPadding
         canvas.drawRRect(RRect.makeXYWH(

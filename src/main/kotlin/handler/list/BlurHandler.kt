@@ -9,8 +9,6 @@ import top.e404.skiko.frame.HandleResult.Companion.result
 
 @ImageHandler
 object BlurHandler : FramesHandler {
-    private val fail = HandleResult.fail("size应为大于0的浮点数")
-
     override val name = "高斯模糊"
     override val regex = Regex("(?i)(高斯)?模糊|blur|mh")
 
@@ -18,8 +16,9 @@ object BlurHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        val size = args["size"]?.toFloatOrNull() ?: return fail
-        if (size <= 0) return fail
+        var size = args["text"]?.toFloatOrNull() ?: 10F
+        if (size < 0) size = -size
+        else if (size == 0F) size = 10F
         return frames.result {
             common(args).withCanvas { image ->
                 drawImage(image, 0F, 0F, Paint().apply {

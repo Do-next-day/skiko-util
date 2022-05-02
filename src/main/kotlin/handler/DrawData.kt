@@ -8,7 +8,6 @@ import org.jetbrains.skia.Image
 import org.jetbrains.skia.Rect
 import top.e404.skiko.util.readJarFile
 import top.e404.skiko.util.rotateKeepSize
-import java.io.File
 
 @Serializable
 data class DrawData(
@@ -19,7 +18,6 @@ data class DrawData(
     var r: Float = 0F,
 ) {
     companion object {
-        fun loadFromFile(f: File) = Yaml.default.decodeFromString<List<DrawData>>(f.readText())
         fun loadFromJar(path: String) = Yaml.default.decodeFromString<List<DrawData>>(readJarFile(path))
     }
 
@@ -35,6 +33,6 @@ data class DrawData(
         image: Image,
     ) = canvas.apply {
         val face = if (r != 0F) image.rotateKeepSize(r) else image
-        if (w > 0 && w > 0) drawImageRect(face, Rect.makeXYWH(x, y, w, h))
+        if (w > 0 && h > 0) drawImageRect(face, Rect.makeXYWH(x, y, w, h))
     }
 }

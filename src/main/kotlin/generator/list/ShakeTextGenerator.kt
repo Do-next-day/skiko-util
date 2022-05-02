@@ -1,6 +1,7 @@
 package top.e404.skiko.generator.list
 
 import org.jetbrains.skia.*
+import top.e404.skiko.Colors
 import top.e404.skiko.FontType
 import top.e404.skiko.draw.Pointer
 import top.e404.skiko.frame.Frame
@@ -13,7 +14,7 @@ object ShakeTextGenerator : ImageGenerator {
     private const val fontSpace = 5
     private const val padding = 10
     private const val fontSize = 60
-    private val font = FontType.YAHEI.getSkijaFont(fontSize.toFloat())
+    private val font = FontType.YAHEI.getSkiaFont(fontSize.toFloat())
 
     /**
      * 生成抖动gif
@@ -72,10 +73,10 @@ object ShakeTextGenerator : ImageGenerator {
 
     override suspend fun generate(args: MutableMap<String, String>): MutableList<Frame> {
         val text = args["text"]!!
-        val color = args["color"]!!.asColor()!!
-        val bg = args["bg"]!!.asColor()!!
-        val size = args["size"]!!.toInt()
-        val count = args["count"]!!.toInt()
+        val color = args["color"]?.asColor() ?: Colors.BLUE_GREEN.argb
+        val bg = args["bg"]?.asColor() ?: Colors.BG.argb
+        val size = args["size"]?.toIntOrNull() ?: 20
+        val count = args["count"]?.toIntOrNull() ?: 10
         return shakeGif(text, color, bg, size, count)
     }
 }

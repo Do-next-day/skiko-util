@@ -8,8 +8,26 @@ import top.e404.skiko.util.bytes
 import kotlin.math.max
 
 interface DrawElement {
+    companion object {
+        @JvmStatic
+        val debugPaint = Paint().apply {
+            color = Colors.LIGHT_BLUE.argb
+        }
+    }
+
     fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int>
-    fun drawToBoard(canvas: Canvas, pointer: Pointer, paint: Paint, width: Int, imagePadding: Int)
+    fun drawToBoard(
+        canvas: Canvas,
+        pointer: Pointer,
+        paint: Paint,
+        width: Int,
+        imagePadding: Int,
+        debug: Boolean = false
+    )
+}
+
+private val debugPatin = Paint().apply {
+    color = 0x77ff00ff
 }
 
 /**
@@ -28,6 +46,7 @@ fun List<DrawElement>.toImage(
     minWidth: Int = 500,
     maxWidth: Int = 1000,
     radius: Float = 50F,
+    debug: Boolean = false
 ): ByteArray {
     var width = 0
     var height = 0
@@ -46,21 +65,35 @@ fun List<DrawElement>.toImage(
     surface.canvas.apply {
         // bg
         drawRRect(
-            RRect.makeXYWH(0f, 0f, surface.width.toFloat(), surface.height.toFloat(), radius),
+            RRect.makeXYWH(
+                l = 0f,
+                t = 0f,
+                w = surface.width.toFloat(),
+                h = surface.height.toFloat(),
+                radius = radius
+            ),
             paint.apply { color = bgColor }
         )
 
         // debug
-        //drawRect(
-        //    Rect(imagePadding.toFloat(), imagePadding.toFloat(), width.toFloat() + imagePadding, height.toFloat() + imagePadding),
-        //    paint.apply {
-        //        color = 0x77ffffff
-        //    }
-        //)
-
+        if (debug) drawRect(
+            Rect(
+                left = imagePadding.toFloat(),
+                top = imagePadding.toFloat(),
+                right = width.toFloat() + imagePadding,
+                bottom = height.toFloat() + imagePadding
+            ), debugPatin
+        )
 
         // 内容
-        for (drawable in this@toImage) drawable.drawToBoard(this, pointer, paint, width, imagePadding)
+        for (drawable in this@toImage) drawable.drawToBoard(
+            canvas = this,
+            pointer = pointer,
+            paint = paint,
+            width = width,
+            imagePadding = imagePadding,
+            debug = debug
+        )
     }
     return surface.bytes()
 }

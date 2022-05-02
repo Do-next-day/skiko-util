@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "top.e404"
-version = "0.0.1"
+version = "1.0.0"
 
 val skikoVer = "0.7.16"
 fun skiko(module: String) = "org.jetbrains.skiko:skiko-awt-runtime-$module:$skikoVer"
@@ -31,8 +31,6 @@ dependencies {
     // apt
     kapt("top.e404:skiko-util-apt:0.0.1")
     implementation("top.e404:skiko-util-apt:0.0.1")
-    // util
-    implementation("top.e404:bot-util:0.0.1")
     // skiko
     api(skiko("windows-x64"))
     api(skiko("linux-x64"))
@@ -45,7 +43,6 @@ dependencies {
     // test
     testImplementation(kotlin("test", "1.6.20-M1"))
 }
-
 
 java {
     withJavadocJar()
@@ -61,4 +58,9 @@ afterEvaluate {
         artifactId = "skiko-util"
         version = "1.0.0"
     }
+}
+
+tasks.test {
+    useJUnit()
+    workingDir = projectDir.resolve("run")
 }

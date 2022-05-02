@@ -24,9 +24,11 @@ object JszzHandler : FramesHandler {
             bg.toSurface().withCanvas {
                 drawImage(bg, 0F, 0F)
                 val face = subCenter().rotate(337F)
-                drawImageRect(face,
+                drawImageRect(
+                    face,
                     Rect.makeWH(face.width.toFloat(), face.height.toFloat()),
-                    Rect.makeXYWH(-174F, -22F, 1075F, 1075F))
+                    Rect.makeXYWH(-174F, -22F, 1075F, 1075F)
+                )
             }
         }
     }

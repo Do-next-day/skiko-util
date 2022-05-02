@@ -2,8 +2,11 @@ package top.e404.skiko.handler.list
 
 import org.jetbrains.skia.Matrix33
 import top.e404.skiko.apt.annotation.ImageHandler
-import top.e404.skiko.frame.*
+import top.e404.skiko.frame.Frame
+import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.HandleResult.Companion.result
+import top.e404.skiko.frame.common
+import top.e404.skiko.frame.withCanvas
 
 /**
  * 水平翻转 `b -> p`
@@ -17,11 +20,13 @@ object FlipHorizontalHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.result {
         common(args).withCanvas { image ->
-            setMatrix(Matrix33(
-                1F, 0F, 0F,
-                0F, -1F, image.height.toFloat(),
-                0F, 0F, 1F
-            ))
+            setMatrix(
+                Matrix33(
+                    1F, 0F, 0F,
+                    0F, -1F, image.height.toFloat(),
+                    0F, 0F, 1F
+                )
+            )
             drawImage(image, 0F, 0F)
         }
     }

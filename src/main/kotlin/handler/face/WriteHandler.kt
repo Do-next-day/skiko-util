@@ -18,7 +18,7 @@ object WriteHandler : FramesHandler {
     private const val minSize = 20
     private const val maxSize = 1000
     private const val unit = 10
-    private val tf = FontType.MI.getSkiaTypeface()
+    private val tf = FontType.MI.typeface
 
     override val name = "write"
     override val regex = Regex("(?i)写|write")

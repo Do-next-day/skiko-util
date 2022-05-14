@@ -17,7 +17,7 @@ object GoodNewsGenerator : ImageGenerator {
     private const val minSize = 20
     private const val maxSize = 100
     private const val unit = 10
-    private val tf = FontType.MI.getSkiaTypeface()
+    private val tf = FontType.MI.typeface
 
     override suspend fun generate(args: MutableMap<String, String>): MutableList<Frame> {
         val text = args["text"]!!

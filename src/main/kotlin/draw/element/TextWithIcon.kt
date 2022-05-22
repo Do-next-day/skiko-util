@@ -57,7 +57,7 @@ class TextWithIcon(
                 h = font.size,
                 radius = font.size / 4
             ),
-            paint = paint.also { it.color = color })
+            paint = paint.apply { color = iconColor })
         // text line
         pointer.y -= line.ascent.toInt()
         canvas.drawTextLine(

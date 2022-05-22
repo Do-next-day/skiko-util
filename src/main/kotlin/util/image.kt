@@ -153,7 +153,7 @@ fun Image.subCenter(size: Int? = null): Image {
  * @return 图片(尺寸比原图大)
  */
 fun Image.rotate(angel: Float): Image {
-    var a = angel
+    var a = angel % 360
     if (a < 0) a += 360
     val r = a.toRadian()
     // 计算旋转后的零点坐标和图片尺寸
@@ -238,8 +238,8 @@ private val defaultFont = FontType.LW.getSkiaFont(20F)
 fun String.toImage(
     maxWidth: Int = 500,
     udPadding: Int = 3,
-    color: Int = Colors.LIGHT_BLUE.argb,
-    bgColor: Int = 0,
+    color: Int = Colors.PINK.argb,
+    bgColor: Int = Colors.BG.argb,
     font: Font = defaultFont
 ) = listOf(Text(
     content = this,
@@ -248,7 +248,8 @@ fun String.toImage(
     color = color,
     center = false
 )).toImage(
-    imagePadding = 0,
+    imagePadding = 20,
     bgColor = bgColor,
-    minWidth = maxWidth
+    minWidth = maxWidth,
+    radius = 15F
 )

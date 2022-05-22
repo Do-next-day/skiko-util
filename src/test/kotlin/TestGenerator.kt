@@ -53,4 +53,11 @@ class TestGenerator {
             "text" to "Administrator"
         ))
     }
+
+    @Test
+    fun testWhisperGenerator() {
+        testGenerator(WhisperGenerator, mutableMapOf(
+            "text" to "Administrator"
+        ))
+    }
 }

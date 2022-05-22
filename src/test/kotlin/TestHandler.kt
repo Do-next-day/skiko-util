@@ -243,4 +243,29 @@ class TestHandler {
     fun testHideHandler() {
         testHandler(HideHandler, emptyArgs)
     }
+
+    @Test
+    fun testPatMelonHandler() {
+        testHandler(PatMelonHandler, emptyArgs)
+    }
+
+    @Test
+    fun testRaiseHandler() {
+        testHandler(RaiseHandler, emptyArgs)
+    }
+
+    @Test
+    fun testLikeHandler() {
+        testHandler(LikeHandler, emptyArgs)
+    }
+
+    @Test
+    fun testShinyHandler() {
+        testHandler(ShinyHandler, emptyArgs)
+    }
+
+    @Test
+    fun testBoxingHandler() {
+        testHandler(BoxingHandler, emptyArgs)
+    }
 }

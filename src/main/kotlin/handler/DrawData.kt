@@ -1,11 +1,15 @@
 package top.e404.skiko.handler
 
 import com.charleskorn.kaml.Yaml
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import org.jetbrains.skia.Canvas
 import org.jetbrains.skia.Image
 import org.jetbrains.skia.Rect
+import top.e404.skiko.handler.DrawData.Companion.FlipMode.*
+import top.e404.skiko.handler.list.FlipHorizontalHandler.flipHorizontal
+import top.e404.skiko.handler.list.FlipVerticalHandler.flipVertical
 import top.e404.skiko.util.readJarFile
 import top.e404.skiko.util.rotateKeepSize
 
@@ -16,9 +20,22 @@ data class DrawData(
     var w: Float,
     var h: Float,
     var r: Float = 0F,
+    var flip: FlipMode = NONE
 ) {
     companion object {
         fun loadFromJar(path: String) = Yaml.default.decodeFromString<List<DrawData>>(readJarFile(path))
+
+        @Serializable
+        enum class FlipMode {
+            @SerialName("n")
+            NONE,
+
+            @SerialName("h")
+            HORIZONTAL,
+
+            @SerialName("v")
+            VERTICAL
+        }
     }
 
     /**
@@ -32,7 +49,14 @@ data class DrawData(
         canvas: Canvas,
         image: Image,
     ) = canvas.apply {
-        val face = if (r != 0F) image.rotateKeepSize(r) else image
-        if (w > 0 && h > 0) drawImageRect(face, Rect.makeXYWH(x, y, w, h))
+        if (w <= 0 || h <= 0) return@apply
+        var face = image
+        if (r != 0F) face = face.rotateKeepSize(r)
+        face = when (flip) {
+            HORIZONTAL -> face.flipHorizontal()
+            VERTICAL -> face.flipVertical()
+            NONE -> face
+        }
+        drawImageRect(face, Rect.makeXYWH(x, y, w, h))
     }
 }

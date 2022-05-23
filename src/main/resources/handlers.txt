@@ -15,6 +15,7 @@ top.e404.skiko.handler.face.LongMingHandler
 top.e404.skiko.handler.face.NationalFaceHandler
 top.e404.skiko.handler.face.PatHandler
 top.e404.skiko.handler.face.PatMelonHandler
+top.e404.skiko.handler.face.PeasHandler
 top.e404.skiko.handler.face.PushHandler
 top.e404.skiko.handler.face.RuaHandler
 top.e404.skiko.handler.face.RubHandler

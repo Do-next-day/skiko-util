@@ -28,8 +28,8 @@ object PeasHandler : FramesHandler {
         val heads: List<DrawData>,
     )
 
-    override val name = "嫌弃"
-    override val regex = Regex("(?i)嫌弃|xq")
+    override val name = "peas"
+    override val regex = Regex("(?i)peas")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

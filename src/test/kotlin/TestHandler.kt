@@ -283,4 +283,9 @@ class TestHandler {
     fun testUpHandler() {
         testHandler(UpHandler, emptyArgs)
     }
+
+    @Test
+    fun testPeasHandler() {
+        testHandler(PeasHandler, emptyArgs)
+    }
 }

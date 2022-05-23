@@ -268,4 +268,19 @@ class TestHandler {
     fun testBoxingHandler() {
         testHandler(BoxingHandler, emptyArgs)
     }
+
+    @Test
+    fun testSkipHandler() {
+        testHandler(SkipHandler, emptyArgs)
+    }
+
+    @Test
+    fun testEatHandler() {
+        testHandler(EatHandler, emptyArgs)
+    }
+
+    @Test
+    fun testUpHandler() {
+        testHandler(UpHandler, emptyArgs)
+    }
 }

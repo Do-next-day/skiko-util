@@ -4,6 +4,7 @@ top.e404.skiko.handler.face.CrawlHandler
 top.e404.skiko.handler.face.DemandHandler
 top.e404.skiko.handler.face.DislikeHandler
 top.e404.skiko.handler.face.DoubtHandler
+top.e404.skiko.handler.face.EatHandler
 top.e404.skiko.handler.face.Hold1Handler
 top.e404.skiko.handler.face.Hold2Handler
 top.e404.skiko.handler.face.InjectionHandler
@@ -18,8 +19,10 @@ top.e404.skiko.handler.face.PushHandler
 top.e404.skiko.handler.face.RuaHandler
 top.e404.skiko.handler.face.RubHandler
 top.e404.skiko.handler.face.ShinyHandler
+top.e404.skiko.handler.face.SkipHandler
 top.e404.skiko.handler.face.ThrowHandler
 top.e404.skiko.handler.face.TouchHandler
+top.e404.skiko.handler.face.UpHandler
 top.e404.skiko.handler.face.WriteHandler
 top.e404.skiko.handler.list.BlurHandler
 top.e404.skiko.handler.list.CharImageHandler

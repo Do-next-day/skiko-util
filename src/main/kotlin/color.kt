@@ -2,6 +2,8 @@
 
 package top.e404.skiko
 
+import org.jetbrains.skia.Bitmap
+import org.jetbrains.skia.ColorAlphaType
 import org.jetbrains.skia.IRect
 import org.jetbrains.skia.Image
 import top.e404.skiko.util.toBitmap
@@ -34,11 +36,15 @@ enum class Colors(val argb: Int) {
 
 fun Image.handlePixel(block: (Int) -> Int): Image {
     val bitmap = toBitmap()
-    for (x in 0 until bitmap.width) for (y in 0 until bitmap.height) {
-        val color = block(bitmap.getColor(x, y))
-        bitmap.erase(color, IRect.makeXYWH(x, y, 1, 1))
+    val result = Bitmap().apply {
+        allocPixels(this@handlePixel.imageInfo)
+        setAlphaType(ColorAlphaType.PREMUL)
     }
-    return bitmap.toImage()
+    for (x in 0 until result.width) for (y in 0 until result.height) {
+        val color = block(bitmap.getColor(x, y))
+        result.erase(color, IRect.makeXYWH(x, y, 1, 1))
+    }
+    return result.toImage()
 }
 
 private val range = 0..255

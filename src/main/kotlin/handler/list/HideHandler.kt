@@ -4,6 +4,7 @@ import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.argb
 import top.e404.skiko.frame.Frame
 import top.e404.skiko.frame.FramesHandler
+import top.e404.skiko.frame.HandleResult.Companion.fail
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.frame.common
 import top.e404.skiko.frame.handle
@@ -19,12 +20,13 @@ object HideHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.result {
+    ) = if (frames.size != 1) fail("hide不支持处理gif")
+    else frames.result {
         common(args).handle { handlePixel(handler) }
     }
 
     private val handler = fun(pixel: Int): Int {
         val (_, r, g, b) = pixel.argb()
-        return (0.299 * r + 0.587 * g + 0.114 * b).toInt() shl 24 or 0xffffff
+        return ((0.299 * r + 0.587 * g + 0.114 * b).toLong() shl 24 or 0xffffff).toInt()
     }
 }

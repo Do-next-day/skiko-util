@@ -288,4 +288,14 @@ class TestHandler {
     fun testPeasHandler() {
         testHandler(PeasHandler, emptyArgs)
     }
+
+    @Test
+    fun testEnchantHandler() {
+        testHandler(EnchantHandler, emptyArgs)
+    }
+
+    @Test
+    fun testBatHandler() {
+        testHandler(BatHandler, emptyArgs)
+    }
 }

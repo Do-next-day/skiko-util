@@ -1,3 +1,4 @@
+top.e404.skiko.handler.face.BatHandler
 top.e404.skiko.handler.face.BeatHandler
 top.e404.skiko.handler.face.BoxingHandler
 top.e404.skiko.handler.face.CrawlHandler
@@ -5,6 +6,7 @@ top.e404.skiko.handler.face.DemandHandler
 top.e404.skiko.handler.face.DislikeHandler
 top.e404.skiko.handler.face.DoubtHandler
 top.e404.skiko.handler.face.EatHandler
+top.e404.skiko.handler.face.EnchantHandler
 top.e404.skiko.handler.face.Hold1Handler
 top.e404.skiko.handler.face.Hold2Handler
 top.e404.skiko.handler.face.InjectionHandler

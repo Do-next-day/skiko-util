@@ -59,7 +59,7 @@ fun Triple<Int, Int, Int>.toFloat() = Triple(first.toFloat(), second.toFloat(), 
 fun rgb(r: Int, g: Int, b: Int) = (r shl 16) or (g shl 8) or b
 fun argb(a: Int, r: Int, g: Int, b: Int) = (a shl 24) or (r shl 16) or (g shl 8) or b
 fun argb(a: Int, r: Double, g: Double, b: Double) = argb(a, r.limit(), g.limit(), b.limit())
-fun ahsb(a: Int, h: Float, s: Float, v: Float) = Color.HSBtoRGB(h, s, v) or (a shl 24)
+fun ahsb(a: Int, h: Float, s: Float, b: Float) = Color.HSBtoRGB(h, s, b) + (a shl 24)
 
 data class Ahsb(var a: Int, var h: Float, var s: Float, var b: Float)
 

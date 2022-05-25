@@ -17,7 +17,7 @@ fun ByteArray.decodeToFrames(): MutableList<Frame> {
     val b = codec.frameCount == 1
     return (0 until codec.frameCount).map { index ->
         Frame(
-            if (b) 40 else codec.getFrameInfo(index).duration,
+            if (b) 50 else codec.getFrameInfo(index).duration,
             Bitmap().apply {
                 allocPixels(codec.imageInfo)
                 codec.readPixels(this, index)

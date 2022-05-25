@@ -43,6 +43,7 @@ object Percent0Handler : FramesHandler {
                             mode = PaintMode.STROKE
                             strokeWidth = radius * .17f
                             maskFilter = MaskFilter.makeBlur(FilterBlurMode.SOLID, radius * v)
+                            alpha = 200
                         })
                         drawTextLine(text, w - text.width / 2, h + text.height / 4, paint.apply {
                             mode = PaintMode.FILL

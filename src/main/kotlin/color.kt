@@ -76,6 +76,8 @@ fun Int.ahsb(): Ahsb {
     }
 }
 
+fun gray(r: Int, g: Int, b: Int) = (0.299 * r + 0.587 * g + 0.114 * b).toInt()
+
 fun genColor(start: Int, end: Int, count: Int): MutableList<Int> {
     val (sr, sg, sb) = start.rgb()
     val (er, eg, eb) = end.rgb()

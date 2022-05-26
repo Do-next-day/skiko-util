@@ -5,7 +5,6 @@ package top.e404.skiko
 import org.jetbrains.skia.Data
 import org.jetbrains.skia.Font
 import org.jetbrains.skia.FontMgr
-import org.jetbrains.skia.Typeface
 import java.io.File
 import java.awt.Font as AwtFont
 
@@ -27,20 +26,16 @@ enum class FontType(name: String) {
     ZHONG_SONG("STZHONGS.TTF"),
     LI_HEI("力黑体.otf");
 
-    val bytes by lazy { File("data/font/$name").readBytes() }
-
-    fun getSkiaTypeface(): Typeface {
-        return FontMgr.default.makeFromData(Data.makeFromBytes(bytes))!!
+    private val bytes by lazy { File("data/font/$name").readBytes() }
+    val typeface by lazy { FontMgr.default.makeFromData(Data.makeFromBytes(bytes))!! }
+    val awtFont by lazy {
+        bytes.inputStream().use {
+            AwtFont.createFont(AwtFont.TRUETYPE_FONT, it)
+        }
     }
 
     fun getSkiaFont(size: Float): Font {
-        return Font(getSkiaTypeface(), size)
-    }
-
-    fun getAwtFont(): AwtFont {
-        return bytes.inputStream().use {
-            AwtFont.createFont(AwtFont.TRUETYPE_FONT, it)
-        }
+        return Font(typeface, size)
     }
 
     companion object {

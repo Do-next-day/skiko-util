@@ -5,11 +5,15 @@ import org.junit.Test
 import top.e404.skiko.handler.handlers
 import top.e404.skiko.util.bytes
 import top.e404.skiko.util.round
+import top.e404.skiko.util.toImage
 import java.io.File
+import kotlin.math.sqrt
 
 class Test {
-    private val inPng = File("in.png").readBytes()
-    private val outPng = File("out/out.png")
+    companion object {
+        private val inPng = File("in.jpg").readBytes()
+        private val outPng = File("out/out.png")
+    }
 
     @Test
     fun drawText() {
@@ -94,5 +98,37 @@ class Test {
         list.forEach {
             println("#${it.toString(16).padStart(6, '0')}")
         }
+    }
+
+    @Test
+    fun distortingRaised() {
+        val image = Image.makeFromEncoded(inPng)
+        val bitmap = Bitmap.makeFromImage(image)
+        val result = Bitmap().apply { allocPixels(image.imageInfo) }
+
+        val centerX = image.width / 2
+        val centerY = image.height / 2
+
+        val r = 100
+
+        fun distance(x1: Int, y1: Int, x2: Int, y2: Int): Int {
+            val dx = x1 - x2
+            val dy = y1 - y2
+            return sqrt((dx * dx + dy * dy).toDouble()).toInt()
+        }
+
+        for (x in 0 until image.width) for (y in 0 until image.height) {
+            val distance = distance(x, y, centerX, centerY)
+            val color = if (distance > r) {
+                bitmap.getColor(x, y)
+            } else {
+                val tx = (x - centerX) * distance / r + centerX
+                val ty = (y - centerY) * distance / r + centerY
+                bitmap.getColor(tx, ty)
+            }
+            result.erase(color, IRect.makeXYWH(x, y, 1, 1))
+        }
+
+        outPng.writeBytes(result.toImage().bytes())
     }
 }

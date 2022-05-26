@@ -20,7 +20,6 @@ import top.e404.skiko.draw.splitByWidth
  * @property padding 背景内边距
  * @property margin 背景外边距
  * @property center 居中
- * @property offset 偏移调整
  */
 open class TextLineBlock(
     var content: String,
@@ -32,7 +31,6 @@ open class TextLineBlock(
     var padding: Int = 20,
     var margin: Int = 20,
     var center: Boolean = true,
-    var offset: Int = 10,
 ) : DrawElement {
     private var lines = listOf<TextLine>()
     var width = 0
@@ -41,8 +39,8 @@ open class TextLineBlock(
     override fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int> {
         val (lines, width) = content.splitByWidth(maxWidth - (padding + margin) * 2, font, padding)
         this.lines = lines
-        this.width = width + 2 * padding
-        height = lines.size * (font.size.toInt() + lineSpace) - lineSpace
+        this.width = width
+        height = lines.sumOf { it.descent.toDouble() - it.ascent }.toInt() + (lines.size - 1) * lineSpace
         return Pair(width + (padding + margin) * 2, height + (margin + padding) * 2)
     }
 
@@ -59,26 +57,23 @@ open class TextLineBlock(
             if (center) (width + 2 * imagePadding - this.width - margin - this.padding) / 2F
             else pointer.x + margin.toFloat(),
             pointer.y + margin.toFloat(),
-            this.width + 2F * this.padding,
-            (height + 2 * this.padding).toFloat(),
+            this.width + 2F * padding,
+            (height + 2 * padding).toFloat(),
             bgRadius
         ), paint.apply { color = bgColor })
         // text
-        pointer.y -= offset
-        pointer.y += this.padding + margin
+        pointer.y += padding + margin
         for (line in lines) {
-            pointer.y += font.size.toInt()
+            pointer.y -= line.ascent.toInt()
             canvas.drawTextLine(
-                line,
-                if (center) (width + 2 * imagePadding - line.width) / 2
-                else pointer.x.toFloat() + this.padding + margin,
-                pointer.y.toFloat(),
-                paint.also {
-                    it.color = color
-                }
+                line = line,
+                x = if (center) (width + 2 * imagePadding - line.width) / 2
+                else pointer.x.toFloat() + padding + margin,
+                y = pointer.y.toFloat(),
+                paint = paint.also { it.color = color }
             )
-            pointer.y += lineSpace
+            pointer.y += line.descent.toInt() + lineSpace
         }
-        pointer.y += offset + this.padding + margin - lineSpace
+        pointer.y += padding + margin - lineSpace
     }
 }

@@ -21,7 +21,6 @@ import top.e404.skiko.draw.splitByWidth
  * @property left 左侧边距
  * @property textIndent 若为true则启用行首缩进(两个空格的宽度)
  * @property center 居中, 若居中则忽略left
- * @property offset 偏移调整
  */
 open class Text(
     var content: String,
@@ -30,8 +29,7 @@ open class Text(
     var udPadding: Int = 20,
     var left: Int = 0,
     var textIndent: Boolean = false,
-    var center: Boolean = true,
-    var offset: Int = 14,
+    var center: Boolean = true
 ) : DrawElement {
     private var lines = listOf<TextLine>()
     var width = 0
@@ -44,7 +42,7 @@ open class Text(
         val (lines, width) = text.splitByWidth(maxWidth - left, font, left)
         this.lines = lines
         this.width = width
-        height = lines.size * (font.size.toInt() + udPadding) - udPadding
+        height = lines.sumOf { it.descent.toDouble() - it.ascent }.toInt() + (lines.size - 1) * udPadding
         return Pair(width + left, height + udPadding)
     }
 
@@ -56,22 +54,18 @@ open class Text(
         imagePadding: Int,
         debug: Boolean
     ) {
-        pointer.y -= offset
         pointer.y += udPadding / 2
         for (line in lines) {
-            pointer.y += font.size.toInt()
+            pointer.y -= line.ascent.toInt()
             canvas.drawTextLine(
-                line,
-                if (center) (width + imagePadding * 2 - line.width) / 2
+                line = line,
+                x = if (center) (width + imagePadding * 2 - line.width) / 2
                 else pointer.x.toFloat() + left,
-                pointer.y.toFloat(),
-                paint.also {
-                    it.color = color
-                }
+                y = pointer.y.toFloat(),
+                paint = paint.also { it.color = color }
             )
-            pointer.y += udPadding
+            pointer.y += line.descent.toInt() + udPadding
         }
-        pointer.y += offset
         pointer.y += udPadding / 2 - udPadding
     }
 }

@@ -1,9 +1,5 @@
 package top.e404.skiko.apt.annotation
 
-import com.charleskorn.kaml.Yaml
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import java.io.File
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.RoundEnvironment
@@ -26,20 +22,9 @@ class FramesHandlerProcessor : AbstractProcessor() {
         annotations: Set<TypeElement>,
         roundEnv: RoundEnvironment,
     ): Boolean {
-        Handlers.apply {
-            roundEnv.filterHasAnnotation(ImageHandler::class.java)
-                .forEach { handlers.add(it) }
-            save()
-        }
+        val list = roundEnv.filterHasAnnotation(ImageHandler::class.java)
+        if (list.isEmpty()) return true
+        File("src/main/resources/handlers.txt").writeText(list.joinToString("\n"))
         return true
     }
-}
-
-@Serializable
-object Handlers {
-    private val f = File("src/main/resources/handlers.txt")
-    val handlers = if (f.exists()) f.readText().split("\n").toMutableList()
-    else mutableListOf()
-
-    fun save() = f.writeText(handlers.joinToString("\n"))
 }

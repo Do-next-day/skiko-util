@@ -21,7 +21,6 @@ import top.e404.skiko.draw.splitByWidth
  * @property lineSpacing 行间距
  * @property left 左侧边距
  * @property index 若为null则使用数字序号(有序列表), 否则作为无序列表的列表项开头
- * @property offset 偏移调整
  */
 open class TextList(
     var contents: List<String>,
@@ -31,7 +30,6 @@ open class TextList(
     var lineSpacing: Int = 10,
     var left: Int = 0,
     var index: String? = null,
-    var offset: Int = 14,
 ) : DrawElement {
     private var lines = ArrayList<TextListLine>()
     var width = 0
@@ -40,10 +38,7 @@ open class TextList(
 
     override fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int> {
         val length = (contents.size - 1).toString().length
-        indexWidth = TextLine.make(
-            if (index == null) "${"0".repeat(length)}. "
-            else index, font
-        ).width.toInt()
+        indexWidth = TextLine.make(if (index == null) "${"0".repeat(length)}. " else index, font).width.toInt()
         fun getIndex(i: Int) = index ?: "${(i + 1).toString().padStart(length, ' ')}. "
         lines = ArrayList(contents.withIndex().map { (index, text) ->
             TextListLine(getIndex(index), indexWidth, text, font, color, font.size, lineSpacing, left)
@@ -62,11 +57,9 @@ open class TextList(
         imagePadding: Int,
         debug: Boolean
     ) {
-        pointer.y += udPadding - offset
-        for (line in lines) {
-            line.drawToBoard(canvas, pointer, paint, width, imagePadding)
-        }
-        pointer.y += udPadding + offset
+        pointer.y += udPadding
+        for (line in lines) line.drawToBoard(canvas, pointer, paint, width, imagePadding)
+        pointer.y += udPadding
     }
 
     class TextListLine(
@@ -100,22 +93,18 @@ open class TextList(
             val indexLine = TextLine.make(index, font)
             var x = pointer.x + left + indexWidth - indexLine.width
             canvas.drawTextLine(
-                indexLine,
-                x,
-                pointer.y.toFloat(),
-                paint.apply {
-                    color = this@TextListLine.color
-                }
+                line = indexLine,
+                x = x,
+                y = pointer.y.toFloat(),
+                paint = paint.also { it.color = color }
             )
             x = pointer.x + left + indexWidth.toFloat()
             for (line in lines) {
                 canvas.drawTextLine(
-                    line,
-                    x,
-                    pointer.y.toFloat(),
-                    paint.apply {
-                        color = this@TextListLine.color
-                    }
+                    line = line,
+                    x = x,
+                    y = pointer.y.toFloat(),
+                    paint = paint.also { it.color = color }
                 )
                 pointer.y += fontSize.toInt() + udPadding
             }

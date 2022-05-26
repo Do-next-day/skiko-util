@@ -1,6 +1,10 @@
 package top.e404.skiko.util
 
 import org.jetbrains.skia.*
+import top.e404.skiko.Colors
+import top.e404.skiko.FontType
+import top.e404.skiko.draw.element.Text
+import top.e404.skiko.draw.toImage
 import kotlin.math.*
 
 fun Surface.bytes(format: EncodedImageFormat = EncodedImageFormat.PNG) = makeImageSnapshot().bytes(format)
@@ -149,7 +153,7 @@ fun Image.subCenter(size: Int? = null): Image {
  * @return 图片(尺寸比原图大)
  */
 fun Image.rotate(angel: Float): Image {
-    var a = angel
+    var a = angel % 360
     if (a < 0) a += 360
     val r = a.toRadian()
     // 计算旋转后的零点坐标和图片尺寸
@@ -227,3 +231,25 @@ fun Surface.withCanvas(block: Canvas.() -> Unit): Image {
     canvas.block()
     return makeImageSnapshot()
 }
+
+private val defaultFont = FontType.LW.getSkiaFont(20F)
+
+@Suppress("UNUSED")
+fun String.toImage(
+    maxWidth: Int = 500,
+    udPadding: Int = 3,
+    color: Int = Colors.PINK.argb,
+    bgColor: Int = Colors.BG.argb,
+    font: Font = defaultFont
+) = listOf(Text(
+    content = this,
+    font = font,
+    udPadding = udPadding,
+    color = color,
+    center = false
+)).toImage(
+    imagePadding = 20,
+    bgColor = bgColor,
+    minWidth = maxWidth,
+    radius = 15F
+)

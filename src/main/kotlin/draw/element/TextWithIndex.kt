@@ -13,23 +13,27 @@ import top.e404.skiko.draw.Pointer
  * @property content 正文
  * @property font 字体
  * @property color 字体颜色
+ * @property index 序号
+ * @property indexMargin 序号边距
+ * @property indexLength 序号长度
+ * @property indexTextColor 序号字体颜色
+ * @property indexBgColor 序号背景颜色
+ * @property contentLeft 左边距
  * @property udPadding 上下边距
  * @property left 左侧边距
- * @property offset 偏移调整
  */
 class TextWithIndex(
     var content: String,
     var font: Font,
     var color: Int = Colors.WHITE.argb,
     var index: String,
-    var indexMargin: Float = font.size / 3,
+    var indexMargin: Float = font.size / 4,
     var indexLength: Int = 2,
     var indexTextColor: Int = Colors.WHITE.argb,
     var indexBgColor: Int = Colors.LIGHT_BLUE.argb,
     var contentLeft: Int = 40,
     var udPadding: Int = 20,
     var left: Int = 0,
-    var offset: Int = 14,
 ) : DrawElement {
     lateinit var indexLine: TextLine
     var indexWidth = 0F
@@ -46,9 +50,12 @@ class TextWithIndex(
             var text = content.substring(0, end--)
             if (text.length != content.length) text = "$text..."
             line = TextLine.make(text, font)
-            width = left + line.width + indexWidth + indexMargin
+            width = left + line.width + indexWidth + indexMargin * 2
         } while (width > maxWidth)
-        return Pair(width.toInt(), font.size.toInt() + (indexMargin.toInt() + udPadding) * 2)
+        return Pair(
+            width.toInt(),
+            (line.descent - line.ascent).toInt() + (indexMargin.toInt() + udPadding) * 2
+        )
     }
 
     override fun drawToBoard(
@@ -61,34 +68,30 @@ class TextWithIndex(
     ) {
         // index bg
         pointer.y += udPadding
-        canvas.drawRRect(RRect.makeXYWH(
-            pointer.x.toFloat() + left,
-            pointer.y.toFloat(),
-            indexWidth,
-            indexHeight,
-            font.size / 3
-        ), paint.apply {
-            color = this@TextWithIndex.indexBgColor
-        })
+        canvas.drawRRect(
+            r = RRect.makeXYWH(
+                l = pointer.x.toFloat() + left + indexMargin,
+                t = pointer.y + line.descent / 2,
+                w = indexWidth,
+                h = indexHeight,
+                radius = font.size / 3
+            ),
+            paint = paint.apply { color = indexBgColor })
         // index text
-        pointer.y += font.size.toInt() - offset
+        pointer.y -= line.ascent.toInt()
         canvas.drawTextLine(
-            indexLine,
-            left + pointer.x + indexMargin + (indexWidth - indexMargin * 2 - indexLine.width) / 2,
-            pointer.y + indexMargin,
-            paint.apply {
-                color = this@TextWithIndex.indexTextColor
-            }
+            line = indexLine,
+            x = left + pointer.x + indexMargin + (indexWidth - indexMargin * 2 - indexLine.width) / 2,
+            y = pointer.y + indexMargin,
+            paint = paint.apply { color = indexTextColor }
         )
         // text line
         canvas.drawTextLine(
-            line,
-            left + pointer.x + indexWidth + contentLeft,
-            pointer.y + indexMargin,
-            paint.apply {
-                color = this@TextWithIndex.color
-            }
+            line = line,
+            x = left + pointer.x + indexWidth + contentLeft,
+            y = pointer.y + indexMargin,
+            paint = paint.also { it.color = color }
         )
-        pointer.y += udPadding + indexMargin.toInt() * 2 + offset
+        pointer.y += line.descent.toInt() + udPadding + indexMargin.toInt() * 2
     }
 }

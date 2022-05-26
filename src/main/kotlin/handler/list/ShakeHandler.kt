@@ -16,8 +16,8 @@ object ShakeHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        val v = args["size"]?.toIntOrNull() ?: 20
-        val count = args["count"]?.toIntOrNull() ?: 10
+        val v = args["size"]?.toIntOrNull()?.coerceIn(1..200) ?: 20
+        val count = args["count"]?.toIntOrNull()?.coerceIn(1..50) ?: 10
         frames.replenish(count, Frame::limitAsGif)
         return frames.result {
             common(args).pmapIndexed { index ->

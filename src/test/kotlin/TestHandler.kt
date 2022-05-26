@@ -18,25 +18,39 @@ class TestHandler {
     private fun testHandler(handler: FramesHandler, args: MutableMap<String, String>) {
         runBlocking {
             val fr1 = inPng.decodeToFrames()
-            handler.handleFrames(fr1, args).run {
-                out.resolve(if (gif) "1.gif" else "1.png")
-                    .writeBytes(getOrThrow().encodeToBytes())
+            var result = handler.handleFrames(fr1, args)
+            if (!result.success) {
+                println("1 - fail, msg: ${result.failMsg}")
+                result.throwable?.printStackTrace()
+            } else {
+                result.run {
+                    out.resolve(if (gif) "1.gif" else "1.png")
+                        .writeBytes(getOrThrow().encodeToBytes())
+                }
+                println("1 - done")
             }
-            println(1)
             val fr2 = inGif.decodeToFrames()
-            handler.handleFrames(fr2, args).run {
-                out.resolve(if (gif) "2.gif" else "2.png")
-                    .writeBytes(getOrThrow().encodeToBytes())
+            result = handler.handleFrames(fr2, args)
+            if (!result.success) {
+                println("2 - fail, msg: ${result.failMsg}")
+                result.throwable?.printStackTrace()
+            } else {
+                result.run {
+                    out.resolve(if (gif) "2.gif" else "2.png")
+                        .writeBytes(getOrThrow().encodeToBytes())
+                }
+                println("2 - done")
             }
-            println(2)
         }
     }
 
     @Test
     fun testBlur() {
-        testHandler(BlurHandler, mutableMapOf(
-            "size" to "10"
-        ))
+        testHandler(
+            BlurHandler, mutableMapOf(
+                "size" to "10"
+            )
+        )
     }
 
     @Test
@@ -76,17 +90,21 @@ class TestHandler {
 
     @Test
     fun testResizeHandler() {
-        testHandler(ResizeHandler, mutableMapOf(
-            "w" to "-10",
-            "h" to "-10",
-        ))
+        testHandler(
+            ResizeHandler, mutableMapOf(
+                "w" to "-10",
+                "h" to "-10",
+            )
+        )
     }
 
     @Test
     fun testRgbFilter() {
-        testHandler(RgbHandler, mutableMapOf(
-            "count" to "10",
-        ))
+        testHandler(
+            RgbHandler, mutableMapOf(
+                "count" to "10",
+            )
+        )
     }
 
     @Test
@@ -96,19 +114,23 @@ class TestHandler {
 
     @Test
     fun testShakeHandler() {
-        testHandler(ShakeHandler, mutableMapOf(
-            "size" to "20",
-        ))
+        testHandler(
+            ShakeHandler, mutableMapOf(
+                "size" to "20",
+            )
+        )
     }
 
     @Test
     fun testClipHandler() {
-        testHandler(ClipHandler, mutableMapOf(
-            "x" to "20",
-            "y" to "20",
-            "w" to "60",
-            "h" to "60",
-        ))
+        testHandler(
+            ClipHandler, mutableMapOf(
+                "x" to "20",
+                "y" to "20",
+                "w" to "60",
+                "h" to "60",
+            )
+        )
     }
 
     @Test
@@ -220,18 +242,21 @@ class TestHandler {
     fun testLatticeHandler() {
         testHandler(
             LatticeHandler, mutableMapOf(
-            "rate" to "8",
-            "spacing" to "3",
-            "bg" to "#000")
+                "rate" to "8",
+                "spacing" to "3",
+                "bg" to "#000"
+            )
         )
     }
 
     @Test
     fun testCharImageHandler() {
-        testHandler(CharImageHandler, mutableMapOf(
-            "text" to "好耶",
-            "c" to ""
-        ))
+        testHandler(
+            CharImageHandler, mutableMapOf(
+                "text" to "好耶",
+                "c" to ""
+            )
+        )
     }
 
     @Test
@@ -242,5 +267,90 @@ class TestHandler {
     @Test
     fun testHideHandler() {
         testHandler(HideHandler, emptyArgs)
+    }
+
+    @Test
+    fun testPatMelonHandler() {
+        testHandler(PatMelonHandler, emptyArgs)
+    }
+
+    @Test
+    fun testRaiseHandler() {
+        testHandler(RaiseHandler, emptyArgs)
+    }
+
+    @Test
+    fun testLikeHandler() {
+        testHandler(LikeHandler, emptyArgs)
+    }
+
+    @Test
+    fun testShinyHandler() {
+        testHandler(ShinyHandler, emptyArgs)
+    }
+
+    @Test
+    fun testBoxingHandler() {
+        testHandler(BoxingHandler, emptyArgs)
+    }
+
+    @Test
+    fun testSkipHandler() {
+        testHandler(SkipHandler, emptyArgs)
+    }
+
+    @Test
+    fun testEatHandler() {
+        testHandler(EatHandler, emptyArgs)
+    }
+
+    @Test
+    fun testUpHandler() {
+        testHandler(UpHandler, emptyArgs)
+    }
+
+    @Test
+    fun testPeasHandler() {
+        testHandler(PeasHandler, emptyArgs)
+    }
+
+    @Test
+    fun testEnchantHandler() {
+        testHandler(EnchantHandler, emptyArgs)
+    }
+
+    @Test
+    fun testBatHandler() {
+        testHandler(BatHandler, emptyArgs)
+    }
+
+    @Test
+    fun testPercent0Handler() {
+        testHandler(Percent0Handler, emptyArgs)
+    }
+
+    @Test
+    fun testX64Handler() {
+        testHandler(X64Handler, emptyArgs)
+    }
+
+    @Test
+    fun testQunQingHandler() {
+        testHandler(
+            QunQingHandler,
+            //emptyArgs
+            mutableMapOf(
+                "right" to "90%",
+                "top" to "50%",
+            )
+        )
+    }
+
+    @Test
+    fun testLowPolyHandler() {
+        testHandler(LowPolyHandler, mutableMapOf(
+            "acc" to "100",
+            "pc" to "10"
+        ))
     }
 }

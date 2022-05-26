@@ -33,5 +33,5 @@ interface FramesHandler {
     ) = handleFrames(
         bytes.decodeToFrames(),
         args
-    ).getOrThrow().encodeToBytes()
+    )
 }

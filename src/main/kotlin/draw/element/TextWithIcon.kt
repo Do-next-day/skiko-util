@@ -13,9 +13,9 @@ import top.e404.skiko.draw.Pointer
  * @property content 正文
  * @property font 字体
  * @property color 字体颜色
+ * @property iconColor 标记颜色
  * @property udPadding 上下边距
  * @property left 左侧边距
- * @property offset 偏移调整
  */
 class TextWithIcon(
     var content: String,
@@ -24,7 +24,6 @@ class TextWithIcon(
     var iconColor: Int = Colors.LIGHT_BLUE.argb,
     var udPadding: Int = 20,
     var left: Int = 0,
-    var offset: Int = 14,
 ) : DrawElement {
     lateinit var line: TextLine
 
@@ -37,7 +36,7 @@ class TextWithIcon(
             line = TextLine.make(text, font)
             width = line.width + font.size
         } while (width > maxWidth)
-        return Pair(width.toInt(), font.size.toInt() + 2 * udPadding)
+        return Pair(width.toInt(), (line.descent - line.ascent).toInt() + 2 * udPadding)
     }
 
     override fun drawToBoard(
@@ -50,25 +49,23 @@ class TextWithIcon(
     ) {
         // icon
         pointer.y += udPadding
-        canvas.drawRRect(RRect.makeXYWH(
-            pointer.x.toFloat(),
-            pointer.y.toFloat(),
-            font.size / 2,
-            font.size,
-            10F
-        ), paint.apply {
-            color = this@TextWithIcon.iconColor
-        })
+        canvas.drawRRect(
+            r = RRect.makeXYWH(
+                l = pointer.x.toFloat(),
+                t = pointer.y + line.descent / 2,
+                w = font.size / 2,
+                h = font.size,
+                radius = font.size / 4
+            ),
+            paint = paint.apply { color = iconColor })
         // text line
-        pointer.y += font.size.toInt() - offset
+        pointer.y -= line.ascent.toInt()
         canvas.drawTextLine(
-            line,
-            pointer.x + font.size,
-            pointer.y.toFloat(),
-            paint.apply {
-                color = this@TextWithIcon.color
-            }
+            line = line,
+            x = pointer.x + font.size,
+            y = pointer.y.toFloat(),
+            paint = paint.also { it.color = color }
         )
-        pointer.y += udPadding + offset
+        pointer.y += line.descent.toInt() + udPadding
     }
 }

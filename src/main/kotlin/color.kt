@@ -2,6 +2,8 @@
 
 package top.e404.skiko
 
+import org.jetbrains.skia.Bitmap
+import org.jetbrains.skia.ColorAlphaType
 import org.jetbrains.skia.IRect
 import org.jetbrains.skia.Image
 import top.e404.skiko.util.toBitmap
@@ -34,11 +36,15 @@ enum class Colors(val argb: Int) {
 
 fun Image.handlePixel(block: (Int) -> Int): Image {
     val bitmap = toBitmap()
-    for (x in 0 until bitmap.width) for (y in 0 until bitmap.height) {
-        val color = block(bitmap.getColor(x, y))
-        bitmap.erase(color, IRect.makeXYWH(x, y, 1, 1))
+    val result = Bitmap().apply {
+        allocPixels(this@handlePixel.imageInfo)
+        setAlphaType(ColorAlphaType.PREMUL)
     }
-    return bitmap.toImage()
+    for (x in 0 until result.width) for (y in 0 until result.height) {
+        val color = block(bitmap.getColor(x, y))
+        result.erase(color, IRect.makeXYWH(x, y, 1, 1))
+    }
+    return result.toImage()
 }
 
 private val range = 0..255
@@ -59,7 +65,7 @@ fun Triple<Int, Int, Int>.toFloat() = Triple(first.toFloat(), second.toFloat(), 
 fun rgb(r: Int, g: Int, b: Int) = (r shl 16) or (g shl 8) or b
 fun argb(a: Int, r: Int, g: Int, b: Int) = (a shl 24) or (r shl 16) or (g shl 8) or b
 fun argb(a: Int, r: Double, g: Double, b: Double) = argb(a, r.limit(), g.limit(), b.limit())
-fun ahsb(a: Int, h: Float, s: Float, v: Float) = Color.HSBtoRGB(h, s, v) or (a shl 24)
+fun ahsb(a: Int, h: Float, s: Float, b: Float) = Color.HSBtoRGB(h, s, b) + (a shl 24)
 
 data class Ahsb(var a: Int, var h: Float, var s: Float, var b: Float)
 
@@ -69,6 +75,8 @@ fun Int.ahsb(): Ahsb {
         Ahsb(a, it[0], it[1], it[2])
     }
 }
+
+fun gray(r: Int, g: Int, b: Int) = (0.299 * r + 0.587 * g + 0.114 * b).toInt()
 
 fun genColor(start: Int, end: Int, count: Int): MutableList<Int> {
     val (sr, sg, sb) = start.rgb()

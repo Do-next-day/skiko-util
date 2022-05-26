@@ -8,6 +8,7 @@ import top.e404.skiko.frame.Frame
 import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.frame.common
+import top.e404.skiko.frame.handle
 import top.e404.skiko.limit
 import top.e404.skiko.rgb
 import top.e404.skiko.util.toBitmap
@@ -25,13 +26,13 @@ object EmbossHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.result {
-        common(args).onEach {
-            val old = it.image.toBitmap()
-            val new = it.image.toBitmap()
+        common(args).handle {
+            val old = toBitmap()
+            val new = toBitmap()
             for (x in 1 until old.width - 1) for (y in 1 until old.height - 1) {
                 new.erase(old.fd(x, y), IRect.makeXYWH(x, y, 1, 1))
             }
-            it.image = new.toImage()
+            new.toImage()
         }
     }
 

@@ -353,4 +353,9 @@ class TestHandler {
             "pc" to "10"
         ))
     }
+
+    @Test
+    fun testReoHandler() {
+        testHandler(ReoHandler, emptyArgs)
+    }
 }

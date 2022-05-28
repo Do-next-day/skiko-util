@@ -123,3 +123,12 @@ fun String.asColor(): Int? {
         else -> null
     }
 }
+
+val grayMatrix = ColorFilter.makeMatrix(
+    ColorMatrix(
+        0.33F, 0.38F, 0.29F, 0F, 0F,
+        0.33F, 0.38F, 0.29F, 0F, 0F,
+        0.33F, 0.38F, 0.29F, 0F, 0F,
+        0F, 0F, 0F, 1F, 0F,
+    )
+)

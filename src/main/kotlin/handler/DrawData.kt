@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import org.jetbrains.skia.Canvas
 import org.jetbrains.skia.Image
+import org.jetbrains.skia.Paint
 import org.jetbrains.skia.Rect
 import top.e404.skiko.handler.DrawData.Companion.FlipMode.*
 import top.e404.skiko.handler.list.FlipHorizontalHandler.flipHorizontal
@@ -15,12 +16,13 @@ import top.e404.skiko.util.rotateKeepSize
 
 @Serializable
 data class DrawData(
-    var x: Float,
-    var y: Float,
-    var w: Float,
-    var h: Float,
-    var r: Float = 0F,
-    var flip: FlipMode = NONE
+    val x: Float,
+    val y: Float,
+    val w: Float,
+    val h: Float,
+    val r: Float = 0F,
+    val a: Int = 255,
+    val flip: FlipMode = NONE
 ) {
     companion object {
         fun loadFromJar(path: String) = Yaml.default.decodeFromString<List<DrawData>>(readJarFile(path))
@@ -57,6 +59,6 @@ data class DrawData(
             VERTICAL -> face.flipVertical()
             NONE -> face
         }
-        drawImageRect(face, Rect.makeXYWH(x, y, w, h))
+        drawImageRect(face, Rect.makeXYWH(x, y, w, h), Paint().apply { alpha = a })
     }
 }

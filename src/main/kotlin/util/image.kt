@@ -241,13 +241,15 @@ fun String.toImage(
     color: Int = Colors.PINK.argb,
     bgColor: Int = Colors.BG.argb,
     font: Font = defaultFont
-) = listOf(Text(
-    content = this,
-    font = font,
-    udPadding = udPadding,
-    color = color,
-    center = false
-)).toImage(
+) = listOf(
+    Text(
+        content = this,
+        font = font,
+        udPadding = udPadding,
+        color = color,
+        center = false
+    )
+).toImage(
     imagePadding = 20,
     bgColor = bgColor,
     minWidth = maxWidth,

@@ -358,4 +358,9 @@ class TestHandler {
     fun testReoHandler() {
         testHandler(ReoHandler, emptyArgs)
     }
+
+    @Test
+    fun testFlashHandler() {
+        testHandler(FlashHandler, emptyArgs)
+    }
 }

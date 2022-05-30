@@ -12,6 +12,7 @@ import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.frame.common
 import top.e404.skiko.frame.handle
+import top.e404.skiko.util.doubleOrPercentage
 import top.e404.skiko.util.toSurface
 import top.e404.skiko.util.withCanvas
 
@@ -40,14 +41,8 @@ object QunQingHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.result {
-        val left = args["left"]?.let {
-            if (it.endsWith("%")) -it.removeSuffix("%").toDouble()
-            else it.toDouble()
-        }
-        val top = args["top"]?.let {
-            if (it.endsWith("%")) -it.removeSuffix("%").toDouble()
-            else it.toDouble()
-        }
+        val left = args["left"]?.doubleOrPercentage()
+        val top = args["top"]?.doubleOrPercentage()
         common(args).handle {
             toSurface().withCanvas {
                 drawImage(this@handle, 0f, 0f, mp)

@@ -132,3 +132,15 @@ val grayMatrix = ColorFilter.makeMatrix(
         0F, 0F, 0F, 1F, 0F,
     )
 )
+
+fun String.intOrPercentage() =
+    if (endsWith("%")) -removeSuffix("%").toInt()
+    else toInt()
+
+fun String.floatOrPercentage() =
+    if (endsWith("%")) -removeSuffix("%").toFloat()
+    else toFloat()
+
+fun String.doubleOrPercentage() =
+    if (endsWith("%")) -removeSuffix("%").toDouble()
+    else toDouble()

@@ -6,9 +6,7 @@ import org.jetbrains.skia.IRect
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result
-import top.e404.skiko.util.Noise
-import top.e404.skiko.util.toBitmap
-import top.e404.skiko.util.toImage
+import top.e404.skiko.util.*
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.floor
@@ -23,8 +21,8 @@ object WarpHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        val s = args["s"]?.toFloatOrNull() ?: -10F
-        val t = args["t"]?.toFloatOrNull() ?: 0.15F
+        val s = args["s"]?.floatOrPercentage() ?: -10F
+        val t = args["t"]?.floatOrPercentage() ?: 0.15F
         var i = 0
         frames.common(args)
         val fs = (0..20).map {

@@ -19,7 +19,7 @@ object PaneHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        val rate = args["text"]?.toIntOrNull() ?: -10
+        val rate = args["text"]?.intOrPercentage() ?: -10
         return frames.result {
             common(args).handle {
                 val src = toBitmap()

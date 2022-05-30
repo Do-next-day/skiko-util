@@ -21,10 +21,8 @@ fun Image.sub(
     y: Int,
     w: Int,
     h: Int,
-): Image {
-    return Surface.makeRasterN32Premul(w, h).withCanvas {
-        drawImage(this@sub, x * -1F, y * -1F)
-    }
+) = Surface.makeRasterN32Premul(w, h).withCanvas {
+    drawImage(this@sub, x * -1F, y * -1F)
 }
 
 /**

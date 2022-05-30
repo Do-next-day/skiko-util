@@ -23,8 +23,7 @@ object WarpHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        val x = args["x"]?.toFloatOrNull() ?: 50F
-        val y = args["y"]?.toFloatOrNull() ?: 50F
+        val s = args["s"]?.toFloatOrNull() ?: -10F
         val t = args["t"]?.toFloatOrNull() ?: 0.15F
         var i = 0
         frames.common(args)
@@ -35,62 +34,56 @@ object WarpHandler : FramesHandler {
         }.toMutableList()
         return fs.result {
             withCanvas { image ->
-                drawImage(warp(image.toBitmap(), x, y, t).toImage(), 0F, 0F)
+                drawImage(warp(image.toBitmap(), s, t).toImage(), 0F, 0F)
             }
         }
     }
 
     private fun warp(
         src: Bitmap,
-        xScale: Float,
-        yScale: Float,
+        scale: Float,
         turbulence: Float
     ): Bitmap {
-        val sinTable = FloatArray(256)
-        val cosTable = FloatArray(256)
-        for (i in 0..255) {
-            val angle = 2 * PI.toFloat() * i / 256f * turbulence
-            sinTable[i] = (-yScale * sin(angle.toDouble())).toFloat()
-            cosTable[i] = (yScale * cos(angle.toDouble())).toFloat()
-        }
-
-        val width = src.width
-        val height = src.height
+        val w = src.width
+        val h = src.height
         val dst = Bitmap().apply {
             allocPixels(src.imageInfo)
             setAlphaType(ColorAlphaType.PREMUL)
         }
-        val out = FloatArray(2)
 
+        val sinTable = FloatArray(256)
+        val cosTable = FloatArray(256)
+        val s = if (scale < 0) -scale * src.height / 100 else scale
+        for (i in 0..255) {
+            val angle = 2 * PI.toFloat() * i / 256f * turbulence
+            sinTable[i] = -s * sin(angle)
+            cosTable[i] = s * cos(angle)
+        }
+
+        val out = FloatArray(2)
         val noise = Noise()
-        for (y in 0 until height) for (x in 0 until width) {
-            val displacement = (127 + 127 * noise.noise2(x / xScale, y / xScale))
+        for (y in 0 until h) for (x in 0 until w) {
+            val displacement = (127 + 127 * noise.noise2(x.toFloat(), y.toFloat()))
                 .toInt().coerceIn(0..255)
             out[0] = x + sinTable[displacement]
             out[1] = y + cosTable[displacement]
-            val srcX = floor(out[0].toDouble()).toInt()
-            val srcY = floor(out[1].toDouble()).toInt()
+            val srcX = floor(out[0]).toInt()
+            val srcY = floor(out[1]).toInt()
             val xWeight = out[0] - srcX
             val yWeight = out[1] - srcY
-            val c = if (srcX in 0..width - 2 && srcY in 0..height - 2) {
-                var xx = srcX + 1
-                var yy = srcY
-                if (xx > width - 2) {
-                    xx = 1
-                    yy++
-                }
+            val c = if (srcX in 0..w - 2 && srcY in 0..h - 2) {
                 bilinearInterpolate(
                     xWeight, yWeight,
                     src.getColor(srcX, srcY),
-                    src.getColor(xx, yy),
+                    src.getColor(srcX + 1, srcY),
                     src.getColor(srcX, srcY + 1),
-                    src.getColor(xx, ++yy)
+                    src.getColor(srcX + 1, srcY + 1)
                 )
             } else {
-                val xx = srcX.coerceIn(0 until width)
-                val xp = (srcX + 1).coerceIn(0 until width)
-                val yy = srcY.coerceIn(0 until height)
-                val yp = (srcY + 1).coerceIn(0 until height)
+                val xx = srcX.coerceIn(0 until w)
+                val xp = (srcX + 1).coerceIn(0 until w)
+                val yy = srcY.coerceIn(0 until h)
+                val yp = (srcY + 1).coerceIn(0 until h)
                 bilinearInterpolate(
                     xWeight, yWeight,
                     src.getColor(xx, yy),

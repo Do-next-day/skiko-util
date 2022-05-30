@@ -13,7 +13,7 @@ import top.e404.skiko.util.pmapIndexed
 import top.e404.skiko.util.withCanvas
 
 /**
- * 嫌弃
+ * 磕蛋
  */
 @ImageHandler
 object EggHandler : FramesHandler {

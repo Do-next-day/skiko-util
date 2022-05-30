@@ -363,4 +363,14 @@ class TestHandler {
     fun testFlashHandler() {
         testHandler(FlashHandler, emptyArgs)
     }
+
+    @Test
+    fun testEggHandler() {
+        testHandler(EggHandler, emptyArgs)
+    }
+
+    @Test
+    fun testWarpHandler() {
+        testHandler(WarpHandler, emptyArgs)
+    }
 }

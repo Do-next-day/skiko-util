@@ -3,14 +3,12 @@ package top.e404.skiko.handler.list
 import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.ColorAlphaType
 import org.jetbrains.skia.IRect
+import org.jetbrains.skia.Image
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.util.*
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.floor
-import kotlin.math.sin
+import kotlin.math.*
 
 @ImageHandler
 object WarpHandler : FramesHandler {
@@ -23,25 +21,25 @@ object WarpHandler : FramesHandler {
     ): HandleResult {
         val s = args["s"]?.floatOrPercentage() ?: -10F
         val t = args["t"]?.floatOrPercentage() ?: 0.15F
+        val n = args["n"]?.toFloatOrNull() ?: 50F
         var i = 0
         frames.common(args)
-        val fs = (0..20).map {
+        val fs = (0..10).map {
             i++
             if (i >= frames.size) i = 0
             frames[i].clone()
         }.toMutableList()
         return fs.result {
-            withCanvas { image ->
-                drawImage(warp(image.toBitmap(), s, t).toImage(), 0F, 0F)
-            }
+            handle { warp(toBitmap(), s, t, n) }
         }
     }
 
     private fun warp(
         src: Bitmap,
         scale: Float,
-        turbulence: Float
-    ): Bitmap {
+        turbulence: Float,
+        noiseScale: Float
+    ): Image {
         val w = src.width
         val h = src.height
         val dst = Bitmap().apply {
@@ -51,17 +49,17 @@ object WarpHandler : FramesHandler {
 
         val sinTable = FloatArray(256)
         val cosTable = FloatArray(256)
-        val s = if (scale < 0) -scale * src.height / 100 else scale
+        val s = if (scale < 0) -scale * min(src.height, src.height) / 100 else scale
         for (i in 0..255) {
             val angle = 2 * PI.toFloat() * i / 256f * turbulence
-            sinTable[i] = -s * sin(angle)
+            sinTable[i] = s * sin(angle)
             cosTable[i] = s * cos(angle)
         }
 
         val out = FloatArray(2)
         val noise = Noise()
         for (y in 0 until h) for (x in 0 until w) {
-            val displacement = (127 + 127 * noise.noise2(x.toFloat(), y.toFloat()))
+            val displacement = (127 + 127 * noise.noise2(x / noiseScale, y / noiseScale))
                 .toInt().coerceIn(0..255)
             out[0] = x + sinTable[displacement]
             out[1] = y + cosTable[displacement]
@@ -92,13 +90,21 @@ object WarpHandler : FramesHandler {
             }
             dst.erase(c, IRect.makeXYWH(x, y, 1, 1))
         }
-        return dst
+        val si = s.toInt()
+        return dst.toImage().sub(0, 0, w - si, h - si)
     }
 
     /**
      * ARGB值的双线性插值
      */
-    private fun bilinearInterpolate(x: Float, y: Float, nw: Int, ne: Int, sw: Int, se: Int): Int {
+    private fun bilinearInterpolate(
+        x: Float,
+        y: Float,
+        nw: Int,
+        ne: Int,
+        sw: Int,
+        se: Int
+    ): Int {
         var m0: Float
         var m1: Float
         val a0 = nw shr 24 and 0xff

@@ -18,7 +18,7 @@ object RaiseHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        val radius = args["text"]?.doubleOrPercentage()
+        val radius = args["text"].doubleOrPercentage(null)
         return frames.result {
             common(args).handle {
                 val bitmap = toBitmap()

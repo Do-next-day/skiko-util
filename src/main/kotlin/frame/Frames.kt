@@ -122,9 +122,14 @@ fun List<Frame>.withCanvas(block: Canvas.(Image) -> Unit) =
         }
     }
 
-fun MutableList<Frame>.replenish(count: Int, block: Frame.() -> Unit = {}) = apply {
-    val f = get(0).apply(block)
-    if (size == 1) repeat(count - 1) { add(f.clone()) }
+suspend fun MutableList<Frame>.replenish(count: Int, block: Frame.() -> Unit = {}) = run {
+    pmap { block() }
+    var i = 0
+    (0..count).map {
+        i++
+        if (i >= size) i = 0
+        this[i].clone()
+    }.toMutableList()
 }
 
 fun Image.toFrame() = Frame(0, this)

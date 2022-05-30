@@ -30,8 +30,12 @@ interface FramesHandler {
     suspend fun handleBytes(
         bytes: ByteArray,
         args: MutableMap<String, String>
-    ) = handleFrames(
-        bytes.decodeToFrames(),
-        args
-    )
+    ) = try {
+        handleFrames(
+            bytes.decodeToFrames(),
+            args
+        )
+    } catch (t: Throwable) {
+        HandleResult(null, t.message, t)
+    }
 }

@@ -17,7 +17,8 @@ import top.e404.skiko.util.withCanvas
 object EatHandler : FramesHandler {
     private const val w = 362
     private const val h = 364
-    private val range = 0..15
+    private const val count = 15
+    private val range = 0..count
     private val bgList = range.map { getJarImage("statistic/eat/$it.png") }
     private val ddList = DrawData.loadFromJar("statistic/eat/eat.yml")
 
@@ -27,22 +28,13 @@ object EatHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ): HandleResult {
-        var i = 0
-        frames.handle { round() }
-        val fs = range.map {
-            i++
-            if (i >= frames.size) i = 0
-            frames[i].clone()
-        }.toMutableList()
-        return fs.result {
-            common(args).pmapIndexed { index ->
-                duration = 80
-                handle {
-                    Surface.makeRasterN32Premul(w, h).withCanvas {
-                        ddList.getOrNull(index)?.draw(this, image)
-                        drawImage(bgList[index], 0F, 0F)
-                    }
+    ) = frames.handle { round() }.common(args).replenish(count, Frame::limitAsGif).result {
+        common(args).pmapIndexed { index ->
+            duration = 80
+            handle {
+                Surface.makeRasterN32Premul(w, h).withCanvas {
+                    ddList.getOrNull(index)?.draw(this, image)
+                    drawImage(bgList[index], 0F, 0F)
                 }
             }
         }

@@ -6,7 +6,7 @@ package top.e404.skiko.frame
  * @property result 处理完的Frames, 若失败则为null
  * @property failMsg 失败的消息
  */
-class HandleResult private constructor(
+class HandleResult constructor(
     val result: List<Frame>?,
     val failMsg: String?,
     val throwable: Throwable?,

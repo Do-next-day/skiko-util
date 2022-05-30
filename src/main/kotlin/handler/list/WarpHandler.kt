@@ -14,22 +14,16 @@ import kotlin.math.*
 object WarpHandler : FramesHandler {
     override val name = "扭曲"
     override val regex = Regex("(?i)扭曲|warp")
+    private const val count = 10
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        val s = args["s"]?.floatOrPercentage() ?: -10F
-        val t = args["t"]?.floatOrPercentage() ?: 0.15F
+        val s = args["s"].floatOrPercentage(-10F)
+        val t = args["t"].floatOrPercentage(0.15F)
         val n = args["n"]?.toFloatOrNull() ?: 50F
-        var i = 0
-        frames.common(args)
-        val fs = (0..10).map {
-            i++
-            if (i >= frames.size) i = 0
-            frames[i].clone()
-        }.toMutableList()
-        return fs.result {
+        return frames.common(args).replenish(count, Frame::limitAsGif).result {
             handle { warp(toBitmap(), s, t, n) }
         }
     }

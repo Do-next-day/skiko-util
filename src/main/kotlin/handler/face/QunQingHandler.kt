@@ -41,8 +41,8 @@ object QunQingHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.result {
-        val left = args["left"]?.doubleOrPercentage()
-        val top = args["top"]?.doubleOrPercentage()
+        val left = args["left"].doubleOrPercentage(null)
+        val top = args["top"].doubleOrPercentage(null)
         common(args).handle {
             toSurface().withCanvas {
                 drawImage(this@handle, 0f, 0f, mp)

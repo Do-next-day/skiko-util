@@ -16,7 +16,7 @@ import top.e404.skiko.util.*
 @ImageHandler
 object BoxingHandler : FramesHandler {
     private const val size = 500
-    private val range = 0..7
+    private const val count = 7
     private val list by lazy { Yaml.default.decodeFromString<List<BoxingData>>(readJarFile("statistic/boxing/boxing.yml")) }
     private val hand by lazy { getJarImage("statistic/boxing/fisted-hand.png") }
 
@@ -33,26 +33,17 @@ object BoxingHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ): HandleResult {
-        var i = 0
-        frames.handle { round() }
-        val fs = range.map {
-            i++
-            if (i >= frames.size) i = 0
-            frames[i].clone()
-        }.toMutableList()
-        return fs.result {
-            common(args).pmapIndexed { index ->
-                duration = 60
-                handle {
-                    Surface.makeRasterN32Premul(
-                        BoxingHandler.size,
-                        BoxingHandler.size
-                    ).withCanvas {
-                        list[index].head.draw(this, image)
-                        list[index].left.draw(this, hand)
-                        list[index].right.draw(this, hand)
-                    }
+    ) = frames.handle { round() }.common(args).replenish(count, Frame::limitAsGif).result {
+        common(args).pmapIndexed { index ->
+            duration = 60
+            handle {
+                Surface.makeRasterN32Premul(
+                    BoxingHandler.size,
+                    BoxingHandler.size
+                ).withCanvas {
+                    list[index].head.draw(this, image)
+                    list[index].left.draw(this, hand)
+                    list[index].right.draw(this, hand)
                 }
             }
         }

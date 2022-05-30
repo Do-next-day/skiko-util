@@ -358,4 +358,19 @@ class TestHandler {
     fun testReoHandler() {
         testHandler(ReoHandler, emptyArgs)
     }
+
+    @Test
+    fun testFlashHandler() {
+        testHandler(FlashHandler, emptyArgs)
+    }
+
+    @Test
+    fun testEggHandler() {
+        testHandler(EggHandler, emptyArgs)
+    }
+
+    @Test
+    fun testWarpHandler() {
+        testHandler(WarpHandler, emptyArgs)
+    }
 }

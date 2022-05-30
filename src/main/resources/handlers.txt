@@ -7,6 +7,7 @@ top.e404.skiko.handler.face.DislikeHandler
 top.e404.skiko.handler.face.DoubtHandler
 top.e404.skiko.handler.face.EatHandler
 top.e404.skiko.handler.face.EnchantHandler
+top.e404.skiko.handler.face.FlashHandler
 top.e404.skiko.handler.face.Hold1Handler
 top.e404.skiko.handler.face.Hold2Handler
 top.e404.skiko.handler.face.InjectionHandler
@@ -19,6 +20,8 @@ top.e404.skiko.handler.face.PatHandler
 top.e404.skiko.handler.face.PatMelonHandler
 top.e404.skiko.handler.face.PeasHandler
 top.e404.skiko.handler.face.PushHandler
+top.e404.skiko.handler.face.QunQingHandler
+top.e404.skiko.handler.face.ReoHandler
 top.e404.skiko.handler.face.RuaHandler
 top.e404.skiko.handler.face.RubHandler
 top.e404.skiko.handler.face.ShinyHandler
@@ -35,7 +38,9 @@ top.e404.skiko.handler.list.FlipHorizontalHandler
 top.e404.skiko.handler.list.FlipVerticalHandler
 top.e404.skiko.handler.list.HideHandler
 top.e404.skiko.handler.list.LatticeHandler
+top.e404.skiko.handler.list.LowPolyHandler
 top.e404.skiko.handler.list.OldHandler
+top.e404.skiko.handler.list.Percent0Handler
 top.e404.skiko.handler.list.PxHandler
 top.e404.skiko.handler.list.RaiseHandler
 top.e404.skiko.handler.list.ResizeHandler
@@ -46,3 +51,4 @@ top.e404.skiko.handler.list.RoundHandler
 top.e404.skiko.handler.list.ShakeHandler
 top.e404.skiko.handler.list.SwapHandler
 top.e404.skiko.handler.list.TurnHandler
+top.e404.skiko.handler.list.X64Handler

@@ -22,9 +22,8 @@ fun Image.sub(
     w: Int,
     h: Int,
 ): Image {
-    return Surface.makeRasterN32Premul(w, h).run {
-        canvas.drawImage(this@sub, x * -1F, y * -1F)
-        makeImageSnapshot()
+    return Surface.makeRasterN32Premul(w, h).withCanvas {
+        drawImage(this@sub, x * -1F, y * -1F)
     }
 }
 

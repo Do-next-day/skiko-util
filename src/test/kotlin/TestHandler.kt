@@ -373,4 +373,9 @@ class TestHandler {
     fun testWarpHandler() {
         testHandler(WarpHandler, emptyArgs)
     }
+
+    @Test
+    fun testLattice1Handler() {
+        testHandler(PaneHandler, emptyArgs)
+    }
 }

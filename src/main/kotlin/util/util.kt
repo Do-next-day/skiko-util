@@ -136,23 +136,27 @@ val grayMatrix = ColorFilter.makeMatrix(
 fun String?.intOrPercentage(default: Int) = when {
     this == null -> default
     endsWith("%") -> -removeSuffix("%").toInt()
+    trim() == "" -> default
     else -> toInt()
 }
 
 fun String?.floatOrPercentage(default: Float) = when {
     this == null -> default
     endsWith("%") -> -removeSuffix("%").toFloat()
+    trim() == "" -> default
     else -> toFloat()
 }
 
 fun String?.doubleOrPercentage(default: Double) = when {
     this == null -> default
     endsWith("%") -> -removeSuffix("%").toDouble()
+    trim() == "" -> default
     else -> toDouble()
 }
 
 fun String?.doubleOrPercentage(default: Double? = null) = when {
     this == null -> default
     endsWith("%") -> -removeSuffix("%").toDouble()
+    trim() == "" -> default
     else -> toDouble()
 }

@@ -31,21 +31,18 @@ object PushHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ): HandleResult {
-        val fr = frames.common(args).handle { round() }.replenish(14)
-        return fr.result {
-            handleIndexed { index ->
-                Surface.makeRasterN32Premul(
-                    this@PushHandler.size,
-                    this@PushHandler.size
-                ).withCanvas {
-                    val angel = index * 360F / fr.size
-                    val i = index % 15
-                    val face = rotateKeepSize(angel)
-                    drawRect(bgRect, paint)
-                    ddList[i].draw(this, face)
-                    drawImageRect(bgList[i], bgRect)
-                }
+    ) = frames.common(args).handle { round() }.replenish(14).result {
+        handleIndexed { index ->
+            Surface.makeRasterN32Premul(
+                this@PushHandler.size,
+                this@PushHandler.size
+            ).withCanvas {
+                val angel = index * 360F / size
+                val i = index % 15
+                val face = rotateKeepSize(angel)
+                drawRect(bgRect, paint)
+                ddList[i].draw(this, face)
+                drawImageRect(bgList[i], bgRect)
             }
         }
     }

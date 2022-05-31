@@ -19,10 +19,7 @@ object TurnHandler : FramesHandler {
         args: MutableMap<String, String>,
     ): HandleResult {
         val count = args["text"]?.toIntOrNull() ?: 10
-        return frames
-            .common(args)
-            .replenish(abs(count), Frame::limitAsGif)
-            .result {
+        return frames.common(args).replenish(abs(count), Frame::limitAsGif).result {
                 val v = (360F / size).let { if (count < 0) -it else it }
                 handleIndexed { index ->
                     round().rotateKeepSize(index * v)

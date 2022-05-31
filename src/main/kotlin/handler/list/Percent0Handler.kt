@@ -21,17 +21,16 @@ object Percent0Handler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        frames.replenish(20, Frame::limitAsGif)
-        return frames.result {
+        return frames.replenish(20, Frame::limitAsGif).result {
             common(args).pmapIndexed { index ->
-                val center = frames.size / 2
+                val center = size / 2
                 handle {
                     val w = width / 2f
                     val h = height / 2f
                     val radius = min(w, h) * .24f
 
                     val text = TextLine.make("0%", FontType.MI.getSkiaFont(radius * .7f))
-                    val v = (abs(center - index) + 1).toFloat() / frames.size / 4
+                    val v = (abs(center - index) + 1).toFloat() / size / 4
                     Surface.makeRaster(imageInfo).withCanvas {
                         val paint = Paint().apply {
                             isAntiAlias = true

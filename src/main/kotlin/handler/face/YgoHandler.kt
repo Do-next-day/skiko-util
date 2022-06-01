@@ -82,12 +82,12 @@ object YgoHandler : FramesHandler {
     private val level by lazy { getJarImage("statistic/ygo/level.png") }
 
     // 字体
-    val fontAttr = FontType.YGODIY_MATRIXBOLDSMALLCAPS.getSkiaFont(35F)
-    val fontId = FontType.YGODIY_MATRIXBOLDSMALLCAPS.getSkiaFont(25F)
-    val fontCopyright = FontType.FOT_RODIN.getSkiaFont(20F)
+    private val fontAttr = FontType.YGODIY_MATRIXBOLDSMALLCAPS.getSkiaFont(35F)
+    private val fontId = FontType.YGODIY_MATRIXBOLDSMALLCAPS.getSkiaFont(25F)
+    private val fontCopyright = FontType.FOT_RODIN.getSkiaFont(20F)
 
     // paint
-    val paint = Paint().apply { color = Colors.BLACK.argb }
+    private val paint = Paint().apply { color = Colors.BLACK.argb }
 
     // rect
     private val rectImage = Rect.makeXYWH(101F, 220F, 612F, 612F)
@@ -186,7 +186,7 @@ object YgoHandler : FramesHandler {
                     .addText(args["title"]?.let { "【$it】" } ?: "【未知/通常】")
                     .build()
                     .layout(690F)
-                    .paint(this, 58F, 898F)
+                    .paint(this, 50F, 896F)
                 // desc
                 ParagraphBuilder(contextDesc, fonts)
                     .addText(desc ?: "")
@@ -234,22 +234,26 @@ object YgoHandler : FramesHandler {
                 .addText(desc ?: "")
                 .build()
                 .layout(690F)
-                .paint(this, 63F, 898F)
+                .paint(this, 63F, 896F)
             // type
             val typeImage = type?.let { spellTypeAllow[it] }?.invoke()
-            if (typeImage == null) drawTextLine(TextLine.make("【魔法卡】", fontId), 533F, 190F, paint)
+            if (typeImage == null) ParagraphBuilder(contextType, fonts)
+                .addText("【魔法卡】")
+                .build()
+                .layout(690F)
+                .paint(this, 533F, 148F)
             else {
                 ParagraphBuilder(contextType, fonts)
                     .addText("【魔法卡")
                     .build()
                     .layout(690F)
-                    .paint(this, 486F, 148F)
+                    .paint(this, 484F, 148F)
                 drawImageRect(typeImage, rectType)
                 ParagraphBuilder(contextType, fonts)
                     .addText("】")
                     .build()
                     .layout(690F)
-                    .paint(this, 704F, 148F)
+                    .paint(this, 716F, 148F)
             }
             // attr
             drawImageRect(attrSpell, rectAttr)
@@ -280,7 +284,7 @@ object YgoHandler : FramesHandler {
                 .addText(desc ?: "")
                 .build()
                 .layout(690F)
-                .paint(this, 63F, 898F)
+                .paint(this, 63F, 896F)
             // type
             val typeImage = type?.let { trapTypeAllow[it] }?.invoke()
             if (typeImage == null) ParagraphBuilder(contextType, fonts)
@@ -293,13 +297,13 @@ object YgoHandler : FramesHandler {
                     .addText("【陷阱卡")
                     .build()
                     .layout(690F)
-                    .paint(this, 486F, 148F)
+                    .paint(this, 484F, 148F)
                 drawImageRect(typeImage, rectType)
                 ParagraphBuilder(contextType, fonts)
                     .addText("】")
                     .build()
                     .layout(690F)
-                    .paint(this, 704F, 148F)
+                    .paint(this, 716F, 148F)
             }
             // attr
             drawImageRect(attrTrap, rectAttr)

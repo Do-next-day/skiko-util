@@ -378,4 +378,21 @@ class TestHandler {
     fun testLattice1Handler() {
         testHandler(PaneHandler, emptyArgs)
     }
+
+    @Test
+    fun testFondleHandler() {
+        testHandler(FondleHandler, emptyArgs)
+    }
+
+    @Test
+    fun testYgoHandler() {
+        testHandler(YgoHandler, mutableMapOf(
+            "c" to "怪兽",
+            "t" to "效果",
+            "name" to "嘎的尚",
+            "title" to "不死族/效果",
+            "desc" to "這個卡名的效果1回合只能使用1次。①：對方場上的怪獸數量比自己場上的怪獸多的場合，把這張卡從手卡丟棄才能發動。選自己的額外卡組1張卡給雙方確認。那之後，把對方的額外卡組確認，有選的卡的同名卡的場合，那些對方的同名卡全部除外。這個效果在對方回合也能發動。",
+            "id" to "1433223",
+        ))
+    }
 }

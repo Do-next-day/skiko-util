@@ -12,6 +12,12 @@ enum class FontType(name: String) {
     LW_LIGHT("LXGWWenKai-Light.ttf"),
     LW("LXGWWenKai-Regular.ttf"),
     LW_BOLD("LXGWWenKai-Bold.ttf"),
+    DF_LEISHO_SB("DFLeiSho-SB.ttf"),
+    YGODIY_MATRIXBOLDSMALLCAPS("YGODIY-MatrixBoldSmallCaps.ttf"),
+    YGO_DIY_GB("YGO-DIY-GB.ttf"),
+    YGODIY_JP("YGODIY-JP.otf"),
+    YGO_DIY_2_BIG5("YGO-DIY-2-BIG5.ttf"),
+    FOT_RODIN("FOT-Rodin Pro M.ttf"),
     MONO_LIGHT("Mono-Light.ttf"),
     MONO("Mono-Regular.ttf"),
     MONO_BOLD("Mono-Bold.ttf"),
@@ -29,9 +35,7 @@ enum class FontType(name: String) {
     private val bytes by lazy { File("data/font/$name").readBytes() }
     val typeface by lazy { FontMgr.default.makeFromData(Data.makeFromBytes(bytes))!! }
     val awtFont by lazy {
-        bytes.inputStream().use {
-            AwtFont.createFont(AwtFont.TRUETYPE_FONT, it)
-        }
+        bytes.inputStream().use { AwtFont.createFont(AwtFont.TRUETYPE_FONT, it)!! }
     }
 
     fun getSkiaFont(size: Float): Font {

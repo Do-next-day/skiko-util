@@ -394,4 +394,13 @@ class TestHandler {
             "id" to "1433223",
         ))
     }
+
+    @Test
+    fun testBwHandler() {
+        testHandler(BwHandler, mutableMapOf(
+            "g" to "",
+            //"l1" to "什么都没有",
+            //"l2" to "何もありません何もありません何もありません何もありません何もありません何もありません何もありません",
+        ))
+    }
 }

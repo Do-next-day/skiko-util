@@ -115,17 +115,20 @@ fun MutableList<Frame>.common(args: Map<String, String>) =
  * @param block 处理
  * @return frames
  */
-fun List<Frame>.withCanvas(block: Canvas.(Image) -> Unit) =
-    onEach {
-        it.image = it.image.toSurface().withCanvas {
-            block(it.image)
+suspend fun List<Frame>.withCanvas(block: Canvas.(Image) -> Unit) =
+    pmap {
+        apply {
+            image = image.toSurface().withCanvas {
+                block(image)
+            }
         }
     }
 
 suspend fun MutableList<Frame>.replenish(count: Int, block: Frame.() -> Unit = {}) = run {
     pmap { block() }
     var i = 0
-    (0..count).map {
+    if (size >= count) this
+    else (0..count).map {
         i++
         if (i >= size) i = 0
         this[i].clone()

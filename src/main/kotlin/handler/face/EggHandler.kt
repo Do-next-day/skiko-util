@@ -30,7 +30,7 @@ object EggHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.common(args).replenish(count, Frame::limitAsGif).result {
+    ) = frames.common(args).replenish(count).result {
         common(args).pmapIndexed { index ->
             handle {
                 Surface.makeRasterN32Premul(w, h).withCanvas {

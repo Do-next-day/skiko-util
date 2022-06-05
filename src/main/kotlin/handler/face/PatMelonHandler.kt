@@ -28,7 +28,7 @@ object PatMelonHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.handle { subCenter() }.common(args).replenish(count, Frame::limitAsGif).result {
+    ) = frames.handle { subCenter() }.common(args).replenish(count).result {
         common(args).pmapIndexed { index ->
             duration = 100
             handle {

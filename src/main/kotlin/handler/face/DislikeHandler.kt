@@ -28,7 +28,7 @@ object DislikeHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.handle { round() }.common(args).replenish(count, Frame::limitAsGif).result {
+    ) = frames.handle { round() }.common(args).replenish(count).result {
         common(args).pmapIndexed { index ->
             handle {
                 Surface.makeRasterN32Premul(w, h).withCanvas {

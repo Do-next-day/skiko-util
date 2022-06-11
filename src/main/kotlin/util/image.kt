@@ -8,10 +8,8 @@ import top.e404.skiko.draw.toImage
 import kotlin.math.*
 
 fun Surface.bytes(format: EncodedImageFormat = EncodedImageFormat.PNG) = makeImageSnapshot().bytes(format)
-fun Image.bytes(format: EncodedImageFormat = EncodedImageFormat.PNG) = encodeToData(format).run {
-    requireNotNull(this) { "Image.bytes() return null" }
-    bytes
-}
+fun Image.bytes(format: EncodedImageFormat = EncodedImageFormat.PNG) =
+    requireNotNull(encodeToData(format)) { "Image.bytes() return null" }.bytes
 
 /**
  * 裁剪
@@ -216,13 +214,7 @@ fun Image.rotateKeepSize(angel: Float) =
         )
     }
 
-fun Surface.fill(color: Int) = apply {
-    canvas.apply {
-        drawRect(Rect.makeWH(width.toFloat(), height.toFloat()), Paint().apply {
-            this.color = color
-        })
-    }
-}
+fun Surface.fill(color: Int) = apply { canvas.clear(color) }
 
 fun Surface.withCanvas(block: Canvas.() -> Unit): Image {
     canvas.block()

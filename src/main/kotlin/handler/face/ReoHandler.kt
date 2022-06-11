@@ -18,7 +18,8 @@ import top.e404.skiko.util.readJarFile
 object ReoHandler : FramesHandler {
     private const val w = 480
     private const val h = 270
-    private val range = 0..36
+    private const val count = 36
+    private val range = 0..count
     private val bgList by lazy { range.map { getJarImage("statistic/reo/$it.png") } }
     private val ddList by lazy { Yaml.default.decodeFromString<List<List<DrawData>>>(readJarFile("statistic/reo/reo.yml")) }
 
@@ -28,22 +29,13 @@ object ReoHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ): HandleResult {
-        var i = 0
-        frames.handle { round(27) }
-        val fs = range.map {
-            i++
-            if (i >= frames.size) i = 0
-            frames[i].clone()
-        }.toMutableList()
-        return fs.result {
-            common(args).pmapIndexed { index ->
-                duration = 80
-                handle {
-                    Surface.makeRasterN32Premul(w, h).withCanvas {
-                        drawImage(bgList[index], 0F, 0F)
-                        ddList[index].forEach { it.draw(this, image) }
-                    }
+    ) = frames.handle { round(27) }.common(args).replenish(count).result {
+        common(args).pmapIndexed { index ->
+            duration = 80
+            handle {
+                Surface.makeRasterN32Premul(w, h).withCanvas {
+                    drawImage(bgList[index], 0F, 0F)
+                    ddList[index].forEach { it.draw(this, image) }
                 }
             }
         }

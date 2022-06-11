@@ -1,11 +1,8 @@
 package top.e404.skiko.handler.face
 
 import top.e404.skiko.apt.annotation.ImageHandler
-import top.e404.skiko.frame.Frame
-import top.e404.skiko.frame.FramesHandler
-import top.e404.skiko.frame.HandleResult
+import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result
-import top.e404.skiko.frame.common
 import top.e404.skiko.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -26,13 +23,7 @@ object EnchantHandler : FramesHandler {
     ): HandleResult {
         val count = if (frames.size != 1) frames.size
         else args["c"]?.toIntOrNull() ?: 40
-        var i = 0
-        val fs = (1..count).map {
-            i++
-            if (i >= frames.size) i = 0
-            frames[i].clone()
-        }.toMutableList()
-        return fs.result {
+        return frames.common(args).replenish(count, Frame::limitAsGif).result {
             val image = frames.first().image
             val size = min(max(image.width, image.height), 400) * 3
             val resize = bg.resize(size, size)

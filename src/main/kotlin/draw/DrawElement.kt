@@ -136,9 +136,7 @@ fun String.splitByWidth(maxWidth: Int, font: Font, left: Int): Pair<ArrayList<Te
     var width = 0
     val lines = ArrayList(split("\n") // 按换行拆分
         .map { it.s(maxWidth, font) } // 按最大宽度拆分
-        .also {
-            width = it.map { pair -> pair.second }.sortedDescending()[0]
-        }
+        .also { width = it.map { pair -> pair.second }.sortedDescending()[0] }
         .flatMap { it.first })
     return Pair(lines, width)
 }

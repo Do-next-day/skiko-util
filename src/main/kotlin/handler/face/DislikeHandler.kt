@@ -17,7 +17,8 @@ import top.e404.skiko.util.withCanvas
 object DislikeHandler : FramesHandler {
     private const val w = 307
     private const val h = 414
-    private val range = 0..30
+    private const val count = 30
+    private val range = 0..count
     private val bgList = range.map { getJarImage("statistic/dislike/$it.png") }
     private val ddList = DrawData.loadFromJar("statistic/dislike/dislike.yml")
 
@@ -27,21 +28,12 @@ object DislikeHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ): HandleResult {
-        var i = 0
-        frames.handle { round() }
-        val fs = range.map {
-            i++
-            if (i >= frames.size) i = 0
-            frames[i].clone()
-        }.toMutableList()
-        return fs.result {
-            common(args).pmapIndexed { index ->
-                handle {
-                    Surface.makeRasterN32Premul(w, h).withCanvas {
-                        drawImage(bgList[index], 0F, 0F)
-                        ddList[index].draw(this, image)
-                    }
+    ) = frames.handle { round() }.common(args).replenish(count).result {
+        common(args).pmapIndexed { index ->
+            handle {
+                Surface.makeRasterN32Premul(w, h).withCanvas {
+                    drawImage(bgList[index], 0F, 0F)
+                    ddList[index].draw(this, image)
                 }
             }
         }

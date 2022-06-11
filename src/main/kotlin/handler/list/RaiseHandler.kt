@@ -3,8 +3,8 @@ package top.e404.skiko.handler.list
 import org.jetbrains.skia.IRect
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
-import top.e404.skiko.frame.HandleResult.Companion.fail
 import top.e404.skiko.frame.HandleResult.Companion.result
+import top.e404.skiko.util.doubleOrPercentage
 import top.e404.skiko.util.toBitmap
 import top.e404.skiko.util.toImage
 import kotlin.math.min
@@ -18,17 +18,7 @@ object RaiseHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        val radius = try {
-            args["text"]?.let {
-                when {
-                    it.trim() == "" -> null
-                    it.endsWith("%") -> -it.removeSuffix("%").toDouble()
-                    else -> it.toDouble()
-                }
-            }
-        } catch (t: Throwable) {
-            return fail("请输入有效数字")
-        }
+        val radius = args["text"].doubleOrPercentage(null)
         return frames.result {
             common(args).handle {
                 val bitmap = toBitmap()

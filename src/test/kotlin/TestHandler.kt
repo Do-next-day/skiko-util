@@ -373,4 +373,34 @@ class TestHandler {
     fun testWarpHandler() {
         testHandler(WarpHandler, emptyArgs)
     }
+
+    @Test
+    fun testLattice1Handler() {
+        testHandler(PaneHandler, emptyArgs)
+    }
+
+    @Test
+    fun testFondleHandler() {
+        testHandler(FondleHandler, emptyArgs)
+    }
+
+    @Test
+    fun testYgoHandler() {
+        testHandler(YgoHandler, mutableMapOf(
+            "c" to "魔法",
+            "t" to "永续",
+            "name" to "+1",
+            "desc" to "這個卡名的效果1回合只能使用1次",
+            "id" to "1433223",
+        ))
+    }
+
+    @Test
+    fun testBwHandler() {
+        testHandler(BwHandler, mutableMapOf(
+            "g" to "",
+            //"l1" to "什么都没有",
+            //"l2" to "何もありません何もありません何もありません何もありません何もありません何もありません何もありません",
+        ))
+    }
 }

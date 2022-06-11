@@ -19,7 +19,8 @@ import top.e404.skiko.util.withCanvas
 object BatHandler : FramesHandler {
     private const val width = 500
     private const val height = 377
-    private val range = 0..7
+    private const val count = 7
+    private val range = 0..count
     private val bgList = range.map { getJarImage("statistic/bat/$it.png") }
     private val ddList = DrawData.loadFromJar("statistic/bat/bat.yml")
     private val bgRect = Rect.makeWH(width.toFloat(), height.toFloat())
@@ -31,24 +32,15 @@ object BatHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ): HandleResult {
-        var i = 0
-        frames.handle { round() }
-        val fs = range.map {
-            i++
-            if (i >= frames.size) i = 0
-            frames[i].clone()
-        }.toMutableList()
-        return fs.result {
-            handleIndexed { index ->
-                Surface.makeRasterN32Premul(
-                    this@BatHandler.width,
-                    this@BatHandler.height
-                ).withCanvas {
-                    drawRect(bgRect, paint)
-                    drawImageRect(bgList[index], bgRect)
-                    ddList[index].draw(this, this@handleIndexed)
-                }
+    ) = frames.handle { round() }.common(args).replenish(count, Frame::limitAsGif).result {
+        handleIndexed { index ->
+            Surface.makeRasterN32Premul(
+                this@BatHandler.width,
+                this@BatHandler.height
+            ).withCanvas {
+                drawRect(bgRect, paint)
+                drawImageRect(bgList[index], bgRect)
+                ddList[index].draw(this, this@handleIndexed)
             }
         }
     }

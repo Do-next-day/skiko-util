@@ -17,21 +17,18 @@ object RgbHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ): HandleResult {
-        frames.replenish(10, Frame::limitAsGif)
-        val v = 1F / frames.size
-        return frames.result {
-            common(args).pmapIndexed { index ->
-                val vv = v * index
-                handle {
-                    handlePixel { pixel ->
-                        val (a, h, s, b) = pixel.ahsb()
-                        if (a == 0) 0
-                        else {
-                            var e = h + vv
-                            if (e > 1) e--
-                            ahsb(a, e, s, b)
-                        }
+    ) = frames.common(args).replenish(10, Frame::limitAsGif).result {
+        val v = 1F / size
+        pmapIndexed { index ->
+            val vv = v * index
+            handle {
+                handlePixel { pixel ->
+                    val (a, h, s, b) = pixel.ahsb()
+                    if (a == 0) 0
+                    else {
+                        var e = h + vv
+                        if (e > 1) e--
+                        ahsb(a, e, s, b)
                     }
                 }
             }

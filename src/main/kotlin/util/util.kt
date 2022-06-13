@@ -81,13 +81,14 @@ fun autoSize(
 
 fun String.asColor(): Int? {
     if (startsWith("#")) {
-        return when (length) {
+        val s = removePrefix("#")
+        return when (s.length) {
             3 -> buildString {
-                for (c in this) repeat(2) { append(c) }
+                for (c in s) repeat(2) { append(c) }
             }.toIntOrNull(16)?.let {
                 (it + 0xff000000).toInt()
             }
-            6 -> toIntOrNull(16)?.let {
+            6 -> s.toIntOrNull(16)?.let {
                 (it + 0xff000000).toInt()
             }
             else -> null

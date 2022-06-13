@@ -1,6 +1,6 @@
 package top.e404.skiko.handler.list
 
-import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.skia.Image
@@ -16,7 +16,6 @@ import top.e404.skiko.frame.common
 import top.e404.skiko.frame.handle
 import top.e404.skiko.util.*
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.Executors
 import kotlin.math.max
 import kotlin.math.roundToInt
 
@@ -41,30 +40,26 @@ object CharImageHandler : FramesHandler {
     private fun Image.toChars(): List<String> {
         val map = ConcurrentHashMap<Int, String>()
         return limit().toBitmap().run {
-            val count = if (height > 200) 200 else height
-            //Dispatchers.Default.limitedParallelism(count).
-            Executors.newScheduledThreadPool(count).asCoroutineDispatcher().use { dispatcher ->
-                runBlocking(dispatcher) {
-                    for (y in 0 until height) launch {
-                        val sb = StringBuilder()
-                        for (x in 0 until width) {
-                            val pixel = getColor(x, y)
-                            val a = pixel.alpha()
-                            if (a == 0) {
-                                sb.append("　")
-                                continue
-                            }
-                            val r = pixel.red() * 0.299F
-                            val g = pixel.green() * 0.578f
-                            val b = pixel.blue() * 0.114f
-                            val index = ((r + g + b) * (base.length + 1) / 255).roundToInt()
-                            sb.append(if (index >= base.length) "　" else base[index].toString())
+            runBlocking(Dispatchers.Default) {
+                for (y in 0 until height) launch {
+                    val sb = StringBuilder()
+                    for (x in 0 until width) {
+                        val pixel = getColor(x, y)
+                        val a = pixel.alpha()
+                        if (a == 0) {
+                            sb.append("　")
+                            continue
                         }
-                        map[y] = sb.toString()
+                        val r = pixel.red() * 0.299F
+                        val g = pixel.green() * 0.578f
+                        val b = pixel.blue() * 0.114f
+                        val index = ((r + g + b) * (base.length + 1) / 255).roundToInt()
+                        sb.append(if (index >= base.length) "　" else base[index].toString())
                     }
+                    map[y] = sb.toString()
                 }
-                map.entries.sortedBy { it.key }.map { it.value }
             }
+            map.entries.sortedBy { it.key }.map { it.value }
         }
     }
 

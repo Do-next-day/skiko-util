@@ -1,16 +1,10 @@
 plugins {
-    kotlin("jvm") version "1.6.10"
-    kotlin("plugin.serialization") version "1.6.10"
-    id("org.jetbrains.kotlin.kapt") version "1.6.20"
+    kotlin("jvm") version Versions.kotlin
+    kotlin("kapt") version Versions.kotlin
+    kotlin("plugin.serialization") version Versions.kotlin
     `maven-publish`
     `java-library`
 }
-
-group = "top.e404"
-version = "1.0.0"
-
-val skikoVer = "0.7.16"
-fun skiko(module: String) = "org.jetbrains.skiko:skiko-awt-runtime-$module:$skikoVer"
 
 allprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
@@ -22,8 +16,7 @@ allprojects {
 
     dependencies {
         // kotlin
-        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.20")
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.1-native-mt")
+        implementation(kotlinx("coroutines-core-jvm", "1.6.2"))
     }
 }
 
@@ -34,14 +27,14 @@ dependencies {
     // skiko
     api(skiko("windows-x64"))
     api(skiko("linux-x64"))
-    // reflect
-    implementation(kotlin("reflect", "1.6.20"))
     // serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.3.2")
+    implementation(kotlinx("serialization-core-jvm", "1.3.3"))
     // kaml
-    implementation("com.charleskorn.kaml:kaml:0.43.0")
+    implementation("com.charleskorn.kaml:kaml:0.45.0")
+    // reflect
+    implementation(kotlin("reflect", Versions.kotlin))
     // test
-    testImplementation(kotlin("test", "1.6.20-M1"))
+    testImplementation(kotlin("test", Versions.kotlin))
 }
 
 java {
@@ -54,9 +47,22 @@ afterEvaluate {
         from(components["kotlin"])
         artifact(tasks.getByName("sourcesJar"))
         artifact(tasks.getByName("javadocJar"))
-        groupId = "top.e404"
         artifactId = "skiko-util"
-        version = "1.0.0"
+        groupId = project.group.toString()
+        version = project.version.toString()
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.internal.KaptWithoutKotlincTask>()
+    .configureEach { kaptProcessJvmArgs.add("-Xmx1G") }
+
+tasks.jar {
+    doLast {
+        println("==== copy ====")
+        for (file in File("build/libs").listFiles() ?: emptyArray()) {
+            println("正在复制`${file.path}`")
+            file.copyTo(File("jar/${file.name}"), true)
+        }
     }
 }
 

@@ -10,6 +10,11 @@ import top.e404.skiko.handler.list.*
 import java.io.File
 
 class TestHandler {
+
+    init {
+        FontType.fontDir = "font"
+    }
+
     private val inPng = File("in.png").readBytes()
     private val inGif = File("in.gif").readBytes()
     private val out = File("out")

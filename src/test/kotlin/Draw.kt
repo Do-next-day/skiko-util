@@ -6,6 +6,11 @@ import top.e404.skiko.draw.toImage
 import java.io.File
 
 class Draw {
+
+    init {
+        FontType.fontDir = "font"
+    }
+
     private val outPng = File("out/out.png")
 
     @Test

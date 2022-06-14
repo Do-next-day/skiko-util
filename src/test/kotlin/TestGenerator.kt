@@ -8,6 +8,11 @@ import top.e404.skiko.generator.list.*
 import java.io.File
 
 class TestGenerator {
+
+    init {
+        FontType.fontDir = "font"
+    }
+
     private val outPng = File("out/out.png")
     private val outGif = File("out/out.gif")
     private fun testGenerator(generator: ImageGenerator, args: MutableMap<String, String>) {

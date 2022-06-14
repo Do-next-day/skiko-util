@@ -24,7 +24,7 @@ class FramesHandlerProcessor : AbstractProcessor() {
     ): Boolean {
         val list = roundEnv.filterHasAnnotation(ImageHandler::class.java)
         if (list.isEmpty()) return true
-        File("src/main/resources/handlers.txt").writeText(list.joinToString("\n"))
+        File("build/resources/main/handlers.txt").writeText(list.joinToString("\n"))
         return true
     }
 }

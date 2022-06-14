@@ -32,7 +32,7 @@ enum class FontType(name: String) {
     ZHONG_SONG("STZHONGS.TTF"),
     LI_HEI("力黑体.otf");
 
-    private val bytes by lazy { File("data/font/$name").readBytes() }
+    private val bytes by lazy { File("${fontDir}/$name").readBytes() }
     val typeface by lazy { FontMgr.default.makeFromData(Data.makeFromBytes(bytes))!! }
     val awtFont by lazy {
         bytes.inputStream().use { AwtFont.createFont(AwtFont.TRUETYPE_FONT, it)!! }
@@ -43,6 +43,7 @@ enum class FontType(name: String) {
     }
 
     companion object {
+        var fontDir = "data/font"
         fun Font.fullHeight() = metrics.run { descent - ascent }
     }
 }

@@ -353,10 +353,12 @@ class TestHandler {
 
     @Test
     fun testLowPolyHandler() {
-        testHandler(LowPolyHandler, mutableMapOf(
-            "acc" to "100",
-            "pc" to "10"
-        ))
+        testHandler(
+            LowPolyHandler, mutableMapOf(
+                "acc" to "100",
+                "pc" to "10"
+            )
+        )
     }
 
     @Test
@@ -391,21 +393,36 @@ class TestHandler {
 
     @Test
     fun testYgoHandler() {
-        testHandler(YgoHandler, mutableMapOf(
-            "c" to "魔法",
-            "t" to "永续",
-            "name" to "+1",
-            "desc" to "這個卡名的效果1回合只能使用1次",
-            "id" to "1433223",
-        ))
+        testHandler(
+            YgoHandler, mutableMapOf(
+                "c" to "魔法",
+                "t" to "永续",
+                "name" to "+1",
+                "desc" to "這個卡名的效果1回合只能使用1次",
+                "id" to "1433223",
+            )
+        )
     }
 
     @Test
     fun testBwHandler() {
-        testHandler(BwHandler, mutableMapOf(
-            "g" to "",
-            //"l1" to "什么都没有",
-            //"l2" to "何もありません何もありません何もありません何もありません何もありません何もありません何もありません",
-        ))
+        testHandler(
+            BwHandler, mutableMapOf(
+                "g" to "",
+                //"l1" to "什么都没有",
+                //"l2" to "何もありません何もありません何もありません何もありません何もありません何もありません何もありません",
+            )
+        )
+    }
+
+    @Test
+    fun testRgbStripHandler() {
+        testHandler(
+            RgbStripHandler,
+            mutableMapOf(
+                //"h" to "",
+                "r" to ""
+            )
+        )
     }
 }

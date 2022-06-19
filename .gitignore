@@ -3,6 +3,7 @@
 /build
 /gradle
 /run
+/jar
 .gitignore
 gradlew
 gradlew.bat
@@ -21,4 +22,3 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
-src/main/resources/handlers.txt

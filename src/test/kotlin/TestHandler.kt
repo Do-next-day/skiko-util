@@ -425,4 +425,25 @@ class TestHandler {
             )
         )
     }
+
+    @Test
+    fun testNotRespondingHandler() {
+        testHandler(
+            NotRespondingHandler,
+            mutableMapOf(
+                //"h" to "",
+                "text" to "Minecraft* 1.18.2 - 多人游戏（第三方服务器）（未响应）",
+                "bg" to "#ffffff",
+                "font" to "#000000",
+            )
+        )
+    }
+
+    @Test
+    fun testTrashHandler() {
+        testHandler(
+            TrashHandler,
+            emptyArgs
+        )
+    }
 }

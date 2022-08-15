@@ -227,7 +227,7 @@ private val defaultFont = FontType.LW.getSkiaFont(20F)
 fun String.toImage(
     maxWidth: Int = 500,
     udPadding: Int = 3,
-    color: Int = Colors.PINK.argb,
+    color: Int = Colors.WHITE.argb,
     bgColor: Int = Colors.BG.argb,
     font: Font = defaultFont
 ) = listOf(

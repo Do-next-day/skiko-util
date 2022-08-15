@@ -26,7 +26,7 @@ object InjectionHandler : FramesHandler {
     }
 
     override val name = "打针"
-    override val regex = Regex("(?i)打针|dz")
+    override val regex = Regex("打针|(?i)dz")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

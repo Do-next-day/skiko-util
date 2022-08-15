@@ -22,7 +22,7 @@ object PatMelonHandler : FramesHandler {
     private val bgList = range.map { getJarImage("statistic/gua/$it.png") }
     private val ddList = DrawData.loadFromJar("statistic/gua/gua.yml")
 
-    override val name = "瓜"
+    override val name = "Gua"
     override val regex = Regex("(?i)瓜|gua")
 
     override suspend fun handleFrames(

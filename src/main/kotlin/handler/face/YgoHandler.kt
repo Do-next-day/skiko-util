@@ -20,7 +20,7 @@ import top.e404.skiko.util.withCanvas
  */
 @ImageHandler
 object YgoHandler : FramesHandler {
-    override val name = "ygo"
+    override val name = "Ygo"
     override val regex = Regex("(?i)ygo")
 
     // 卡片背景

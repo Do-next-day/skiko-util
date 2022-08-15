@@ -37,8 +37,8 @@ object NotRespondingHandler : FramesHandler {
         FontType.YAHEI.getSkiaFont(14F)
     }
 
-    override val name = "未响应"
-    override val regex = Regex("未响应|(?i)notResponding")
+    override val name = "NotResponding"
+    override val regex = Regex("未响应|(?i)NotResponding|wxy")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

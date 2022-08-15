@@ -23,7 +23,7 @@ object ReoHandler : FramesHandler {
     private val bgList by lazy { range.map { getJarImage("statistic/reo/$it.png") } }
     private val ddList by lazy { Yaml.default.decodeFromString<List<List<DrawData>>>(readJarFile("statistic/reo/reo.yml")) }
 
-    override val name = "reo"
+    override val name = "Reo"
     override val regex = Regex("(?i)reo")
 
     override suspend fun handleFrames(

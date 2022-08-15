@@ -24,8 +24,8 @@ object ShinyHandler : FramesHandler {
         color = Colors.WHITE.argb
     }
 
-    override val name = "闪耀"
-    override val regex = Regex("(?i)闪耀|shiny")
+    override val name = "shiny"
+    override val regex = Regex("(?i)shiny")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

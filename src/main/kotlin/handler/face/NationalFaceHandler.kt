@@ -13,7 +13,7 @@ object NationalFaceHandler : FramesHandler {
     private val coverList = range.map { getJarImage("statistic/national/$it.png") }
 
     override val name = "国庆头像"
-    override val regex = Regex("(?i)国庆头像|gqtx")
+    override val regex = Regex("(?i)(国庆|gq)(头像|face|tx)")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

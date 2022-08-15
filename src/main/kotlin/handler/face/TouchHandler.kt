@@ -21,8 +21,8 @@ object TouchHandler : FramesHandler {
     private val bgRect = Rect.makeWH(w.toFloat(), h.toFloat())
     private val paint = Paint().apply { color = Colors.WHITE.argb }
 
-    override val name = "摸"
-    override val regex = Regex("(?i)摸|mo|touch")
+    override val name = "Touch"
+    override val regex = Regex("摸|(?i)mo|touch")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

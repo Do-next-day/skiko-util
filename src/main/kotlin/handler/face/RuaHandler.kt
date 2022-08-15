@@ -19,7 +19,7 @@ object RuaHandler : FramesHandler {
     private val bgList = (0..4).map { getJarImage("statistic/rua/$it.png") }
     private val ddList = RuaInfo.fromJar()
 
-    override val name = "Rua"
+    override val name = "rua"
     override val regex = Regex("(?i)rua")
 
     override suspend fun handleFrames(

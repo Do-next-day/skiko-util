@@ -20,8 +20,8 @@ object WriteHandler : FramesHandler {
     private const val unit = 10
     private val tf = FontType.MI.typeface
 
-    override val name = "write"
-    override val regex = Regex("(?i)写|write")
+    override val name = "drawstring"
+    override val regex = Regex("(?i)写|(d(raw)?s(tring)?|write)")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

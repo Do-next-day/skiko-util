@@ -24,8 +24,8 @@ object Hold2Handler : FramesHandler {
         color = Colors.WHITE.argb
     }
 
-    override val name = "抱2"
-    override val regex = Regex("(?i)抱2|bao2")
+    override val name = "Hold2"
+    override val regex = Regex("(?i)Hold2")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

@@ -15,7 +15,7 @@ object EnchantHandler : FramesHandler {
     private val bg by lazy { getJarImage("statistic/enchant.png") }
 
     override val name = "enchant"
-    override val regex = Regex("附魔|(?i)enchant(ment)?")
+    override val regex = Regex("附魔|(?i)enchant")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

@@ -20,7 +20,7 @@ object TrashHandler : FramesHandler {
     private val bg by lazy { getJarImage("statistic/trash.png") }
     private val rect = Rect.makeXYWH(41F, 30F, 68F, 68F)
 
-    override val name = "trash"
+    override val name = "Trash"
     override val regex = Regex("(?i)trash")
 
     override suspend fun handleFrames(

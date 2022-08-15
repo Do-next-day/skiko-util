@@ -24,7 +24,7 @@ object BeatHandler : FramesHandler {
     private val rect = Rect.makeXYWH(5F, 60F, 100F, 100F)
     private val paint = Paint().apply { color = Colors.WHITE.argb }
 
-    override val name = "铁咩"
+    override val name = "tm"
     override val regex = Regex("(?i)铁咩|tm")
 
     override suspend fun handleFrames(

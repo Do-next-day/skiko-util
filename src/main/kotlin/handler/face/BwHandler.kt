@@ -1,4 +1,4 @@
-package top.e404.skiko.handler.list
+package top.e404.skiko.handler.face
 
 import org.jetbrains.skia.Font
 import org.jetbrains.skia.Paint
@@ -17,7 +17,7 @@ import top.e404.skiko.util.withCanvas
 
 @ImageHandler
 object BwHandler : FramesHandler {
-    override val name = "bw"
+    override val name = "Bw"
     override val regex = Regex("(?i)bw")
 
     private val tf by lazy { FontType.MI_BOLD.typeface }

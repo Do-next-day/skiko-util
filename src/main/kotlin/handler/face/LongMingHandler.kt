@@ -26,7 +26,7 @@ object LongMingHandler : FramesHandler {
     }
 
     override val name = "龙鸣"
-    override val regex = Regex("(?i)龙鸣|lm")
+    override val regex = Regex("龙鸣|(?i)lm")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

@@ -13,8 +13,8 @@ import top.e404.skiko.util.*
  */
 @ImageHandler
 object LatticeHandler : FramesHandler {
-    override val name = "方格化"
-    override val regex = Regex("(?i)方格化?|fgh?")
+    override val name = "Lattice"
+    override val regex = Regex("(?i)lattice|方格化?|fgh?")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

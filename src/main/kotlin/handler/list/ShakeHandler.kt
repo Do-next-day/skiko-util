@@ -10,8 +10,8 @@ import top.e404.skiko.util.withCanvas
 
 @ImageHandler
 object ShakeHandler : FramesHandler {
-    override val name = "抖动"
-    override val regex = Regex("(?i)抖动|shake")
+    override val name = "Shake"
+    override val regex = Regex("(?i)shake")
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,

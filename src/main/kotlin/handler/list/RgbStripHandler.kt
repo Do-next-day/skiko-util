@@ -19,8 +19,8 @@ import top.e404.skiko.util.toImage
  */
 @ImageHandler
 object RgbStripHandler : FramesHandler {
-    override val name = "Rgb"
-    override val regex = Regex("(?i)rgb")
+    override val name = "RgbStrip"
+    override val regex = Regex("(?i)rgbstrip")
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,

@@ -13,8 +13,8 @@ import top.e404.skiko.handlePixel
  */
 @ImageHandler
 object OldHandler : FramesHandler {
-    override val name = "老化"
-    override val regex = Regex("(?i)老化|旧照片|old")
+    override val name = "旧照片滤镜"
+    override val regex = Regex("(?i)old|旧照片(滤镜)?")
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,

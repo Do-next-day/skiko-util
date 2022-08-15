@@ -16,7 +16,7 @@ import kotlin.math.min
 @ImageHandler
 object Percent0Handler : FramesHandler {
     override val name = "Percent0"
-    override val regex = Regex("(?i)Percent0|0%")
+    override val regex = Regex("0%|%0")
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,

@@ -14,7 +14,7 @@ import top.e404.skiko.util.sub
 object ClipHandler : FramesHandler {
 
     override val name = "裁剪"
-    override val regex = Regex("(?i)裁剪|cj|sub")
+    override val regex = Regex("(?i)(裁剪|sub|cj)(图片|img)?")
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,

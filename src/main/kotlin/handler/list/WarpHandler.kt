@@ -13,7 +13,7 @@ import kotlin.math.*
 @ImageHandler
 object WarpHandler : FramesHandler {
     override val name = "扭曲"
-    override val regex = Regex("(?i)扭曲|warp")
+    override val regex = Regex("扭曲|(?i)warp")
     private const val count = 10
 
     override suspend fun handleFrames(

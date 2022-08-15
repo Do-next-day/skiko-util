@@ -20,7 +20,7 @@ import top.e404.skiko.util.toImage
 @ImageHandler
 object EmbossHandler : FramesHandler {
     override val name = "浮雕"
-    override val regex = Regex("(?i)浮雕|fd")
+    override val regex = Regex("(?i)浮雕|fd|emboss")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

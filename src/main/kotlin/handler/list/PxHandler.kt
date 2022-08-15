@@ -10,8 +10,8 @@ import top.e404.skiko.util.resize
 
 @ImageHandler
 object PxHandler : FramesHandler {
-    override val name = "像素化"
-    override val regex = Regex("(?i)像素化|px|pixel")
+    override val name = "像素画"
+    override val regex = Regex("(?i)px|pixel")
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,

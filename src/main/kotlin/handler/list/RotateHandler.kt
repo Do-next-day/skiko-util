@@ -11,7 +11,7 @@ import top.e404.skiko.util.rotate
 @ImageHandler
 object RotateHandler : FramesHandler {
     override val name = "旋转"
-    override val regex = Regex("(?i)旋转|xz|rotate")
+    override val regex = Regex("旋转|(?i)xz|rotate")
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,

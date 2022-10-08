@@ -25,7 +25,7 @@ object DoubtHandler : FramesHandler {
     }
 
     override val name = "疑惑"
-    override val regex = Regex("(?i)疑惑|yh")
+    override val regex = Regex("(?i)疑惑|yh|doubt")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

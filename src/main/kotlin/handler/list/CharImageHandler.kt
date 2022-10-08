@@ -84,6 +84,7 @@ object CharImageHandler : FramesHandler {
         common(args).handle {
             if (args.containsKey("c")) { // 保留颜色
                 val text = args["text"]!!
+                val sc = args["sc"]?.toFloatOrNull() ?: 1.5F
                 val list = toColors()
                 var i = 0
                 val w = 12 * list[0].size
@@ -99,7 +100,11 @@ object CharImageHandler : FramesHandler {
                             line = t(),
                             x = x * 12F,
                             y = (y + 1F) * 12,
-                            paint = paint.apply { color = c }
+                            paint = paint.apply {
+                                color = c.ahsb().editSaturation {
+                                    (it * sc).coerceIn(0F, 1F)
+                                }
+                            }
                         )
                     }
                 }

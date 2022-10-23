@@ -221,7 +221,7 @@ fun Surface.withCanvas(block: Canvas.() -> Unit): Image {
     return makeImageSnapshot()
 }
 
-private val defaultFont = FontType.LW.getSkiaFont(20F)
+private val defaultFont by lazy { FontType.LW.getSkiaFont(20F) }
 
 @Suppress("UNUSED")
 fun String.toImage(

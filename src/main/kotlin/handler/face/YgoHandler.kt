@@ -197,7 +197,7 @@ object YgoHandler : FramesHandler {
                 val attrImage = monsterAttrAllow[args["attr"]]?.invoke() ?: attrLight
                 drawImageRect(attrImage, rectAttr)
                 // lv
-                repeat(args["lv"]?.toIntOrNull() ?: 4) {
+                repeat((args["lv"]?.toIntOrNull() ?: 4).coerceIn(0, 12)) {
                     drawImageRect(level, Rect.makeXYWH(740F - (it + 1) * 49 - it * 7, 146F, 49F, 49F))
                 }
                 // line

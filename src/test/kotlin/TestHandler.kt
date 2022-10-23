@@ -1,5 +1,7 @@
 package top.e404.skiko
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import top.e404.skiko.frame.FramesHandler
@@ -15,37 +17,28 @@ class TestHandler {
         FontType.fontDir = "font"
     }
 
-    private val inPng = File("in.png").readBytes()
-    private val inGif = File("in.gif").readBytes()
-    private val out = File("out")
+    private val inDir = File("in")
+    private val outDir = File("out")
     private val emptyArgs = mutableMapOf<String, String>()
 
     private fun testHandler(handler: FramesHandler, args: MutableMap<String, String>) {
         runBlocking {
-            val fr1 = inPng.decodeToFrames()
-            var result = handler.handleFrames(fr1, args)
-            if (!result.success) {
-                println("1 - fail, msg: ${result.failMsg}")
-                result.throwable?.printStackTrace()
-            } else {
-                result.run {
-                    out.resolve(if (gif) "1.gif" else "1.png")
-                        .writeBytes(getOrThrow().encodeToBytes())
+            inDir.listFiles()?.map {
+                async {
+                    val fr1 = it.readBytes().decodeToFrames()
+                    val result = handler.handleFrames(fr1, args)
+                    if (!result.success) {
+                        println("${it.name} - fail, msg: ${result.failMsg}")
+                        result.throwable?.printStackTrace()
+                    } else {
+                        result.run {
+                            outDir.resolve(it.name)
+                                .writeBytes(getOrThrow().encodeToBytes())
+                        }
+                        println("${it.name} - done")
+                    }
                 }
-                println("1 - done")
-            }
-            val fr2 = inGif.decodeToFrames()
-            result = handler.handleFrames(fr2, args)
-            if (!result.success) {
-                println("2 - fail, msg: ${result.failMsg}")
-                result.throwable?.printStackTrace()
-            } else {
-                result.run {
-                    out.resolve(if (gif) "2.gif" else "2.png")
-                        .writeBytes(getOrThrow().encodeToBytes())
-                }
-                println("2 - done")
-            }
+            }?.awaitAll()
         }
     }
 
@@ -356,7 +349,7 @@ class TestHandler {
         testHandler(
             LowPolyHandler, mutableMapOf(
                 "acc" to "100",
-                "pc" to "10"
+                "pc" to "1000"
             )
         )
     }
@@ -443,6 +436,38 @@ class TestHandler {
     fun testTrashHandler() {
         testHandler(
             TrashHandler,
+            emptyArgs
+        )
+    }
+
+    @Test
+    fun testAddictionHandler() {
+        testHandler(
+            AddictionHandler,
+            emptyArgs
+        )
+    }
+
+    @Test
+    fun testCyberpunkHandler() {
+        testHandler(
+            CyberpunkHandler,
+            emptyArgs
+        )
+    }
+
+    @Test
+    fun testEmbossColor() {
+        testHandler(
+            EmbossColorHandler,
+            emptyArgs
+        )
+    }
+
+    @Test
+    fun testColorfulEdgeHandler() {
+        testHandler(
+            ColorfulEdgeHandler,
             emptyArgs
         )
     }

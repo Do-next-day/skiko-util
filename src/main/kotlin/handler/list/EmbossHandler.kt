@@ -44,9 +44,9 @@ object EmbossHandler : FramesHandler {
         val (nr, ng, nb) = getColor(x + 1, y + 1).rgb()
         return argb(
             a,
-            (nr - pr + 128).limit(),
-            (ng - pg + 128).limit(),
-            (nb - pb + 128).limit(),
+            (pr - nr + 128).limit(),
+            (pg - ng + 128).limit(),
+            (pb - nb + 128).limit(),
         )
     }
 }

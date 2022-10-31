@@ -163,6 +163,7 @@ fun Image.rotate(angel: Float): Image {
             x = sin(r).toFloat() * height
             y = 0F
         }
+
         in 90F..180F -> {
             val ta = (a - 90).toRadian()
             w = (sin(ta) * width + cos(ta) * height).toInt()
@@ -170,6 +171,7 @@ fun Image.rotate(angel: Float): Image {
             x = w.toFloat()
             y = (sin(ta) * height).toFloat()
         }
+
         in 180F..270F -> {
             val ta = (a - 180).toRadian()
             w = (cos(ta) * width + sin(ta) * height).toInt()
@@ -177,6 +179,7 @@ fun Image.rotate(angel: Float): Image {
             x = (cos(ta) * width).toFloat()
             y = h.toFloat()
         }
+
         else -> {
             val ta = (a - 270).toRadian()
             w = (sin(ta) * width + cos(ta) * height).toInt()
@@ -204,15 +207,14 @@ fun Image.rotate(angel: Float): Image {
  * @param angel 角度
  * @return 图片
  */
-fun Image.rotateKeepSize(angel: Float) =
-    rotate(angel).let {
-        it.sub(
-            abs((it.width - width) / 2),
-            abs((it.height - height) / 2),
-            width,
-            height
-        )
-    }
+fun Image.rotateKeepSize(angel: Float) = rotate(angel).let {
+    it.sub(
+        abs((it.width - width) / 2),
+        abs((it.height - height) / 2),
+        width,
+        height
+    )
+}
 
 fun Surface.fill(color: Int) = apply { canvas.clear(color) }
 

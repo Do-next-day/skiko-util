@@ -123,10 +123,10 @@ class TestHandler {
     fun testClipHandler() {
         testHandler(
             ClipHandler, mutableMapOf(
-                "x" to "20",
-                "y" to "20",
-                "w" to "60",
-                "h" to "60",
+                "x" to "10%",
+                "y" to "10%",
+                "w" to "80%",
+                "h" to "80%",
             )
         )
     }

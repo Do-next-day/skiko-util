@@ -94,33 +94,19 @@ fun String.asColor(): Int? {
             else -> null
         }
     }
-    return when (this) {
-        "white" -> Color.WHITE.rgb
-        "白" -> Color.WHITE.rgb
-        "淡灰" -> Color.LIGHT_GRAY.rgb
-        "lightGray" -> Color.LIGHT_GRAY.rgb
-        "LIGHT_GRAY" -> Color.LIGHT_GRAY.rgb
-        "深灰" -> Color.DARK_GRAY.rgb
-        "darkGray" -> Color.DARK_GRAY.rgb
-        "DARK_GRAY" -> Color.DARK_GRAY.rgb
-        "黑" -> Color.BLACK.rgb
-        "BLACK" -> Color.BLACK.rgb
-        "红" -> Color.RED.rgb
-        "RED" -> Color.RED.rgb
-        "粉" -> Color.PINK.rgb
-        "PINK" -> Color.PINK.rgb
-        "橘黄" -> Color.ORANGE.rgb
-        "ORANGE" -> Color.ORANGE.rgb
-        "黄" -> Color.YELLOW.rgb
-        "YELLOW" -> Color.YELLOW.rgb
-        "绿" -> Color.GREEN.rgb
-        "GREEN" -> Color.GREEN.rgb
-        "品红" -> Color.MAGENTA.rgb
-        "MAGENTA" -> Color.MAGENTA.rgb
-        "青" -> Color.CYAN.rgb
-        "CYAN" -> Color.CYAN.rgb
-        "蓝" -> Color.BLUE.rgb
-        "BLUE" -> Color.BLUE.rgb
+    return when (this.lowercase()) {
+        "白", "white" -> Color.WHITE.rgb
+        "淡灰", "lightGray", "LIGHT_GRAY" -> Color.LIGHT_GRAY.rgb
+        "深灰", "darkGray", "DARK_GRAY" -> Color.DARK_GRAY.rgb
+        "黑", "black" -> Color.BLACK.rgb
+        "红", "red" -> Color.RED.rgb
+        "粉", "pink" -> Color.PINK.rgb
+        "橘黄", "orange" -> Color.ORANGE.rgb
+        "黄", "yellow" -> Color.YELLOW.rgb
+        "绿", "green" -> Color.GREEN.rgb
+        "品红", "magenta" -> Color.MAGENTA.rgb
+        "青", "cyan" -> Color.CYAN.rgb
+        "蓝", "blue" -> Color.BLUE.rgb
         else -> null
     }
 }

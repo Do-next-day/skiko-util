@@ -22,7 +22,7 @@ object HideHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = if (frames.size != 1) fail("hide不支持处理gif")
     else frames.result {
-        common(args).handle { handlePixel(handler) }
+        common(args).handle { it.handlePixel(handler) }
     }
 
     private val handler = fun(pixel: Int): Int {

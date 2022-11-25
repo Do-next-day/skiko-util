@@ -20,7 +20,7 @@ object SwapHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.result {
-        common(args).handle { handlePixel(handler) }
+        common(args).handle { it.handlePixel(handler) }
     }
 
     private val handler = fun(pixel: Int): Int {

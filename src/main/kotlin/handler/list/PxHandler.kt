@@ -23,11 +23,11 @@ object PxHandler : FramesHandler {
                     resize(
                         width / scale,
                         height / scale,
-                        false
+                        true
                     ).resize(
                         width,
                         height,
-                        false
+                        true
                     )
                 }
             }

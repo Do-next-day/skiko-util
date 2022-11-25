@@ -18,7 +18,7 @@ object LowPolyHandler : FramesHandler {
         val pointCount = args["pc"]?.toIntOrNull()?.coerceIn(1..1000) ?: 200
         return frames.result {
             common(args).handle {
-                lowPoly(accuracy, pointCount)
+                it.lowPoly(accuracy, pointCount)
             }
         }
     }

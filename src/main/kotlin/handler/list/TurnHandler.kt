@@ -20,10 +20,10 @@ object TurnHandler : FramesHandler {
     ): HandleResult {
         val count = args["text"]?.toIntOrNull() ?: 10
         return frames.common(args).replenish(abs(count), Frame::limitAsGif).result {
-                val v = (360F / size).let { if (count < 0) -it else it }
-                handleIndexed { index ->
-                    round().rotateKeepSize(index * v)
-                }
+            val v = (360F / size).let { if (count < 0) -it else it }
+            handleIndexed { index ->
+                round().rotateKeepSize(index * v)
             }
+        }
     }
 }

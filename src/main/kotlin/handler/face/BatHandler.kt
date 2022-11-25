@@ -29,11 +29,14 @@ object BatHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.handle { round() }.common(args).replenish(count, Frame::limitAsGif).result {
-        handleIndexed { index ->
-            Surface.makeRasterN32Premul(w, h).withCanvas {
-                drawImageRect(bgList[index], bgRect)
-                ddList[index].draw(this, this@handleIndexed)
+    ): HandleResult {
+        return frames.handle { it.round() }.common(args).replenish(count, Frame::limitAsGif).result {
+            handleIndexed { index ->
+                val src = Rect.makeWH(width.toFloat(), height.toFloat())
+                Surface.makeRasterN32Premul(w, h).withCanvas {
+                    drawImageRect(bgList[index % 8], bgRect)
+                    ddList[index % 8].draw(this, this@handleIndexed, src)
+                }
             }
         }
     }

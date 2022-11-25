@@ -31,7 +31,7 @@ object EnchantHandler : FramesHandler {
             common(args).pmapIndexed { index ->
                 limitAsGif(400F)
                 also {
-                    it.image = it.image.toSurface().withCanvas {
+                    it.image = it.image.newSurface().withCanvas {
                         drawImage(this@pmapIndexed.image, 0F, 0F)
                         drawImage(resize, 0f, unit * (count - 1 - index).toFloat())
                         drawImage(resize, 0f, unit * (count - 1 - index).toFloat() - size)

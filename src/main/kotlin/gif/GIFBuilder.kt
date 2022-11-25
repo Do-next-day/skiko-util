@@ -7,9 +7,11 @@ import top.e404.skiko.util.any
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-@Suppress("UNUSED")
 class GIFBuilder(val width: Int, val height: Int) {
     companion object {
+        /**
+         * GIF标识头
+         */
         internal val GIF_HEADER = "GIF89a".toByteArray(Charsets.US_ASCII)
         internal val GIF_TRAILER = ";".toByteArray(Charsets.US_ASCII)
     }
@@ -18,57 +20,57 @@ class GIFBuilder(val width: Int, val height: Int) {
 
     private fun trailer(buffer: ByteBuffer) = buffer.put(GIF_TRAILER)
 
-    var capacity: Int = 1 shl 23
+    var capacity = 1 shl 23
 
     /**
      * [ByteBuffer.capacity]
      */
-    fun capacity(total: Int): GIFBuilder = apply { capacity = total }
+    fun capacity(total: Int) = apply { capacity = total }
 
-    var loop: Int = 0
+    var loop = 0
 
     /**
      * Netscape Looping Application Extension, 0 is infinite times
      * @see [ApplicationExtension.loop]
      */
-    fun loop(count: Int): GIFBuilder = apply { loop = count }
+    fun loop(count: Int) = apply { loop = count }
 
-    var buffering: Int = 0
+    var buffering = 0
 
     /**
      * Netscape Buffering Application Extension
      * @see [ApplicationExtension.buffering]
      */
-    fun buffering(open: Boolean): GIFBuilder = apply { buffering = if (open) 0x0001_0000 else 0x0000_0000 }
+    fun buffering(open: Boolean) = apply { buffering = if (open) 0x0001_0000 else 0x0000_0000 }
 
-    var ratio: Int = 0
+    var ratio = 0
 
     /**
      * Pixel Aspect Ratio
      * @see [LogicalScreenDescriptor.write]
      */
-    fun ratio(size: Int): GIFBuilder = apply {
+    fun ratio(size: Int) = apply {
         ratio = size
     }
 
-    var global: ColorTable = ColorTable.Empty
+    var global = ColorTable.Empty
 
     /**
      * GlobalColorTable
      * @see [OctTreeQuantizer.quantize]
      */
-    fun table(bitmap: Bitmap): GIFBuilder = apply {
+    fun table(bitmap: Bitmap) = apply {
         global = ColorTable(OctTreeQuantizer().quantize(bitmap, 256), true)
     }
 
     /**
      * GlobalColorTable
      */
-    fun table(value: ColorTable): GIFBuilder = apply {
+    fun table(value: ColorTable) = apply {
         global = value
     }
 
-    var options: AnimationFrameInfo = AnimationFrameInfo(
+    var options = AnimationFrameInfo(
         requiredFrame = -1,
         duration = 1000,
         // no use
@@ -87,7 +89,7 @@ class GIFBuilder(val width: Int, val height: Int) {
         options.apply(block)
     }
 
-    var frames: MutableList<Triple<Bitmap, ColorTable, AnimationFrameInfo>> = ArrayList()
+    var frames = ArrayList<Triple<Bitmap, ColorTable, AnimationFrameInfo>>()
 
     fun frame(
         bitmap: Bitmap,
@@ -102,7 +104,7 @@ class GIFBuilder(val width: Int, val height: Int) {
         bitmap: Bitmap,
         colors: ColorTable = ColorTable.Empty,
         info: AnimationFrameInfo,
-    ): GIFBuilder = apply {
+    ) = apply {
         frames.add(Triple(bitmap, colors, info))
     }
 

@@ -5,11 +5,7 @@ import top.e404.skiko.rgb
 import top.e404.skiko.util.forEachColor
 
 /**
- * Implements qct-tree quantization.
- *
- *
- * The principle of algorithm: [http://www.microsoft.com/msj/archive/S3F1.aspx]
- *
+ * qct树量化器
  */
 class OctTreeQuantizer {
     companion object {

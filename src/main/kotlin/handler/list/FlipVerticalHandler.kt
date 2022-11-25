@@ -22,7 +22,7 @@ object FlipVerticalHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.result {
-        common(args).handle { flipVertical() }
+        common(args).handle { it.flipVertical() }
     }
 
     fun Image.flipVertical() = Surface.makeRaster(imageInfo).withCanvas {

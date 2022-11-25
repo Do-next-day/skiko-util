@@ -9,7 +9,7 @@ import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.frame.common
 import top.e404.skiko.frame.handle
-import top.e404.skiko.util.toSurface
+import top.e404.skiko.util.newSurface
 import top.e404.skiko.util.withCanvas
 
 /**
@@ -43,8 +43,8 @@ object EmbossColorHandler : FramesHandler {
                 input = null,
                 crop = null
             )
-            toSurface().withCanvas {
-                drawImage(this@handle, 0f, 0f, Paint().apply { imageFilter = filter })
+            it.newSurface().withCanvas {
+                drawImage(it, 0f, 0f, Paint().apply { imageFilter = filter })
             }
         }
     }

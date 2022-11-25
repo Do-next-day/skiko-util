@@ -21,9 +21,9 @@ object JszzHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.result {
         common(args).handle {
-            bg.toSurface().withCanvas {
+            bg.newSurface().withCanvas {
                 drawImage(bg, 0F, 0F)
-                val face = subCenter().rotate(337F)
+                val face = it.subCenter().rotate(337F)
                 drawImageRect(
                     face,
                     Rect.makeWH(face.width.toFloat(), face.height.toFloat()),

@@ -7,8 +7,8 @@ import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.util.getJarImage
+import top.e404.skiko.util.newSurface
 import top.e404.skiko.util.round
-import top.e404.skiko.util.toSurface
 import top.e404.skiko.util.withCanvas
 
 @ImageHandler
@@ -37,7 +37,7 @@ object CrawlHandler : FramesHandler {
                 val size = 144
                 Surface.makeRasterN32Premul(720, 720).withCanvas {
                     drawImageRect(bg, rect)
-                    drawImage(round(size), 0F, size * 4F)
+                    drawImage(it.round(size), 0F, size * 4F)
                 }
             }
         }
@@ -45,9 +45,9 @@ object CrawlHandler : FramesHandler {
         return frames.result {
             handle {
                 val size = bg.height / 5
-                bg.toSurface().withCanvas {
+                bg.newSurface().withCanvas {
                     drawImage(bg, 0F, 0F)
-                    drawImage(round(size), 0F, size * 4F)
+                    drawImage(it.round(size), 0F, size * 4F)
                 }
             }
         }

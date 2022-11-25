@@ -25,7 +25,7 @@ object LatticeHandler : FramesHandler {
         val bg = args["bg"]?.asColor()
         return frames.result {
             common(args).handle {
-                val temp = run { resize(width / rate, height / rate) }.toBitmap()
+                val temp = run { it.resize(it.width / rate, it.height / rate) }.toBitmap()
                 Surface.makeRasterN32Premul(
                     temp.width * (rate + spacing) + spacing,
                     temp.height * (rate + spacing) + spacing

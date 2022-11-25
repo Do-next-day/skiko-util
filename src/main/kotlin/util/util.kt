@@ -29,7 +29,7 @@ fun Font.height() = metrics.run { size + descent }
 
 fun Bitmap.toImage() = Image.makeFromBitmap(this)
 fun Image.toBitmap() = Bitmap.makeFromImage(this)
-fun Image.toSurface() = Surface.makeRaster(imageInfo)
+fun Image.newSurface() = Surface.makeRaster(imageInfo)
 
 fun Bitmap.forEach(block: (x: Int, y: Int) -> Boolean) {
     for (x in 0 until width) for (y in 0 until height) {
@@ -88,9 +88,11 @@ fun String.asColor(): Int? {
             }.toIntOrNull(16)?.let {
                 (it + 0xff000000).toInt()
             }
+
             6 -> s.toIntOrNull(16)?.let {
                 (it + 0xff000000).toInt()
             }
+
             else -> null
         }
     }

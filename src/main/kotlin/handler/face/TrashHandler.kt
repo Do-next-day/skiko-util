@@ -4,8 +4,12 @@ import org.jetbrains.skia.Rect
 import org.jetbrains.skia.Surface
 import top.e404.skiko.Colors
 import top.e404.skiko.apt.annotation.ImageHandler
-import top.e404.skiko.frame.*
+import top.e404.skiko.frame.Frame
+import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.HandleResult.Companion.result
+import top.e404.skiko.frame.common
+import top.e404.skiko.frame.handle
+import top.e404.skiko.util.drawImageRectNearest
 import top.e404.skiko.util.getJarImage
 import top.e404.skiko.util.round
 import top.e404.skiko.util.withCanvas
@@ -26,11 +30,12 @@ object TrashHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.handle { round() }.common(args).result {
-        handleIndexed { index ->
+    ) = frames.handle { it.round() }.common(args).result {
+        handle {
+            val src = Rect.makeWH(it.width.toFloat(), it.height.toFloat())
             Surface.makeRasterN32Premul(w, h).withCanvas {
                 clear(Colors.WHITE.argb)
-                drawImageRect(this@handleIndexed, rect)
+                drawImageRectNearest(it, src, rect)
                 drawImage(bg, 0F, 0F)
             }
         }

@@ -24,7 +24,7 @@ object WarpHandler : FramesHandler {
         val t = args["t"].floatOrPercentage(0.15F)
         val n = args["n"]?.toFloatOrNull() ?: 50F
         return frames.common(args).replenish(count, Frame::limitAsGif).result {
-            handle { warp(toBitmap(), s, t, n) }
+            handle { warp(it.toBitmap(), s, t, n) }
         }
     }
 

@@ -3,6 +3,7 @@ package top.e404.skiko.handler.face
 import com.charleskorn.kaml.Yaml
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
+import org.jetbrains.skia.Rect
 import org.jetbrains.skia.Surface
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
@@ -20,8 +21,8 @@ object PeasHandler : FramesHandler {
     private const val count = 7
     private val range = 0..count
     private val bgList = range.map { getJarImage("statistic/peas/$it.png") }
-    private val pdList =
-        Yaml.default.decodeFromString<List<PeasData>>(readJarFile("statistic/peas/peas.yml"))
+    private val pdList = Yaml.default.decodeFromString<List<PeasData>>(readJarFile("statistic/peas/peas.yml"))
+    private val bgSrcList = bgList.map { Rect.makeWH(it.width.toFloat(), it.height.toFloat()) }
 
     @Serializable
     private data class PeasData(
@@ -35,13 +36,14 @@ object PeasHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.handle { round() }.common(args).replenish(count).result {
+    ) = frames.handle { it.round() }.common(args).replenish(count).result {
         common(args).pmapIndexed { index ->
             handle {
+                val src = Rect.makeWH(width.toFloat(), height.toFloat())
                 Surface.makeRasterN32Premul(w, h).withCanvas {
-                    val pd = pdList[index]
-                    pd.peas.draw(this, bgList[index])
-                    pd.heads.forEach { it.draw(this, this@handle) }
+                    val pd = pdList[index % 8]
+                    pd.peas.draw(this, bgList[index % 8], bgSrcList[index % 8])
+                    pd.heads.forEach { it.draw(this, this@handle, src) }
                 }
             }
         }

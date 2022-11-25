@@ -45,17 +45,17 @@ object NotRespondingHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.result {
         val title = args["text"] ?: "（未响应）"
-        listOf(common(args)[0]).handle {
-            Surface.makeRasterN32Premul(width, height + 23).withCanvas {
+        listOf(common(args)[0]).handle { image ->
+            Surface.makeRasterN32Premul(image.width, image.height + 23).withCanvas {
                 clear(Colors.BLACK.argb)
                 // 主体
-                drawImage(this@handle, 0F, 23F, colorPaint)
+                drawImage(image, 0F, 23F, colorPaint)
                 // 图标
-                drawImageRect(this@handle, rect)
+                drawImageRect(image, rect)
                 // 文本
                 drawTextLine(TextLine.make(title, font), 24F, 17F, whitePaint)
                 // 右上角图标
-                drawImage(rt, (width - rt.width).toFloat(), 0F)
+                drawImage(rt, (image.width - rt.width).toFloat(), 0F)
             }
         }
     }

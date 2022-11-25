@@ -27,12 +27,13 @@ object RubHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.common(args).handle { round() }.replenish(5).result {
+    ) = frames.common(args).handle { it.round() }.replenish(4).result {
         handleIndexed { index ->
+            val src = Rect.makeWH(width.toFloat(), height.toFloat())
             val i = index % 5
             Surface.makeRasterN32Premul(w, h).withCanvas {
                 drawRect(bgRect, paint)
-                ddList[i].draw(this, this@handleIndexed)
+                ddList[i].draw(this, this@handleIndexed, src)
                 drawImageRect(bgList[i], bgRect)
             }
         }

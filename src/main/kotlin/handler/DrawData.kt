@@ -11,6 +11,7 @@ import org.jetbrains.skia.Rect
 import top.e404.skiko.handler.DrawData.Companion.FlipMode.*
 import top.e404.skiko.handler.list.FlipHorizontalHandler.flipHorizontal
 import top.e404.skiko.handler.list.FlipVerticalHandler.flipVertical
+import top.e404.skiko.util.drawImageRectNearest
 import top.e404.skiko.util.readJarFile
 import top.e404.skiko.util.rotateKeepSize
 
@@ -50,15 +51,21 @@ data class DrawData(
     fun draw(
         canvas: Canvas,
         image: Image,
+        src: Rect
     ) = canvas.apply {
         if (w <= 0 || h <= 0) return@apply
-        var face = image
-        if (r != 0F) face = face.rotateKeepSize(r)
-        face = when (flip) {
-            HORIZONTAL -> face.flipHorizontal()
-            VERTICAL -> face.flipVertical()
-            NONE -> face
+        var temp = image
+        if (r != 0F) temp = temp.rotateKeepSize(r)
+        temp = when (flip) {
+            HORIZONTAL -> temp.flipHorizontal()
+            VERTICAL -> temp.flipVertical()
+            NONE -> temp
         }
-        drawImageRect(face, Rect.makeXYWH(x, y, w, h), Paint().apply { alpha = a })
+        drawImageRectNearest(
+            image = temp,
+            src = src,
+            dst = Rect.makeXYWH(x, y, w, h),
+            paint = Paint().apply { alpha = a }
+        )
     }
 }

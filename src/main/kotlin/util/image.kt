@@ -18,9 +18,13 @@ fun Image.sub(
     x: Int,
     y: Int,
     w: Int,
-    h: Int,
+    h: Int
 ) = Surface.makeRasterN32Premul(w, h).withCanvas {
-    drawImage(this@sub, x * -1F, y * -1F)
+    drawImageRectNearest(
+        image = this@sub,
+        src = Rect.makeXYWH(x.toFloat(), y.toFloat(), w.toFloat(), h.toFloat()),
+        dst = Rect.makeWH(w.toFloat(), h.toFloat())
+    )
 }
 
 /**
@@ -50,18 +54,22 @@ fun Canvas.drawImageRectNearest(
  * @param h 新的高度, 若小于0则作为百分比处理
  * @return 缩放后的图片
  */
-fun Image.resize(w: Int, h: Int, smooth: Boolean = true): Image {
+fun Image.resize(w: Int, h: Int, smooth: Boolean = false): Image {
     require(w != 0) { "图片宽度不可为0" }
     require(h != 0) { "图片高度不可为0" }
     val width = if (w > 0) w else (w / -100.0 * width).toInt()
     val height = if (h > 0) h else (h / -100.0 * height).toInt()
     return Surface.makeRasterN32Premul(width, height).withCanvas {
         scale(width / this@resize.width.toFloat(), height / this@resize.height.toFloat())
-        if (smooth) drawImageRectNearest(
-            this@resize,
-            Rect.makeWH(this@resize.width.toFloat(), this@resize.height.toFloat()),
-            Rect.makeWH(this@resize.width.toFloat(), this@resize.height.toFloat())
-        ) else drawImage(this@resize, 0F, 0F)
+        if (smooth) {
+            drawImage(this@resize, 0F, 0F)
+            return@withCanvas
+        }
+        drawImageRectNearest(
+            image = this@resize,
+            src = Rect.makeWH(this@resize.width.toFloat(), this@resize.height.toFloat()),
+            dst = Rect.makeWH(this@resize.width.toFloat(), this@resize.height.toFloat())
+        )
     }
 }
 
@@ -207,7 +215,9 @@ fun Image.rotate(angel: Float): Image {
  * @param angel 角度
  * @return 图片
  */
-fun Image.rotateKeepSize(angel: Float) = rotate(angel).let {
+fun Image.rotateKeepSize(
+    angel: Float
+) = rotate(angel).let {
     it.sub(
         abs((it.width - width) / 2),
         abs((it.height - height) / 2),

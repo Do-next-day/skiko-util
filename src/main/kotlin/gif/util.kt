@@ -1,6 +1,5 @@
 package top.e404.skiko.gif
 
-import org.jetbrains.skia.Data
 import top.e404.skiko.blue
 import top.e404.skiko.green
 import top.e404.skiko.red
@@ -17,8 +16,10 @@ internal fun Int.asUnsignedByte(): Byte {
 
 internal fun Int.asRGBBytes() = byteArrayOf(red().toByte(), green().toByte(), blue().toByte())
 
-fun gif(width: Int, height: Int, block: GIFBuilder.() -> Unit): Data {
-    return GIFBuilder(width, height)
-        .apply(block)
-        .data()
-}
+fun gif(
+    width: Int,
+    height: Int,
+    block: GIFBuilder.() -> Unit
+) = GIFBuilder(width, height)
+    .apply(block)
+    .data()

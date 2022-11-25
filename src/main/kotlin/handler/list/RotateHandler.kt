@@ -17,6 +17,6 @@ object RotateHandler : FramesHandler {
         args: MutableMap<String, String>,
     ): HandleResult {
         val angel = args["text"]?.toFloatOrNull() ?: return HandleResult.fail("旋转角度应为数字")
-        return frames.result { common(args).handle { rotate(angel) } }
+        return frames.result { common(args).handle { it.rotate(angel) } }
     }
 }

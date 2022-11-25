@@ -21,16 +21,16 @@ object RaiseHandler : FramesHandler {
         val radius = args["text"].doubleOrPercentage(null)
         return frames.result {
             common(args).handle {
-                val bitmap = toBitmap()
-                val result = toBitmap()
-                val centerX = width / 2
-                val centerY = height / 2
+                val bitmap = it.toBitmap()
+                val result = it.toBitmap()
+                val centerX = it.width / 2
+                val centerY = it.height / 2
                 val r = when {
-                    radius == null -> min(width, height) / 2
-                    radius < 0 -> min(width, height) * -radius / 100
+                    radius == null -> min(it.width, it.height) / 2
+                    radius < 0 -> min(it.width, it.height) * -radius / 100
                     else -> radius
                 }.toInt()
-                for (x in 0 until width) for (y in 0 until height) {
+                for (x in 0 until it.width) for (y in 0 until it.height) {
                     val distance = distance(x, y, centerX, centerY)
                     if (distance > r) continue
                     val tx = (x - centerX) * distance / r + centerX

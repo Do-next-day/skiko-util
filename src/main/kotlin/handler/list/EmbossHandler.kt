@@ -27,8 +27,8 @@ object EmbossHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.result {
         common(args).handle {
-            val old = toBitmap()
-            val new = toBitmap()
+            val old = it.toBitmap()
+            val new = it.toBitmap()
             for (x in 1 until old.width - 1) for (y in 1 until old.height - 1) {
                 new.erase(old.fd(x, y), IRect.makeXYWH(x, y, 1, 1))
             }

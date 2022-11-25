@@ -31,8 +31,9 @@ object PushHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.common(args).handle { round() }.replenish(14).result {
+    ) = frames.common(args).handle { it.round() }.replenish(14).result {
         handleIndexed { index ->
+            val src = Rect.makeWH(width.toFloat(), height.toFloat())
             Surface.makeRasterN32Premul(
                 this@PushHandler.size,
                 this@PushHandler.size
@@ -41,7 +42,7 @@ object PushHandler : FramesHandler {
                 val i = index % 15
                 val face = rotateKeepSize(angel)
                 drawRect(bgRect, paint)
-                ddList[i].draw(this, face)
+                ddList[i].draw(this, face, src)
                 drawImageRect(bgList[i], bgRect)
             }
         }

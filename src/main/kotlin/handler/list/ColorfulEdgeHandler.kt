@@ -29,19 +29,19 @@ object ColorfulEdgeHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.result {
         common(args).handle {
-            val rst = Bitmap().also {
-                it.allocPixels(
+            val rst = Bitmap().also { bitmap ->
+                bitmap.allocPixels(
                     ImageInfo(
-                        width = imageInfo.width - 2,
-                        height = imageInfo.height - 2,
-                        colorType = imageInfo.colorType,
-                        alphaType = imageInfo.colorAlphaType,
-                        colorSpace = imageInfo.colorSpace
+                        width = it.imageInfo.width - 2,
+                        height = it.imageInfo.height - 2,
+                        colorType = it.imageInfo.colorType,
+                        alphaType = it.imageInfo.colorAlphaType,
+                        colorSpace = it.imageInfo.colorSpace
                     )
                 )
             }
-            val ic = ImageColors(toBitmap())
-            for (x in 1 until width - 1) for (y in 1 until height - 1) {
+            val ic = ImageColors(it.toBitmap())
+            for (x in 1 until it.width - 1) for (y in 1 until it.height - 1) {
                 rst.erase(fd(ic, x, y), IRect.makeXYWH(x - 1, y - 1, 1, 1))
             }
             rst.toImage()
@@ -60,30 +60,6 @@ object ColorfulEdgeHandler : FramesHandler {
         operator fun get(x: Int, y: Int) = argb[y * width + x]
     }
 
-    /*
-     * int r1 = this.img.red[i-1+(j+1)*w]
-     *   +2*this.img.red[i+(j+1)*w]
-     *   +this.img.red[i+1+(j+1)*w]
-     *   -this.img.red[i-1+(j-1)*w]
-     *   -2*this.img.red[i+(j-1)*w]
-     *   -this.img.red[i+1+(j-1)*w];
-     * int r2 = this.img.red[i+1+(j-1)*w]
-     *   +2*this.img.red[i+1+(j)*w]
-     *   +this.img.red[i+1+(j+1)*w]
-     *   -this.img.red[i-1+(j-1)*w]
-     *   -2*this.img.red[i-1+(j)*w]
-     *   -this.img.red[i-1+(j+1)*w];
-     * int g1 = this.img.green[i-1+(j+1)*w]+2*this.img.green[i+(j+1)*w]+this.img.green[i+1+(j+1)*w]-this.img.green[i-1+(j-1)*w]-2*this.img.green[i+(j-1)*w]-this.img.green[i+1+(j-1)*w];
-     * int g2 = this.img.green[i+1+(j-1)*w]+2*this.img.green[i+1+(j)*w]+this.img.green[i+1+(j+1)*w]-this.img.green[i-1+(j-1)*w]-2*this.img.green[i-1+(j)*w]-this.img.green[i-1+(j+1)*w];
-     * int b1 = this.img.blue[i-1+(j+1)*w]+2*this.img.blue[i+(j+1)*w]+this.img.blue[i+1+(j+1)*w]-this.img.blue[i-1+(j-1)*w]-2*this.img.blue[i+(j-1)*w]-this.img.blue[i+1+(j-1)*w];
-     * int b2 = this.img.blue[i+1+(j-1)*w]+2*this.img.blue[i+1+(j)*w]+this.img.blue[i+1+(j+1)*w]-this.img.blue[i-1+(j-1)*w]-2*this.img.blue[i-1+(j)*w]-this.img.blue[i-1+(j+1)*w];
-     *
-     * int tr = (Math.abs(r1)+Math.abs(r2));
-     * int tg = (Math.abs(g1)+Math.abs(g2));
-     * int tb = (Math.abs(b1)+Math.abs(b2));
-     *
-     * this.img.data[i + j * this.img.w] = (255 << 24) | (math.st(tr) << 16) | (math.st(tg) << 8) | math.st(tb);
-     */
     private fun fd(ic: ImageColors, x: Int, y: Int): Int {
         val xl = x - 1
         val xr = x + 1

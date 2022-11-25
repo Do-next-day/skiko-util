@@ -23,8 +23,8 @@ object NationalFaceHandler : FramesHandler {
         val cover = coverList[i]
         return frames.result {
             common(args).handle {
-                val center = subCenter()
-                center.toSurface().apply {
+                val center = it.subCenter()
+                center.newSurface().apply {
                     fill(Colors.WHITE.argb)
                 }.withCanvas {
                     val w = center.width.toFloat()

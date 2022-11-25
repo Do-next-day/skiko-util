@@ -85,7 +85,7 @@ object CharImageHandler : FramesHandler {
             if (args.containsKey("c")) { // 保留颜色
                 val text = args["text"]!!
                 val sc = args["sc"]?.toFloatOrNull() ?: 1.5F
-                val list = toColors()
+                val list = it.toColors()
                 var i = 0
                 val w = 12 * list[0].size
                 val h = 12 * list.size
@@ -110,7 +110,7 @@ object CharImageHandler : FramesHandler {
                 }
             } else { // 保留明暗
                 val c = args["color"]?.asColor() ?: Colors.BLACK.argb
-                val list = toChars()
+                val list = it.toChars()
                 val texts = list.map { TextLine.make(it, font) }
                 val w = texts[0].width
                 val h = list.size * 12F

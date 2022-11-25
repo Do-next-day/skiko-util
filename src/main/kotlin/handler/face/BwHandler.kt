@@ -66,9 +66,9 @@ object BwHandler : FramesHandler {
         val g = args.containsKey("g")
 
         return frames.result {
-            common(args).handle {
+            common(args).handle { image ->
                 Surface.makeRasterN32Premul(w, h + ph).fill(Colors.BLACK.argb).withCanvas {
-                    drawImage(this@handle, 0F, 0F, if (g) grayPaint else null)
+                    drawImage(image, 0F, 0F, if (g) grayPaint else null)
                     lines1.forEachIndexed { index, line ->
                         val x = (w - line.width) / 2
                         val y = h + index * (fh1 + spacing) + spacing - line.ascent

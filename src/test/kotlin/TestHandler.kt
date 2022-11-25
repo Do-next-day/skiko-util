@@ -23,6 +23,7 @@ class TestHandler {
 
     private fun testHandler(handler: FramesHandler, args: MutableMap<String, String>) {
         runBlocking {
+            outDir.listFiles()?.forEach { it.delete() }
             inDir.listFiles()?.map {
                 async {
                     val fr1 = it.readBytes().decodeToFrames()
@@ -31,9 +32,10 @@ class TestHandler {
                         println("${it.name} - fail, msg: ${result.failMsg}")
                         result.throwable?.printStackTrace()
                     } else {
-                        result.run {
-                            outDir.resolve(it.name)
-                                .writeBytes(getOrThrow().encodeToBytes())
+                        result.let { handleResult ->
+                            val suffix = if (handleResult.result!!.size == 1) ".png" else ".gif"
+                            outDir.resolve("${it.name}$suffix")
+                                .writeBytes(handleResult.getOrThrow().encodeToBytes())
                         }
                         println("${it.name} - done")
                     }
@@ -89,7 +91,8 @@ class TestHandler {
     @Test
     fun testResizeHandler() {
         testHandler(
-            ResizeHandler, mutableMapOf(
+            ResizeHandler,
+            mutableMapOf(
                 "w" to "-10",
                 "h" to "-10",
             )
@@ -218,7 +221,7 @@ class TestHandler {
 
     @Test
     fun testRotateHandler() {
-        testHandler(RotateHandler, mutableMapOf("angel" to "45"))
+        testHandler(RotateHandler, mutableMapOf("text" to "45"))
     }
 
     @Test
@@ -324,7 +327,12 @@ class TestHandler {
 
     @Test
     fun testPercent0Handler() {
-        testHandler(Percent0Handler, emptyArgs)
+        testHandler(
+            Percent0Handler,
+            mutableMapOf(
+                "text" to "-10%"
+            )
+        )
     }
 
     @Test

@@ -21,18 +21,19 @@ object TouchHandler : FramesHandler {
     private val bgRect = Rect.makeWH(w.toFloat(), h.toFloat())
     private val paint = Paint().apply { color = Colors.WHITE.argb }
 
-    override val name = "摸"
-    override val regex = Regex("(?i)摸|mo|touch")
+    override val name = "Touch"
+    override val regex = Regex("摸|(?i)mo|touch")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.common(args).handle { round() }.replenish(10).result {
+    ) = frames.common(args).handle { it.round() }.replenish(10).result {
         handleIndexed { index ->
+            val src = Rect.makeWH(width.toFloat(), height.toFloat())
             Surface.makeRasterN32Premul(w, h).withCanvas {
                 val i = index % 10
                 drawRect(bgRect, paint)
-                ddList[i].draw(this, this@handleIndexed)
+                ddList[i].draw(this, this@handleIndexed, src)
                 drawImageRect(bgList[i], bgRect)
             }
         }

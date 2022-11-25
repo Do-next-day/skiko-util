@@ -37,7 +37,7 @@ object FlashHandler : FramesHandler {
         common(args).handle {
             Surface.makeRasterN32Premul(w, h).withCanvas {
                 drawRect(imgRect, paint)
-                drawImage(resize(8, 7, false).resize(w, h, false), 0f, 0f)
+                drawImage(it.resize(8, 7, true).resize(w, h, true), 0f, 0f)
                 drawImage(cover, 0f, 0f, alphaPaint)
             }
         }

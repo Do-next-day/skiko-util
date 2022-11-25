@@ -13,17 +13,17 @@ import kotlin.math.abs
 @ImageHandler
 object TurnHandler : FramesHandler {
     override val name = "转动"
-    override val regex = Regex("(?i)转动|turn|zd")
+    override val regex = Regex("转动?|(?i)zhuan|turn|zd")
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
         val count = args["text"]?.toIntOrNull() ?: 10
         return frames.common(args).replenish(abs(count), Frame::limitAsGif).result {
-                val v = (360F / size).let { if (count < 0) -it else it }
-                handleIndexed { index ->
-                    round().rotateKeepSize(index * v)
-                }
+            val v = (360F / size).let { if (count < 0) -it else it }
+            handleIndexed { index ->
+                round().rotateKeepSize(index * v)
             }
+        }
     }
 }

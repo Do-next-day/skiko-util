@@ -1,10 +1,15 @@
 package top.e404.skiko.handler.list
 
-import org.jetbrains.skia.*
+import org.jetbrains.skia.Bitmap
+import org.jetbrains.skia.ColorAlphaType
+import org.jetbrains.skia.IRect
+import org.jetbrains.skia.ImageInfo
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result
-import top.e404.skiko.util.*
+import top.e404.skiko.util.intOrPercentage
+import top.e404.skiko.util.toBitmap
+import top.e404.skiko.util.toImage
 import kotlin.math.min
 
 /**
@@ -22,7 +27,7 @@ object PaneHandler : FramesHandler {
         val rate = args["text"].intOrPercentage(-10)
         return frames.result {
             common(args).handle {
-                val src = toBitmap()
+                val src = it.toBitmap()
                 val r = if (rate > 0) rate else rate * min(src.width, src.height) / -100
                 val dst = Bitmap().apply {
                     val cInfo = src.imageInfo.colorInfo.apply { setAlphaType(ColorAlphaType.PREMUL) }

@@ -3,6 +3,7 @@ package top.e404.skiko.handler.face
 import com.charleskorn.kaml.Yaml
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
+import org.jetbrains.skia.Rect
 import org.jetbrains.skia.Surface
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
@@ -18,19 +19,21 @@ object RuaHandler : FramesHandler {
     private const val size = 448
     private val bgList = (0..4).map { getJarImage("statistic/rua/$it.png") }
     private val ddList = RuaInfo.fromJar()
+    private val bgSrc = Rect.makeWH(bgList[0].width.toFloat(), bgList[0].height.toFloat())
 
-    override val name = "Rua"
+    override val name = "rua"
     override val regex = Regex("(?i)rua")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.common(args).handle { round() }.replenish(5).result {
+    ) = frames.common(args).handle { it.round() }.replenish(4).result {
         handleIndexed { index ->
+            val src = Rect.makeWH(width.toFloat(), height.toFloat())
             Surface.makeRasterN32Premul(this@RuaHandler.size, this@RuaHandler.size).withCanvas {
                 val i = index % 5
-                ddList.face[i].draw(this, this@handleIndexed)
-                ddList.hand[i].draw(this, bgList[i])
+                ddList.face[i].draw(this, this@handleIndexed, src)
+                ddList.hand[i].draw(this, bgList[i], bgSrc)
             }
         }
     }

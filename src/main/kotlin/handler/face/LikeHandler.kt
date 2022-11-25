@@ -9,10 +9,8 @@ import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.frame.common
 import top.e404.skiko.frame.handle
+import top.e404.skiko.util.*
 import top.e404.skiko.util.getJarImage
-import top.e404.skiko.util.subCenter
-import top.e404.skiko.util.toSurface
-import top.e404.skiko.util.withCanvas
 
 @ImageHandler
 object LikeHandler : FramesHandler {
@@ -32,9 +30,11 @@ object LikeHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.result {
         common(args).handle {
-            cover.toSurface().withCanvas {
+            val image = it.subCenter()
+            val src = Rect.makeWH(image.width.toFloat(), image.height.toFloat())
+            cover.newSurface().withCanvas {
                 drawRect(imgRect, paint)
-                drawImageRect(subCenter(), faceRect)
+                drawImageRectNearest(image, src, faceRect)
                 drawImage(cover, 0F, 0F)
             }
         }

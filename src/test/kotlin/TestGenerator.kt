@@ -29,7 +29,7 @@ class TestGenerator {
             "text" to "哼哼哼啊啊啊啊啊啊啊啊啊啊啊啊",
             "color" to "#0f7",
             "bg" to "#1F1B1D",
-            "size" to "50",
+            "size" to "20",
             "count" to "12"
         ))
     }

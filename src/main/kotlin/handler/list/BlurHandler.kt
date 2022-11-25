@@ -10,7 +10,7 @@ import top.e404.skiko.frame.HandleResult.Companion.result
 @ImageHandler
 object BlurHandler : FramesHandler {
     override val name = "高斯模糊"
-    override val regex = Regex("(?i)(高斯)?模糊|blur|mh")
+    override val regex = Regex("(高斯)?模糊|(?i)blur|(gs)?mh")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

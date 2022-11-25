@@ -67,7 +67,9 @@ fun argb(a: Int, r: Int, g: Int, b: Int) = (a shl 24) or (r shl 16) or (g shl 8)
 fun argb(a: Int, r: Double, g: Double, b: Double) = argb(a, r.limit(), g.limit(), b.limit())
 fun ahsb(a: Int, h: Float, s: Float, b: Float) = Color.HSBtoRGB(h, s, b) + (a shl 24)
 
-data class Ahsb(var a: Int, var h: Float, var s: Float, var b: Float)
+data class Ahsb(var a: Int, var h: Float, var s: Float, var b: Float) {
+    fun editSaturation(block: (Float) -> Float) = ahsb(a, h, block(s), b)
+}
 
 fun Int.ahsb(): Ahsb {
     val (a, r, g, b) = argb()

@@ -1,5 +1,7 @@
 package top.e404.skiko
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import top.e404.skiko.frame.FramesHandler
@@ -15,37 +17,30 @@ class TestHandler {
         FontType.fontDir = "font"
     }
 
-    private val inPng = File("in.png").readBytes()
-    private val inGif = File("in.gif").readBytes()
-    private val out = File("out")
+    private val inDir = File("in")
+    private val outDir = File("out")
     private val emptyArgs = mutableMapOf<String, String>()
 
     private fun testHandler(handler: FramesHandler, args: MutableMap<String, String>) {
         runBlocking {
-            val fr1 = inPng.decodeToFrames()
-            var result = handler.handleFrames(fr1, args)
-            if (!result.success) {
-                println("1 - fail, msg: ${result.failMsg}")
-                result.throwable?.printStackTrace()
-            } else {
-                result.run {
-                    out.resolve(if (gif) "1.gif" else "1.png")
-                        .writeBytes(getOrThrow().encodeToBytes())
+            outDir.listFiles()?.forEach { it.delete() }
+            inDir.listFiles()?.map {
+                async {
+                    val fr1 = it.readBytes().decodeToFrames()
+                    val result = handler.handleFrames(fr1, args)
+                    if (!result.success) {
+                        println("${it.name} - fail, msg: ${result.failMsg}")
+                        result.throwable?.printStackTrace()
+                    } else {
+                        result.let { handleResult ->
+                            val suffix = if (handleResult.result!!.size == 1) ".png" else ".gif"
+                            outDir.resolve("${it.name}$suffix")
+                                .writeBytes(handleResult.getOrThrow().encodeToBytes())
+                        }
+                        println("${it.name} - done")
+                    }
                 }
-                println("1 - done")
-            }
-            val fr2 = inGif.decodeToFrames()
-            result = handler.handleFrames(fr2, args)
-            if (!result.success) {
-                println("2 - fail, msg: ${result.failMsg}")
-                result.throwable?.printStackTrace()
-            } else {
-                result.run {
-                    out.resolve(if (gif) "2.gif" else "2.png")
-                        .writeBytes(getOrThrow().encodeToBytes())
-                }
-                println("2 - done")
-            }
+            }?.awaitAll()
         }
     }
 
@@ -96,7 +91,8 @@ class TestHandler {
     @Test
     fun testResizeHandler() {
         testHandler(
-            ResizeHandler, mutableMapOf(
+            ResizeHandler,
+            mutableMapOf(
                 "w" to "-10",
                 "h" to "-10",
             )
@@ -130,10 +126,10 @@ class TestHandler {
     fun testClipHandler() {
         testHandler(
             ClipHandler, mutableMapOf(
-                "x" to "20",
-                "y" to "20",
-                "w" to "60",
-                "h" to "60",
+                "x" to "10%",
+                "y" to "10%",
+                "w" to "80%",
+                "h" to "80%",
             )
         )
     }
@@ -225,7 +221,7 @@ class TestHandler {
 
     @Test
     fun testRotateHandler() {
-        testHandler(RotateHandler, mutableMapOf("angel" to "45"))
+        testHandler(RotateHandler, mutableMapOf("text" to "45"))
     }
 
     @Test
@@ -331,7 +327,12 @@ class TestHandler {
 
     @Test
     fun testPercent0Handler() {
-        testHandler(Percent0Handler, emptyArgs)
+        testHandler(
+            Percent0Handler,
+            mutableMapOf(
+                "text" to "-10%"
+            )
+        )
     }
 
     @Test
@@ -356,7 +357,7 @@ class TestHandler {
         testHandler(
             LowPolyHandler, mutableMapOf(
                 "acc" to "100",
-                "pc" to "10"
+                "pc" to "1000"
             )
         )
     }
@@ -423,6 +424,59 @@ class TestHandler {
                 //"h" to "",
                 "r" to ""
             )
+        )
+    }
+
+    @Test
+    fun testNotRespondingHandler() {
+        testHandler(
+            NotRespondingHandler,
+            mutableMapOf(
+                //"h" to "",
+                "text" to "Minecraft* 1.18.2 - 多人游戏（第三方服务器）（未响应）",
+                "bg" to "#ffffff",
+                "font" to "#000000",
+            )
+        )
+    }
+
+    @Test
+    fun testTrashHandler() {
+        testHandler(
+            TrashHandler,
+            emptyArgs
+        )
+    }
+
+    @Test
+    fun testAddictionHandler() {
+        testHandler(
+            AddictionHandler,
+            emptyArgs
+        )
+    }
+
+    @Test
+    fun testCyberpunkHandler() {
+        testHandler(
+            CyberpunkHandler,
+            emptyArgs
+        )
+    }
+
+    @Test
+    fun testEmbossColor() {
+        testHandler(
+            EmbossColorHandler,
+            emptyArgs
+        )
+    }
+
+    @Test
+    fun testColorfulEdgeHandler() {
+        testHandler(
+            ColorfulEdgeHandler,
+            emptyArgs
         )
     }
 }

@@ -1,5 +1,6 @@
 package top.e404.skiko.handler.face
 
+import org.jetbrains.skia.Rect
 import org.jetbrains.skia.Surface
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
@@ -28,12 +29,13 @@ object SkipHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.handle { round() }.common(args).replenish(count).result {
+    ) = frames.handle { it.round() }.common(args).replenish(count).result {
         common(args).pmapIndexed { index ->
             handle {
+                val src = Rect.makeWH(width.toFloat(), height.toFloat())
                 Surface.makeRasterN32Premul(w, h).withCanvas {
-                    drawImage(bgList[index], 0F, 0F)
-                    ddList[index].draw(this, image)
+                    drawImage(bgList[index % 8], 0F, 0F)
+                    ddList[index % 8].draw(this, image, src)
                 }
             }
         }

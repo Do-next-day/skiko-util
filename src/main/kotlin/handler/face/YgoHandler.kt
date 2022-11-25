@@ -11,8 +11,8 @@ import top.e404.skiko.frame.HandleResult
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.frame.handle
 import top.e404.skiko.util.getJarImage
+import top.e404.skiko.util.newSurface
 import top.e404.skiko.util.subCenter
-import top.e404.skiko.util.toSurface
 import top.e404.skiko.util.withCanvas
 
 /**
@@ -20,7 +20,7 @@ import top.e404.skiko.util.withCanvas
  */
 @ImageHandler
 object YgoHandler : FramesHandler {
-    override val name = "ygo"
+    override val name = "Ygo"
     override val regex = Regex("(?i)ygo")
 
     // 卡片背景
@@ -172,7 +172,7 @@ object YgoHandler : FramesHandler {
                 "同调" -> monsterTt
                 else -> monsterTc
             }
-            return card.toSurface().withCanvas {
+            return card.newSurface().withCanvas {
                 drawImage(card, 0F, 0F)
                 drawImageRect(img, rectImage)
                 // name
@@ -197,7 +197,7 @@ object YgoHandler : FramesHandler {
                 val attrImage = monsterAttrAllow[args["attr"]]?.invoke() ?: attrLight
                 drawImageRect(attrImage, rectAttr)
                 // lv
-                repeat(args["lv"]?.toIntOrNull() ?: 4) {
+                repeat((args["lv"]?.toIntOrNull() ?: 4).coerceIn(0, 12)) {
                     drawImageRect(level, Rect.makeXYWH(740F - (it + 1) * 49 - it * 7, 146F, 49F, 49F))
                 }
                 // line
@@ -220,7 +220,7 @@ object YgoHandler : FramesHandler {
             desc: String?,
             type: String?,
             args: MutableMap<String, String>
-        ) = spell.toSurface().withCanvas {
+        ) = spell.newSurface().withCanvas {
             drawImage(spell, 0F, 0F)
             drawImageRect(img, rectImage)
             // name
@@ -270,7 +270,7 @@ object YgoHandler : FramesHandler {
             desc: String?,
             type: String?,
             args: MutableMap<String, String>
-        ) = trap.toSurface().withCanvas {
+        ) = trap.newSurface().withCanvas {
             drawImage(trap, 0F, 0F)
             drawImageRect(img, rectImage)
             // name
@@ -324,7 +324,7 @@ object YgoHandler : FramesHandler {
         val c = Category.values().firstOrNull { it.alias == args["c"] } ?: Category.MONSTER
         val t = args["t"].let { if (it == null || it !in c.types) c.defaultType else it }
         return frames.result {
-            handle { c.draw.invoke(subCenter(), args["name"], args["desc"], t, args) }
+            handle { c.draw.invoke(it.subCenter(), args["name"], args["desc"], t, args) }
         }
     }
 }

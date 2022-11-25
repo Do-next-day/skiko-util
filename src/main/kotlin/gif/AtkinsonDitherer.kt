@@ -3,8 +3,11 @@ package top.e404.skiko.gif
 import org.jetbrains.skia.*
 import top.e404.skiko.rgb
 
+/**
+ * 抖动器
+ */
 object AtkinsonDitherer {
-    private val DISTRIBUTION: List<ErrorComponent> = listOf(
+    private val DISTRIBUTION = listOf(
         ErrorComponent(1, 0, 1 / 8.0),
         ErrorComponent(2, 0, 1 / 8.0),
 

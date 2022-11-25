@@ -13,8 +13,8 @@ import top.e404.skiko.util.*
  */
 @ImageHandler
 object LatticeHandler : FramesHandler {
-    override val name = "方格化"
-    override val regex = Regex("(?i)方格化?|fgh?")
+    override val name = "Lattice"
+    override val regex = Regex("(?i)lattice|方格化?|fgh?")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
@@ -25,7 +25,7 @@ object LatticeHandler : FramesHandler {
         val bg = args["bg"]?.asColor()
         return frames.result {
             common(args).handle {
-                val temp = run { resize(width / rate, height / rate) }.toBitmap()
+                val temp = run { it.resize(it.width / rate, it.height / rate) }.toBitmap()
                 Surface.makeRasterN32Premul(
                     temp.width * (rate + spacing) + spacing,
                     temp.height * (rate + spacing) + spacing

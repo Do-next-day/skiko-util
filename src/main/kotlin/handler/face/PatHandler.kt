@@ -7,10 +7,8 @@ import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.frame.common
 import top.e404.skiko.frame.handle
+import top.e404.skiko.util.*
 import top.e404.skiko.util.getJarImage
-import top.e404.skiko.util.round
-import top.e404.skiko.util.toSurface
-import top.e404.skiko.util.withCanvas
 
 /**
  * 拍
@@ -27,10 +25,10 @@ object PatHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.result {
         common(args).handle {
-            val face = round()
-            bg.toSurface().withCanvas {
+            val face = it.round()
+            bg.newSurface().withCanvas {
                 drawImage(bg, 0F, 0F)
-                drawImageRect(
+                drawImageRectNearest(
                     face,
                     Rect.makeWH(face.width.toFloat(), face.height.toFloat()),
                     Rect.makeXYWH(230F, 270F, 150F, 150F)

@@ -20,8 +20,8 @@ object WriteHandler : FramesHandler {
     private const val unit = 10
     private val tf = FontType.MI.typeface
 
-    override val name = "write"
-    override val regex = Regex("(?i)写|write")
+    override val name = "drawstring"
+    override val regex = Regex("(?i)写|(d(raw)?s(tring)?|write)")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
@@ -49,11 +49,11 @@ object WriteHandler : FramesHandler {
                 val paint = Paint()
                 val height = lines.sumOf { it.descent.toDouble() - it.ascent }.toInt() + (lines.size - 1) * spacing
                 when (location) {
-                    CENTER -> toSurface().withCanvas {
-                        var y = (this@handle.height - height) / 2F
-                        drawImage(this@handle, 0F, 0F)
+                    CENTER -> it.newSurface().withCanvas {
+                        var y = (it.height - height) / 2F
+                        drawImage(it, 0F, 0F)
                         for (line in lines) {
-                            val x = (this@handle.width - line.width) / 2
+                            val x = (it.width - line.width) / 2
                             y -= line.ascent
                             drawTextLine(line, x, y, paint.apply {
                                 color = strokeColor
@@ -68,11 +68,12 @@ object WriteHandler : FramesHandler {
                             y += line.descent + spacing
                         }
                     }
-                    INSIDE_TOP -> toSurface().withCanvas {
+
+                    INSIDE_TOP -> it.newSurface().withCanvas {
                         var y = 0F
-                        drawImage(this@handle, 0F, 0F)
+                        drawImage(it, 0F, 0F)
                         for (line in lines) {
-                            val x = (this@handle.width - line.width) / 2
+                            val x = (it.width - line.width) / 2
                             y -= line.ascent
                             drawTextLine(line, x, y, paint.apply {
                                 color = strokeColor
@@ -87,11 +88,12 @@ object WriteHandler : FramesHandler {
                             y += spacing + line.descent
                         }
                     }
-                    INSIDE_BOTTOM -> toSurface().withCanvas {
-                        var y = this@handle.height.toFloat() - spacing
-                        drawImage(this@handle, 0F, 0F)
+
+                    INSIDE_BOTTOM -> it.newSurface().withCanvas {
+                        var y = it.height.toFloat() - spacing
+                        drawImage(it, 0F, 0F)
                         for (line in lines) {
-                            val x = (this@handle.width - line.width) / 2
+                            val x = (it.width - line.width) / 2
                             y -= line.descent
                             drawTextLine(line, x, y, paint.apply {
                                 color = strokeColor
@@ -106,14 +108,15 @@ object WriteHandler : FramesHandler {
                             y -= spacing - line.ascent
                         }
                     }
+
                     OUTSIDE_TOP -> Surface.makeRasterN32Premul(
-                        this@handle.width,
-                        this@handle.height + height
+                        it.width,
+                        it.height + height
                     ).fill(bgColor).withCanvas {
                         var y = 0F
-                        drawImage(this@handle, 0F, height.toFloat())
+                        drawImage(it, 0F, height.toFloat())
                         for (line in lines) {
-                            val x = (this@handle.width - line.width) / 2
+                            val x = (it.width - line.width) / 2
                             y -= line.ascent
                             drawTextLine(line, x, y, paint.apply {
                                 color = strokeColor
@@ -128,14 +131,15 @@ object WriteHandler : FramesHandler {
                             y += spacing + line.descent
                         }
                     }
+
                     OUTSIDE_BOTTOM -> Surface.makeRasterN32Premul(
-                        this@handle.width,
-                        this@handle.height + height
+                        it.width,
+                        it.height + height
                     ).fill(bgColor).withCanvas {
-                        var y = this@handle.height.toFloat()
-                        drawImage(this@handle, 0F, 0F)
+                        var y = it.height.toFloat()
+                        drawImage(it, 0F, 0F)
                         for (line in lines) {
-                            val x = (this@handle.width - line.width) / 2
+                            val x = (it.width - line.width) / 2
                             y -= line.ascent
                             drawTextLine(line, x, y, paint.apply {
                                 color = strokeColor

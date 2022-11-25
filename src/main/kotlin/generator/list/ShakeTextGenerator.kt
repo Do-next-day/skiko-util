@@ -77,6 +77,6 @@ object ShakeTextGenerator : ImageGenerator {
         val bg = args["bg"]?.asColor() ?: Colors.BG.argb
         val size = args["size"]?.toIntOrNull() ?: 20
         val count = args["count"]?.toIntOrNull() ?: 10
-        return shakeGif(text, color, bg, size, count)
+        return shakeGif(text, color, bg, size.coerceIn(1, 100), count.coerceIn(1, 20))
     }
 }

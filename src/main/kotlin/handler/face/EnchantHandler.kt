@@ -15,7 +15,7 @@ object EnchantHandler : FramesHandler {
     private val bg by lazy { getJarImage("statistic/enchant.png") }
 
     override val name = "enchant"
-    override val regex = Regex("附魔|(?i)enchant(ment)?")
+    override val regex = Regex("附魔|(?i)enchant")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
@@ -31,7 +31,7 @@ object EnchantHandler : FramesHandler {
             common(args).pmapIndexed { index ->
                 limitAsGif(400F)
                 also {
-                    it.image = it.image.toSurface().withCanvas {
+                    it.image = it.image.newSurface().withCanvas {
                         drawImage(this@pmapIndexed.image, 0F, 0F)
                         drawImage(resize, 0f, unit * (count - 1 - index).toFloat())
                         drawImage(resize, 0f, unit * (count - 1 - index).toFloat() - size)

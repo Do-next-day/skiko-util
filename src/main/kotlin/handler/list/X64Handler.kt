@@ -7,8 +7,8 @@ import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.frame.common
 import top.e404.skiko.frame.handle
 import top.e404.skiko.util.getJarImage
+import top.e404.skiko.util.newSurface
 import top.e404.skiko.util.resize
-import top.e404.skiko.util.toSurface
 import top.e404.skiko.util.withCanvas
 import kotlin.math.min
 
@@ -27,14 +27,14 @@ object X64Handler : FramesHandler {
     ) = frames.result {
         val first = first()
         val size = min(first.image.width, first.image.height)
-        val resize = x64.resize(size / 2, size / 3, false)
+        val resize = x64.resize(size / 2, size / 3, true)
         common(args).handle {
-            toSurface().withCanvas {
-                drawImage(this@handle, 0f, 0f)
+            it.newSurface().withCanvas {
+                drawImage(it, 0f, 0f)
                 drawImage(
                     resize,
-                    this@handle.width.toFloat() - resize.width,
-                    this@handle.height.toFloat() - resize.height
+                    it.width.toFloat() - resize.width,
+                    it.height.toFloat() - resize.height
                 )
             }
         }

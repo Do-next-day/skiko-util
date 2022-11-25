@@ -6,8 +6,8 @@ import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.frame.common
 import top.e404.skiko.util.getJarImage
+import top.e404.skiko.util.newSurface
 import top.e404.skiko.util.round
-import top.e404.skiko.util.toSurface
 import top.e404.skiko.util.withCanvas
 
 /**
@@ -26,7 +26,7 @@ object DemandHandler : FramesHandler {
     ) = frames.result {
         common(args).onEach { frame ->
             frame.handle {
-                bg.toSurface().withCanvas {
+                bg.newSurface().withCanvas {
                     drawImage(bg, 0F, 0F)
                     drawImage(round(90), 107F, 37F)
                 }

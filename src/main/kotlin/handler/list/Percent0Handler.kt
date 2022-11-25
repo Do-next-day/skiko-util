@@ -16,11 +16,12 @@ import kotlin.math.min
 @ImageHandler
 object Percent0Handler : FramesHandler {
     override val name = "Percent0"
-    override val regex = Regex("(?i)Percent0|0%")
+    override val regex = Regex("0%")
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
+        val t = args["text"] ?: "0%"
         return frames.replenish(20, Frame::limitAsGif).result {
             common(args).pmapIndexed { index ->
                 val center = size / 2
@@ -28,8 +29,7 @@ object Percent0Handler : FramesHandler {
                     val w = width / 2f
                     val h = height / 2f
                     val radius = min(w, h) * .24f
-
-                    val text = TextLine.make("0%", FontType.MI.getSkiaFont(radius * .7f))
+                    val text = TextLine.make(t, FontType.MI.getSkiaFont(radius * .7f))
                     val v = (abs(center - index) + 1).toFloat() / size / 4
                     Surface.makeRaster(imageInfo).withCanvas {
                         val paint = Paint().apply {

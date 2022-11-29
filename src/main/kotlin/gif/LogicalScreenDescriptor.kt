@@ -28,15 +28,8 @@ internal object LogicalScreenDescriptor {
     ) {
         // Color Resolution Use 7
         var flags = 0x70
-
-        if (table.exists()) {
-            flags = flags or 0x80 or table.size()
-        }
-
-        if (table.sort) {
-            flags = flags or 0x08
-        }
-
+        if (table.exists()) flags = flags or 0x80 or table.size()
+        if (table.sort) flags = flags or 0x08
         block(
             buffer = buffer,
             width = width.asUnsignedShort(),
@@ -45,7 +38,6 @@ internal object LogicalScreenDescriptor {
             backgroundColorIndex = table.background.asUnsignedByte(),
             pixelAspectRatio = ratio.asUnsignedByte()
         )
-
         table.write(buffer)
     }
 }

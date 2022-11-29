@@ -18,6 +18,8 @@ class ColorTable(
         check(colors.capacity() != -1) { "Color Table Too Large" }
     }
 
+    fun s() = colors.size * 3 + (colors.capacity() - colors.size) * 3
+
     fun write(buffer: ByteBuffer) {
         for (color in colors) {
             buffer.put(color.asRGBBytes())

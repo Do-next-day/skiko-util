@@ -55,7 +55,7 @@ class TestHandler {
 
     @Test
     fun testRotate() {
-        testHandler(RotateHandler, mutableMapOf("angel" to "45"))
+        testHandler(RotateHandler, mutableMapOf("text" to "45"))
     }
 
     @Test
@@ -220,11 +220,6 @@ class TestHandler {
     }
 
     @Test
-    fun testRotateHandler() {
-        testHandler(RotateHandler, mutableMapOf("text" to "45"))
-    }
-
-    @Test
     fun testWriteHandler() {
         testHandler(WriteHandler, mutableMapOf("text" to "400"))
     }
@@ -242,7 +237,8 @@ class TestHandler {
     @Test
     fun testLatticeHandler() {
         testHandler(
-            LatticeHandler, mutableMapOf(
+            LatticeHandler,
+            mutableMapOf(
                 "rate" to "8",
                 "spacing" to "3",
                 "bg" to "#000"
@@ -253,7 +249,8 @@ class TestHandler {
     @Test
     fun testCharImageHandler() {
         testHandler(
-            CharImageHandler, mutableMapOf(
+            CharImageHandler,
+            mutableMapOf(
                 "text" to "好耶",
                 "c" to ""
             )
@@ -383,7 +380,7 @@ class TestHandler {
     }
 
     @Test
-    fun testLattice1Handler() {
+    fun testPaneHandler() {
         testHandler(PaneHandler, emptyArgs)
     }
 
@@ -478,5 +475,31 @@ class TestHandler {
             ColorfulEdgeHandler,
             emptyArgs
         )
+    }
+
+    @Test
+    fun testHold3Handler() {
+        testHandler(
+            Hold3Handler,
+            emptyArgs
+        )
+    }
+
+    @Test
+    fun testDpxHandler() {
+        testHandler(
+            DpxHandler,
+            mutableMapOf("text" to "20", "r" to "")
+        )
+    }
+
+    @Test
+    fun test() {
+        runBlocking {
+            val fr = File("in/0.png").readBytes().decodeToFrames()
+
+            val bytes = DpxHandler.handleFrames(fr, mutableMapOf("count" to "40")).result!!.encodeToBytes()
+            File("out/0.png.gif").writeBytes(bytes)
+        }
     }
 }

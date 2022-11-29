@@ -1,9 +1,7 @@
 package top.e404.skiko.gif
 
+import kotlinx.coroutines.*
 import org.jetbrains.skia.*
-import org.jetbrains.skia.impl.BufferUtil
-import top.e404.skiko.alpha
-import top.e404.skiko.util.any
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -19,13 +17,6 @@ class GIFBuilder(val width: Int, val height: Int) {
     private fun header(buffer: ByteBuffer) = buffer.put(GIF_HEADER)
 
     private fun trailer(buffer: ByteBuffer) = buffer.put(GIF_TRAILER)
-
-    var capacity = 1 shl 23
-
-    /**
-     * [ByteBuffer.capacity]
-     */
-    fun capacity(total: Int) = apply { capacity = total }
 
     var loop = 0
 
@@ -108,44 +99,57 @@ class GIFBuilder(val width: Int, val height: Int) {
         frames.add(Triple(bitmap, colors, info))
     }
 
-    fun build(buffer: ByteBuffer) {
-        buffer.order(ByteOrder.LITTLE_ENDIAN)
+    @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
+    fun buildToBuffer(): ByteBuffer {
+        val list = runBlocking {
+            frames.map { (bitmap, colors, info) ->
+                CoroutineScope(Dispatchers.Default).async {
+                    val opaque = !bitmap.computeIsOpaque()
+                    val table = when {
+                        colors.exists() -> colors
+                        global.exists() -> global
+                        else -> ColorTable(OctTreeQuantizer().quantize(bitmap, if (opaque) 255 else 256), true)
+                    }
+                    val transparency = if (opaque) table.transparency else null
+                    val result = AtkinsonDitherer.dither(bitmap, table.colors)
 
-        header(buffer)
-        LogicalScreenDescriptor.write(buffer, width, height, global, ratio)
-        if (loop >= 0) ApplicationExtension.loop(buffer, loop)
-        if (buffering > 0) ApplicationExtension.buffering(buffer, buffering)
-        for ((bitmap, colors, info) in frames) {
-            val opaque = bitmap.any { it.alpha() == 0 }
-            val table = when {
-                colors.exists() -> colors
-                global.exists() -> global
-                else -> ColorTable(OctTreeQuantizer().quantize(bitmap, if (opaque) 255 else 256), true)
-            }
-            val transparency = if (opaque) table.transparency else null
-
-            GraphicControlExtension.write(buffer, info.disposalMethod, false, transparency, info.duration)
-
-            val result = AtkinsonDitherer.dither(bitmap, table.colors)
-
-            @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
-            ImageDescriptor.write(buffer, info.frameRect, table, table !== global, result)
+                    val descBuf = ImageDescriptor.toBuffer(info.frameRect, table, table !== global, result)
+                    val buf = ByteBuffer.allocate(descBuf.limit() + 8)
+                    buf.order(ByteOrder.LITTLE_ENDIAN)
+                    GraphicControlExtension.write(
+                        buf,
+                        info.disposalMethod,
+                        false,
+                        transparency,
+                        info.duration
+                    ) // 8 Byte
+                    for (i in 0 until descBuf.position()) buf.put(descBuf[i])
+                    buf
+                }
+            }.awaitAll()
         }
-        trailer(buffer)
+        var size = GIF_HEADER.size +
+                global.s() + 7 +
+                list.sumOf { it.limit() } +
+                GIF_TRAILER.size
+        if (loop >= 0) size += 19
+        if (buffering > 0) size += 21
+        val buf = ByteBuffer.allocate(size)
+
+        buf.order(ByteOrder.LITTLE_ENDIAN)
+
+        header(buf) // GIF_HEADER.size
+        LogicalScreenDescriptor.write(buf, width, height, global, ratio) // global.s()
+        if (loop >= 0) ApplicationExtension.loop(buf, loop) // 19
+        if (buffering > 0) ApplicationExtension.buffering(buf, buffering) // 21
+
+        list.forEach {
+            for (i in 0 until it.position()) buf.put(it[i])
+        }
+
+        trailer(buf)
+        return buf
     }
 
-    fun data(): Data {
-        val data = Data.makeUninitialized(capacity)
-        val buffer = BufferUtil.getByteBufferFromPointer(data.writableData(), capacity)
-        build(buffer = buffer)
-
-        return data.makeSubset(0, buffer.position())
-    }
-
-    fun build(): ByteArray {
-        val buffer = ByteBuffer.allocate(capacity)
-        build(buffer = buffer)
-
-        return ByteArray(buffer.position()).also { buffer.get(it) }
-    }
+    fun buildToData() = Data.makeFromBytes(buildToBuffer().array())
 }

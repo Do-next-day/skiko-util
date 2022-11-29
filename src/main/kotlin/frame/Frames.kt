@@ -58,7 +58,7 @@ fun List<Frame>.encodeToBytes() = when (size) {
  */
 suspend fun List<Frame>.handle(
     block: (Image) -> Image
-) = pmap { handle(block) }
+) = pmap { handleImage(block) }
 
 /**
  * 对frames的每一帧进行处理, 处理时获取frame下标
@@ -68,7 +68,7 @@ suspend fun List<Frame>.handle(
  */
 suspend fun List<Frame>.handleIndexed(
     block: Image.(Int) -> Image
-) = pmapIndexed { handle { block(it) } }
+) = pmapIndexed { handleImage { img -> img.block(it) } }
 
 /**
  * 处理通用参数
@@ -90,10 +90,10 @@ fun MutableList<Frame>.common(
     onEach { frame ->
         duration?.let { frame.duration = it }
         if (width == null && height == null) return@onEach
-        frame.handle {
-            val w = width ?: this.width
-            val h = height ?: this.height
-            resize(w, h, smooth)
+        frame.handleImage {
+            val w = width ?: it.width
+            val h = height ?: it.height
+            it.resize(w, h, smooth)
         }
     }
 }
@@ -145,7 +145,7 @@ class Frame(
     fun duration(duration: Int) = apply { this.duration = duration }
     fun image(image: Image) = apply { this.image = image }
     fun bytes(format: EncodedImageFormat = EncodedImageFormat.PNG) = image.bytes(format)
-    fun handle(block: Image.() -> Image) = apply { image = image.block() }
+    fun handleImage(block: (Image) -> Image) = apply { image = block(image) }
     fun clone() = Frame(duration, image.toBitmap().makeClone().toImage())
     fun limitAsGif(limit: Float = 600F) {
         val max = max(image.width, image.height)

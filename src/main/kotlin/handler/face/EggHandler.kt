@@ -32,9 +32,9 @@ object EggHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.common(args).replenish(count).result {
-        common(args).pmapIndexed { index ->
-            handle {
-                val src = Rect.makeWH(width.toFloat(), height.toFloat())
+        pmapIndexed { index ->
+            handleImage {
+                val src = Rect.makeWH(it.width.toFloat(), it.height.toFloat())
                 Surface.makeRasterN32Premul(w, h).withCanvas {
                     ddList[index % 4].draw(this, image, src)
                     drawImage(bgList[index % 4], 0F, 0F)

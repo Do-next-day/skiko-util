@@ -22,4 +22,4 @@ fun gif(
     block: GIFBuilder.() -> Unit
 ) = GIFBuilder(width, height)
     .apply(block)
-    .data()
+    .buildToData()

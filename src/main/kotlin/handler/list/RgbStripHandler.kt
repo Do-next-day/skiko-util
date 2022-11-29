@@ -33,10 +33,10 @@ object RgbStripHandler : FramesHandler {
         val reverse = args.containsKey("r") // 反向
         pmapIndexed { index ->
             val uw = unitWidth * (if (reverse) size - index else index) // 变换起点宽度
-            handle {
-                val bitmap = toBitmap()
+            handleImage {
+                val bitmap = it.toBitmap()
                 val result = Bitmap().apply {
-                    allocPixels(this@handle.imageInfo)
+                    allocPixels(it.imageInfo)
                     setAlphaType(ColorAlphaType.PREMUL)
                 }
                 if (horizontal) for (y in 0 until hei) {

@@ -36,10 +36,10 @@ object BoxingHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.handle { it.round() }.common(args).replenish(count, Frame::limitAsGif).result {
-        common(args).pmapIndexed { index ->
+        pmapIndexed { index ->
             duration = 60
-            handle {
-                val headSrc = Rect.makeWH(width.toFloat(), height.toFloat())
+            handleImage {
+                val headSrc = Rect.makeWH(it.width.toFloat(), it.height.toFloat())
                 Surface.makeRasterN32Premul(
                     BoxingHandler.size,
                     BoxingHandler.size

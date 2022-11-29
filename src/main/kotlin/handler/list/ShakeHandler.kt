@@ -20,7 +20,7 @@ object ShakeHandler : FramesHandler {
         val count = args["count"]?.toIntOrNull()?.coerceIn(1..50) ?: 10
         return frames.replenish(count, Frame::limitAsGif).result {
             common(args).pmapIndexed { index ->
-                handle {
+                handleImage {
                     val w = image.width.toFloat()
                     val h = image.height.toFloat()
                     val rect = when (index % 4) {

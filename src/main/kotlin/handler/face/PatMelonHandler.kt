@@ -7,7 +7,6 @@ import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.handler.DrawData
 import top.e404.skiko.util.*
-import top.e404.skiko.util.getJarImage
 
 /**
  * 拍
@@ -30,10 +29,10 @@ object PatMelonHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.handle { it.subCenter() }.common(args).replenish(count).result {
-        common(args).pmapIndexed { index ->
+        pmapIndexed { index ->
             duration = 100
-            handle {
-                val src = Rect.makeWH(width.toFloat(), height.toFloat())
+            handleImage {
+                val src = Rect.makeWH(it.width.toFloat(), it.height.toFloat())
                 Surface.makeRasterN32Premul(w, h).withCanvas {
                     ddList[index].draw(this, image, src)
                     drawImageRectNearest(bgList[index], bgSrcList[index], imgSrc)

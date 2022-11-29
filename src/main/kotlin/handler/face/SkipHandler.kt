@@ -30,9 +30,9 @@ object SkipHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.handle { it.round() }.common(args).replenish(count).result {
-        common(args).pmapIndexed { index ->
-            handle {
-                val src = Rect.makeWH(width.toFloat(), height.toFloat())
+        pmapIndexed { index ->
+            handleImage {
+                val src = Rect.makeWH(it.width.toFloat(), it.height.toFloat())
                 Surface.makeRasterN32Premul(w, h).withCanvas {
                     drawImage(bgList[index % 8], 0F, 0F)
                     ddList[index % 8].draw(this, image, src)

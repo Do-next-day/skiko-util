@@ -28,7 +28,7 @@ object EnchantHandler : FramesHandler {
             val size = min(max(image.width, image.height), 400) * 3
             val resize = bg.resize(size, size)
             val unit = size / (count - 1)
-            common(args).pmapIndexed { index ->
+            pmapIndexed { index ->
                 limitAsGif(400F)
                 also {
                     it.image = it.image.newSurface().withCanvas {

@@ -25,19 +25,19 @@ object Percent0Handler : FramesHandler {
         return frames.replenish(20, Frame::limitAsGif).result {
             common(args).pmapIndexed { index ->
                 val center = size / 2
-                handle {
-                    val w = width / 2f
-                    val h = height / 2f
+                handleImage {
+                    val w = it.width / 2f
+                    val h = it.height / 2f
                     val radius = min(w, h) * .24f
                     val text = TextLine.make(t, FontType.MI.getSkiaFont(radius * .7f))
                     val v = (abs(center - index) + 1).toFloat() / size / 4
-                    Surface.makeRaster(imageInfo).withCanvas {
+                    Surface.makeRaster(it.imageInfo).withCanvas {
                         val paint = Paint().apply {
                             isAntiAlias = true
                             color = Color.WHITE
                         }
                         clear(Color.BLACK)
-                        drawImage(this@handle, 0F, 0F, paint.apply { alpha = 160 })
+                        drawImage(it, 0F, 0F, paint.apply { alpha = 160 })
                         drawCircle(w, h, radius, paint.apply {
                             mode = PaintMode.STROKE
                             strokeWidth = radius * .17f

@@ -15,8 +15,8 @@ object RoundHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.result {
-        common(args).onEach {
-            it.handle { round() }
+        common(args).onEach { frame ->
+            frame.handleImage { image -> image.round() }
         }
     }
 }

@@ -25,10 +25,10 @@ object DemandHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.result {
         common(args).onEach { frame ->
-            frame.handle {
+            frame.handleImage {
                 bg.newSurface().withCanvas {
                     drawImage(bg, 0F, 0F)
-                    drawImage(round(90), 107F, 37F)
+                    drawImage(it.round(90), 107F, 37F)
                 }
             }
         }

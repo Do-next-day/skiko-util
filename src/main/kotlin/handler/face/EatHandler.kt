@@ -30,10 +30,10 @@ object EatHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.handle { it.round() }.common(args).replenish(count).result {
-        common(args).pmapIndexed { index ->
+        pmapIndexed { index ->
             duration = 80
-            handle {
-                val src = Rect.makeWH(width.toFloat(), height.toFloat())
+            handleImage {
+                val src = Rect.makeWH(it.width.toFloat(), it.height.toFloat())
                 Surface.makeRasterN32Premul(w, h).withCanvas {
                     ddList.getOrNull(index)?.draw(this, image, src)
                     drawImage(bgList[index], 0F, 0F)

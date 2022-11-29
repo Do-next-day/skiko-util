@@ -37,13 +37,13 @@ object PeasHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.handle { it.round() }.common(args).replenish(count).result {
-        common(args).pmapIndexed { index ->
-            handle {
-                val src = Rect.makeWH(width.toFloat(), height.toFloat())
+        pmapIndexed { index ->
+            handleImage { img ->
+                val src = Rect.makeWH(img.width.toFloat(), img.height.toFloat())
                 Surface.makeRasterN32Premul(w, h).withCanvas {
                     val pd = pdList[index % 8]
                     pd.peas.draw(this, bgList[index % 8], bgSrcList[index % 8])
-                    pd.heads.forEach { it.draw(this, this@handle, src) }
+                    pd.heads.forEach { it.draw(this, img, src) }
                 }
             }
         }

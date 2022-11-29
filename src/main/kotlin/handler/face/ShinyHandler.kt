@@ -10,7 +10,6 @@ import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.frame.common
 import top.e404.skiko.frame.handle
 import top.e404.skiko.util.*
-import top.e404.skiko.util.getJarImage
 
 @ImageHandler
 object ShinyHandler : FramesHandler {

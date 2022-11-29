@@ -32,16 +32,25 @@ object AtkinsonDitherer {
         )
     }
 
-    private operator fun Color.minus(other: Color): Color =
-        Color(this.red - other.red, this.green - other.green, this.blue - other.blue)
+    private operator fun Color.minus(other: Color) = Color(
+        red = this.red - other.red,
+        green = this.green - other.green,
+        blue = this.blue - other.blue
+    )
 
-    private operator fun Color.plus(other: Color): Color =
-        Color(this.red + other.red, this.green + other.green, this.blue + other.blue)
+    private operator fun Color.plus(other: Color) = Color(
+        red = this.red + other.red,
+        green = this.green + other.green,
+        blue = this.blue + other.blue
+    )
 
-    private operator fun Color.times(power: Double): Color =
-        Color((this.red * power).toInt(), (this.green * power).toInt(), (this.blue * power).toInt())
+    private operator fun Color.times(power: Double) = Color(
+        red = (this.red * power).toInt(),
+        green = (this.green * power).toInt(),
+        blue = (this.blue * power).toInt()
+    )
 
-    private fun Color.nearest(): Int = red * red + green * green + blue * blue
+    private fun Color.nearest() = red * red + green * green + blue * blue
 
     fun dither(bitmap: Bitmap, table: IntArray): IntArray {
         val width = bitmap.width

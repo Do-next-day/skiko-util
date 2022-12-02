@@ -128,7 +128,7 @@ suspend fun MutableList<Frame>.replenish(
     }.toMutableList()
 }
 
-fun Image.toFrame() = Frame(0, this)
+fun Image.toFrame(duration: Int = 0) = Frame(duration, this)
 fun Image.toFrames() = mutableListOf(toFrame())
 
 /**

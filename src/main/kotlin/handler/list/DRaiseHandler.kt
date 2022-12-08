@@ -29,9 +29,10 @@ object DRaiseHandler : FramesHandler {
                 val centerX = image.width / 2
                 val centerY = image.height / 2
                 // 开始的幅度
-                val s = if (start <= 0) start * min(image.width, image.height) / -100 else start
+                val size = min(image.width, image.height)
+                val s = if (start <= 0) start * size / -100 else start
                 // 最终的幅度
-                val e = if (end <= 0) end * min(image.width, image.height) / -100 else end
+                val e = if (end <= 0) end * size / -100 else end
                 val radius = s + (e - s) * index / count
                 if (radius == 0) return@handleIndexed result.toImage()
                 for (x in 0 until image.width) for (y in 0 until image.height) {

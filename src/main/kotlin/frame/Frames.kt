@@ -67,8 +67,8 @@ suspend fun List<Frame>.handle(
  * @return frames
  */
 suspend fun List<Frame>.handleIndexed(
-    block: Image.(Int) -> Image
-) = pmapIndexed { handleImage { img -> img.block(it) } }
+    block: (Int, Image) -> Image
+) = pmapIndexed { handleImage { img -> block(it, img) } }
 
 /**
  * 处理通用参数

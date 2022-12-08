@@ -21,8 +21,8 @@ object TurnHandler : FramesHandler {
         val count = args["text"]?.toIntOrNull() ?: 10
         return frames.common(args).replenish(abs(count), Frame::limitAsGif).result {
             val v = (360F / size).let { if (count < 0) -it else it }
-            handleIndexed { index ->
-                round().rotateKeepSize(index * v)
+            handleIndexed { index, image ->
+                image.round().rotateKeepSize(index * v)
             }
         }
     }

@@ -28,11 +28,11 @@ object RuaHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.common(args).handle { it.round() }.replenish(4).result {
-        handleIndexed { index ->
-            val src = Rect.makeWH(width.toFloat(), height.toFloat())
+        handleIndexed { index, image ->
+            val src = Rect.makeWH(image.width.toFloat(), image.height.toFloat())
             Surface.makeRasterN32Premul(this@RuaHandler.size, this@RuaHandler.size).withCanvas {
                 val i = index % 5
-                ddList.face[i].draw(this, this@handleIndexed, src)
+                ddList.face[i].draw(this, image, src)
                 ddList.hand[i].draw(this, bgList[i], bgSrc)
             }
         }

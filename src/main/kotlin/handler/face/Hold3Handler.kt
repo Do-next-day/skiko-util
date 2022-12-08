@@ -24,10 +24,10 @@ object Hold3Handler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.common(args).replenish(2, Frame::limitAsGif).result {
-        handleIndexed { index ->
-            val src = Rect.makeWH(width.toFloat(), height.toFloat())
+        handleIndexed { index, image ->
+            val src = Rect.makeWH(image.width.toFloat(), image.height.toFloat())
             Surface.makeRasterN32Premul(w, h).withCanvas {
-                drawImageRectNearest(this@handleIndexed, src, dstRect) // face
+                drawImageRectNearest(image, src, dstRect) // face
                 drawImage(cover[index % 2], 0F, 0F) // cover
             }
         }

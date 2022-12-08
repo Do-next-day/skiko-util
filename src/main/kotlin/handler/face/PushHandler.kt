@@ -32,15 +32,15 @@ object PushHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.common(args).handle { it.round() }.replenish(14).result {
-        handleIndexed { index ->
-            val src = Rect.makeWH(width.toFloat(), height.toFloat())
+        handleIndexed { index, image ->
+            val src = Rect.makeWH(image.width.toFloat(), image.height.toFloat())
             Surface.makeRasterN32Premul(
                 this@PushHandler.size,
                 this@PushHandler.size
             ).withCanvas {
                 val angel = index * 360F / size
                 val i = index % 15
-                val face = rotateKeepSize(angel)
+                val face = image.rotateKeepSize(angel)
                 drawRect(bgRect, paint)
                 ddList[i].draw(this, face, src)
                 drawImageRect(bgList[i], bgRect)

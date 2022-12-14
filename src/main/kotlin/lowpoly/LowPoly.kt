@@ -5,7 +5,14 @@ import top.e404.skiko.util.toBitmap
 import top.e404.skiko.util.withCanvas
 
 object LowPoly {
-    fun Image.lowPoly(
+    fun Image.lowpolyBySize(
+        accuracy: Int = 100
+    ) = lowpoly(
+        accuracy,
+        pointCount = width * height / 25
+    )
+
+    fun Image.lowpoly(
         accuracy: Int = 100,
         pointCount: Int = 300
     ) = generate(toBitmap(), accuracy, pointCount)

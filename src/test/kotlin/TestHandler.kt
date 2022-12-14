@@ -351,7 +351,7 @@ class TestHandler {
     fun testLowPolyHandler() {
         testHandler(
             LowPolyHandler, mutableMapOf(
-                "acc" to "100",
+                "acc" to "30",
                 "pc" to "1000"
             )
         )

@@ -85,15 +85,13 @@ fun MutableList<Frame>.common(
     val width = args["w"]?.toIntOrNull()
     // 图片高度
     val height = args["h"]?.toIntOrNull()
-    // 平滑
-    val smooth = args.containsKey("smooth")
     onEach { frame ->
         duration?.let { frame.duration = it }
         if (width == null && height == null) return@onEach
         frame.handleImage {
             val w = width ?: it.width
             val h = height ?: it.height
-            it.resize(w, h, smooth)
+            it.resize(w, h, true)
         }
     }
 }

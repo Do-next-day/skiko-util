@@ -91,7 +91,7 @@ fun MutableList<Frame>.common(
         frame.handleImage {
             val w = width ?: it.width
             val h = height ?: it.height
-            it.resize(w, h, true)
+            it.resize(w, h, false)
         }
     }
 }

@@ -20,9 +20,8 @@ object RgbHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.common(args).replenish(
-        args["text"]?.toIntOrNull()?.let { if (it < 2) null else it } ?: 10, Frame::limitAsGif
-    ).result {
+    ) = frames.common(args).result {
+        if (size == 1) replenish(args["text"]?.toIntOrNull()?.let { if (it < 2) null else it } ?: 10, Frame::limitAsGif)
         val v = 1F / size
         pmapIndexed { index ->
             val vv = v * index

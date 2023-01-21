@@ -112,6 +112,12 @@ suspend fun List<Frame>.withCanvas(
     }
 }
 
+/**
+ * 增加帧数
+ *
+ * @param count 目标帧数
+ * @param block 在增加帧数之前进行的操作
+ */
 suspend fun MutableList<Frame>.replenish(
     count: Int,
     block: Frame.() -> Unit = {}

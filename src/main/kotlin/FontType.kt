@@ -2,10 +2,10 @@
 
 package top.e404.skiko
 
-import org.jetbrains.skia.Data
-import org.jetbrains.skia.Font
-import org.jetbrains.skia.FontMgr
+import org.jetbrains.skia.*
+import org.jetbrains.skia.paragraph.TypefaceFontProvider
 import java.io.File
+import java.util.*
 import java.awt.Font as AwtFont
 
 enum class FontType(name: String) {
@@ -43,7 +43,20 @@ enum class FontType(name: String) {
     }
 
     companion object {
+        val fontMgr = ServiceLoader.load(TypefaceFontProvider::class.java)
         var fontDir = "data/font"
         fun Font.fullHeight() = metrics.run { descent - ascent }
+
+        init {
+            fun File.registerAsFont() {
+                if (isDirectory) listFiles()?.forEach { it.registerAsFont() }
+                else {
+                    fontMgr.forEach {
+                        it.registerTypeface(Typeface.makeFromFile(this.path, 0))
+                    }
+                }
+            }
+            File(fontDir).registerAsFont()
+        }
     }
 }

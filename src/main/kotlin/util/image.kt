@@ -34,8 +34,8 @@ fun Image.sub(
  */
 fun Canvas.drawImageRectNearest(
     image: Image,
-    src: Rect,
-    dst: Rect,
+    src: Rect = Rect.makeWH(image.width.toFloat(), image.height.toFloat()),
+    dst: Rect = src,
     paint: Paint? = null,
     block: Paint.() -> Unit = {},
 ) = drawImageRect(

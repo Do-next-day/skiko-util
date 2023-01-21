@@ -1,6 +1,8 @@
 package top.e404.skiko
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.decodeToFrames
@@ -91,8 +93,8 @@ class TestHandler {
         testHandler(
             ResizeHandler,
             mutableMapOf(
-                "w" to "-10",
-                "h" to "-10",
+                "w" to "-50",
+                "h" to "-50",
             )
         )
     }
@@ -214,7 +216,12 @@ class TestHandler {
 
     @Test
     fun testTurnHandler() {
-        testHandler(TurnHandler, mutableMapOf("count" to "10"))
+        testHandler(
+            TurnHandler, mutableMapOf(
+                "text" to "50",
+                "r" to "",
+            )
+        )
     }
 
     @Test

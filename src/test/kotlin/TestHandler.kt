@@ -103,7 +103,7 @@ class TestHandler {
     fun testRgbFilter() {
         testHandler(
             RgbHandler, mutableMapOf(
-                "count" to "10",
+                "text" to "10",
             )
         )
     }

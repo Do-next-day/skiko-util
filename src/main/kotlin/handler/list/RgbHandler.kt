@@ -21,9 +21,18 @@ object RgbHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.common(args).result {
-        if (size == 1) replenish(args["text"]?.toIntOrNull()?.let { if (it < 2) null else it } ?: 10, Frame::limitAsGif)
+        val size = if (size == 1) args["text"]
+            ?.toIntOrNull()
+            ?.let { if (it < 2) null else it }
+            ?: 10 else size
         val v = 1F / size
-        pmapIndexed { index ->
+        replenish(
+            args["text"]
+                ?.toIntOrNull()
+                ?.let { if (it < 2) null else it }
+                ?: 10,
+            Frame::limitAsGif
+        ).pmapIndexed { index ->
             val vv = v * index
             handleImage {
                 it.handlePixel { pixel ->

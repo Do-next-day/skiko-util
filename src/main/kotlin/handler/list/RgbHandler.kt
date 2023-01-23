@@ -25,21 +25,15 @@ object RgbHandler : FramesHandler {
             ?.toIntOrNull()
             ?.let { if (it < 2) null else it }
             ?: 10 else size
-        val v = 1F / size
-        replenish(
-            args["text"]
-                ?.toIntOrNull()
-                ?.let { if (it < 2) null else it }
-                ?: 10,
-            Frame::limitAsGif
-        ).pmapIndexed { index ->
-            val vv = v * index
+        val unit = 1F / size // rgb颜色渐变的单位
+        replenish(size, Frame::limitAsGif).pmapIndexed { index ->
+            val addH = unit * index // 在当前帧增加的h
             handleImage {
                 it.handlePixel { pixel ->
                     val (a, h, s, b) = pixel.ahsb()
                     if (a == 0) 0
                     else {
-                        var e = h + vv
+                        var e = h + addH
                         if (e > 1) e--
                         ahsb(a, e, s, b)
                     }

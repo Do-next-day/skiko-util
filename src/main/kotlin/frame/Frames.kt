@@ -123,9 +123,9 @@ suspend fun MutableList<Frame>.replenish(
     block: Frame.() -> Unit = {}
 ) = run {
     pmap(block)
+    if (size >= count) return@run this
     var i = 0
-    if (size >= count) this
-    else (0..count).map {
+    (0..count).map {
         i++
         if (i >= size) i = 0
         this[i].clone()

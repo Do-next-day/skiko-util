@@ -423,8 +423,8 @@ class TestHandler {
         testHandler(
             RgbStripHandler,
             mutableMapOf(
-                //"h" to "",
-                "r" to ""
+                "h" to "",
+                "r" to "",
             )
         )
     }

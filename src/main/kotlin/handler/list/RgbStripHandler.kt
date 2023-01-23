@@ -26,44 +26,56 @@ object RgbStripHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.common(args).replenish(10, Frame::limitAsGif).result {
         val img = first().image
-        val wid = img.width
-        val hei = img.height
-        val unitWidth = wid / size // 变换的单位宽度
-        val horizontal = args.containsKey("h") // 水平
         val reverse = args.containsKey("r") // 反向
+        if (args.containsKey("h")) { // 纵向渐变
+            val unitHeight = img.height / size // 变换的单位宽度
+            return@result pmapIndexed { index ->
+                val startY = unitHeight * (if (reverse) size - index else index) // 变换起点高度
+                handleImage {
+                    val bitmap = it.toBitmap()
+                    val result = Bitmap().apply {
+                        allocPixels(it.imageInfo)
+                        setAlphaType(ColorAlphaType.PREMUL)
+                    }
+                    for (y in 0 until img.height) {
+                        val currentY = (y + startY) % img.height // 当前处理的y
+                        val addH = y.toFloat() / img.height // 增加的h
+                        for (x in 0 until img.width) {
+                            val pixel = bitmap.getColor(x, currentY)
+                            var (a, h, s, b) = pixel.ahsb()
+                            if (a == 0) {
+                                result.erase(0, IRect.makeXYWH(x, currentY, 1, 1))
+                                continue
+                            }
+                            h = (h + addH) % 1
+                            result.erase(ahsb(a, h, s, b), IRect.makeXYWH(x, currentY, 1, 1))
+                        }
+                    }
+                    result.toImage()
+                }
+            }
+        }
+        val unitWidth = img.width / size // 变换的单位宽度
         pmapIndexed { index ->
-            val uw = unitWidth * (if (reverse) size - index else index) // 变换起点宽度
+            val startX = unitWidth * (if (reverse) size - index else index) // 变换起点宽度
             handleImage {
-                val bitmap = it.toBitmap()
-                val result = Bitmap().apply {
+                val bitmap = it.toBitmap() // 原图
+                val result = Bitmap().apply { // 画板
                     allocPixels(it.imageInfo)
                     setAlphaType(ColorAlphaType.PREMUL)
                 }
-                if (horizontal) for (y in 0 until hei) {
-                    val uy = (y + uw) % hei
-                    val uh = y.toFloat() / hei
-                    for (x in 0 until wid) {
-                        val pixel = bitmap.getColor(x, uy)
+                for (x in 0 until img.width) {
+                    val currentX = (x + startX) % img.width // 当前处理的x
+                    val addH = x.toFloat() / img.width // 增加的h
+                    for (y in 0 until img.height) {
+                        val pixel = bitmap.getColor(currentX, y)
                         var (a, h, s, b) = pixel.ahsb()
                         if (a == 0) {
-                            result.erase(0, IRect.makeXYWH(x, uy, 1, 1))
+                            result.erase(0, IRect.makeXYWH(currentX, y, 1, 1))
                             continue
                         }
-                        h = (h + uh) % 1
-                        result.erase(ahsb(a, h, s, b), IRect.makeXYWH(x, uy, 1, 1))
-                    }
-                } else for (x in 0 until wid) {
-                    val ux = (x + uw) % wid
-                    val uh = x.toFloat() / wid
-                    for (y in 0 until hei) {
-                        val pixel = bitmap.getColor(ux, y)
-                        var (a, h, s, b) = pixel.ahsb()
-                        if (a == 0) {
-                            result.erase(0, IRect.makeXYWH(ux, y, 1, 1))
-                            continue
-                        }
-                        h = (h + uh) % 1
-                        result.erase(ahsb(a, h, s, b), IRect.makeXYWH(ux, y, 1, 1))
+                        h = (h + addH) % 1
+                        result.erase(ahsb(a, h, s, b), IRect.makeXYWH(currentX, y, 1, 1))
                     }
                 }
                 result.toImage()

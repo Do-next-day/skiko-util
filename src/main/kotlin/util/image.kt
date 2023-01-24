@@ -77,15 +77,29 @@ fun Image.resize(w: Int, h: Int, smooth: Boolean = false): Image {
  * 绘制圆角图片
  *
  * @param image 待绘制的图片
- * @param srcRect 对原图进行裁剪
- * @param rRect 圆角矩形
+ * @param src 对原图进行裁剪
+ * @param dst 圆角矩形
  */
-fun Canvas.drawImageRRect(image: Image, srcRect: Rect, rRect: RRect) {
+fun Canvas.drawImageRRect(
+    image: Image,
+    src: Rect,
+    dst: RRect,
+    samplingMode: FilterMipmap = FilterMipmap(FilterMode.LINEAR, MipmapMode.NEAREST),
+    paint: Paint? = null,
+    strict: Boolean = true
+) {
     // 保存canvas属性
     save()
     // 设置圆角
-    clipRRect(rRect, true)
-    drawImageRect(image, srcRect, rRect)
+    clipRRect(dst, true)
+    drawImageRect(
+        image = image,
+        src = src,
+        dst = dst,
+        samplingMode = samplingMode,
+        paint = paint,
+        strict = strict
+    )
     // 恢复canvas属性
     restore()
 }
@@ -127,10 +141,8 @@ fun Canvas.drawImageRRect(
  */
 fun Image.round(size: Int? = null): Image {
     val s = size ?: max(width, height)
-    val image = subCenter(s)
-    return Surface.makeRasterN32Premul(s, s).run {
-        canvas.drawImageRRect(image, 0F, 0F, s.toFloat(), s.toFloat(), s / 2F)
-        makeImageSnapshot()
+    return Surface.makeRasterN32Premul(s, s).withCanvas {
+        drawImageRRect(subCenter(s), 0F, 0F, s.toFloat(), s.toFloat(), s / 2F)
     }
 }
 

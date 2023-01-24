@@ -3,7 +3,7 @@ package top.e404.skiko.handler.list
 import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.ColorAlphaType
 import org.jetbrains.skia.IRect
-import top.e404.skiko.ahsb
+import top.e404.skiko.*
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.Frame
 import top.e404.skiko.frame.FramesHandler
@@ -25,10 +25,42 @@ object RgbStripHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ) = frames.common(args).replenish(10, Frame::limitAsGif).result {
-        val img = first().image
+        val f = args.containsKey("f") // 灰度模式
         val reverse = args.containsKey("r") // 反向
+        val img = first().image
         if (args.containsKey("h")) { // 纵向渐变
             val unitHeight = img.height / size // 变换的单位宽度
+            if (f) {
+                val ss = args["s"]?.toFloatOrNull() ?: 0.5F
+                val bb = args["b"]?.toFloatOrNull() ?: 0.3F
+                return@result pmapIndexed { index ->
+                    val startY = unitHeight * (if (reverse) size - index else index) // 变换起点高度
+                    handleImage {
+                        val bitmap = it.toBitmap()
+                        val result = Bitmap().apply {
+                            allocPixels(it.imageInfo)
+                            setAlphaType(ColorAlphaType.PREMUL)
+                        }
+                        for (y in 0 until img.height) {
+                            val currentY = (y + startY) % img.height // 当前处理的y
+                            val (hr, hg, hb) = hsb(y.toFloat() / img.height, ss, bb).rgb()
+                            for (x in 0 until img.width) {
+                                val pixel = bitmap.getColor(x, currentY)
+                                val (a, r, g, b) = pixel.argb()
+                                if (a == 0) {
+                                    result.erase(0, IRect.makeXYWH(x, currentY, 1, 1))
+                                    continue
+                                }
+                                result.erase(
+                                    argb(a, (r + hr).limit(), (g + hg).limit(), (b + hb).limit()),
+                                    IRect.makeXYWH(x, currentY, 1, 1)
+                                )
+                            }
+                        }
+                        result.toImage()
+                    }
+                }
+            }
             return@result pmapIndexed { index ->
                 val startY = unitHeight * (if (reverse) size - index else index) // 变换起点高度
                 handleImage {
@@ -56,6 +88,38 @@ object RgbStripHandler : FramesHandler {
             }
         }
         val unitWidth = img.width / size // 变换的单位宽度
+        if (f) {
+            val ss = args["s"]?.toFloatOrNull() ?: 0.5F
+            val bb = args["b"]?.toFloatOrNull() ?: 0.3F
+            return@result pmapIndexed { index ->
+                val startX = unitWidth * (if (reverse) size - index else index) // 变换起点宽度
+                handleImage {
+                    val bitmap = it.toBitmap() // 原图
+                    val result = Bitmap().apply { // 画板
+                        allocPixels(it.imageInfo)
+                        setAlphaType(ColorAlphaType.PREMUL)
+                    }
+                    for (x in 0 until img.width) {
+                        val currentX = (x + startX) % img.width // 当前处理的x
+                        val (hr, hg, hb) = hsb(x.toFloat() / img.width, ss, bb).rgb()
+                        for (y in 0 until img.height) {
+                            val pixel = bitmap.getColor(currentX, y)
+
+                            val (a, r, g, b) = pixel.argb()
+                            if (a == 0) {
+                                result.erase(0, IRect.makeXYWH(currentX, y, 1, 1))
+                                continue
+                            }
+                            result.erase(
+                                argb(a, (r + hr).limit(), (g + hg).limit(), (b + hb).limit()),
+                                IRect.makeXYWH(currentX, y, 1, 1)
+                            )
+                        }
+                    }
+                    result.toImage()
+                }
+            }
+        }
         pmapIndexed { index ->
             val startX = unitWidth * (if (reverse) size - index else index) // 变换起点宽度
             handleImage {

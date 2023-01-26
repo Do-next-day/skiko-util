@@ -16,12 +16,12 @@ import kotlin.math.min
 @ImageHandler
 object Percent0Handler : FramesHandler {
     override val name = "Percent0"
-    override val regex = Regex("0%")
+    override val regex = Regex("(\\d{1,2}|100)%")
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        val t = args["text"] ?: "0%"
+        val t = args["command_name"] ?: "0%"
         return frames.replenish(20, Frame::limitAsGif).result {
             common(args).pmapIndexed { index ->
                 val center = size / 2

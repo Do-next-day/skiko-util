@@ -17,7 +17,7 @@ object DpxHandler : FramesHandler {
         if (args.containsKey("r")) return frames.onEach {
             it.limitAsGif()
         }.result {
-            val replenish = common(args).replenish(count * 2 - 1)
+            val replenish = common(args).replenish(count * 2 - 1, Frame::limitAsGif)
             val size = replenish.size
             replenish.onEachIndexed { index, frame ->
                 val by = if (index < size / 2) 1 + index else size - index

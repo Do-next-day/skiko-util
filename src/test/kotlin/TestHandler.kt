@@ -1,7 +1,7 @@
 package top.e404.skiko
 
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import top.e404.skiko.frame.FramesHandler
@@ -22,10 +22,10 @@ class TestHandler {
     private val emptyArgs = mutableMapOf<String, String>()
 
     private fun testHandler(handler: FramesHandler, args: MutableMap<String, String>) {
-        runBlocking {
+        runBlocking(Dispatchers.IO) {
             outDir.listFiles()?.forEach { it.delete() }
-            inDir.listFiles()?.map {
-                async {
+            inDir.listFiles()?.forEach {
+                launch {
                     val fr1 = it.readBytes().decodeToFrames()
                     val result = handler.handleFrames(fr1, args)
                     if (!result.success) {
@@ -40,7 +40,7 @@ class TestHandler {
                         println("${it.name} - done")
                     }
                 }
-            }?.awaitAll()
+            }
         }
     }
 
@@ -93,8 +93,8 @@ class TestHandler {
         testHandler(
             ResizeHandler,
             mutableMapOf(
-                "w" to "-10",
-                "h" to "-10",
+                "w" to "-50",
+                "h" to "-50",
             )
         )
     }
@@ -103,7 +103,8 @@ class TestHandler {
     fun testRgbFilter() {
         testHandler(
             RgbHandler, mutableMapOf(
-                "count" to "10",
+                "text" to "10",
+                "f" to "",
             )
         )
     }
@@ -216,7 +217,12 @@ class TestHandler {
 
     @Test
     fun testTurnHandler() {
-        testHandler(TurnHandler, mutableMapOf("count" to "10"))
+        testHandler(
+            TurnHandler, mutableMapOf(
+                "text" to "50",
+                "r" to "",
+            )
+        )
     }
 
     @Test
@@ -353,7 +359,7 @@ class TestHandler {
     fun testLowPolyHandler() {
         testHandler(
             LowPolyHandler, mutableMapOf(
-                "acc" to "100",
+                "acc" to "30",
                 "pc" to "1000"
             )
         )
@@ -418,8 +424,9 @@ class TestHandler {
         testHandler(
             RgbStripHandler,
             mutableMapOf(
-                //"h" to "",
-                "r" to ""
+                "f" to "",
+                "h" to "",
+                "r" to "",
             )
         )
     }
@@ -489,17 +496,30 @@ class TestHandler {
     fun testDpxHandler() {
         testHandler(
             DpxHandler,
-            mutableMapOf("text" to "20", "r" to "")
+            mutableMapOf("r" to "")
         )
     }
 
     @Test
-    fun test() {
-        runBlocking {
-            val fr = File("in/0.png").readBytes().decodeToFrames()
+    fun testDRaiseHandler() {
+        testHandler(
+            DRaiseHandler,
+            mutableMapOf(
+                "text" to "20",
+                "start" to "50%",
+                "end" to "100%",
+                "r" to "",
+            )
+        )
+    }
 
-            val bytes = DpxHandler.handleFrames(fr, mutableMapOf("count" to "40")).result!!.encodeToBytes()
-            File("out/0.png.gif").writeBytes(bytes)
-        }
+    @Test
+    fun testFormulaHandler() {
+        testHandler(
+            FormulaHandler,
+            mutableMapOf(
+                "r" to ""
+            )
+        )
     }
 }

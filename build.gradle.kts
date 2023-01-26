@@ -60,6 +60,7 @@ tasks.jar {
     doLast {
         println("==== copy ====")
         for (file in File("build/libs").listFiles() ?: emptyArray()) {
+            if ("source" in file.name || "javadoc" in file.name) continue
             println("正在复制`${file.path}`")
             file.copyTo(File("jar/${file.name}"), true)
         }
@@ -69,4 +70,6 @@ tasks.jar {
 tasks.test {
     useJUnit()
     workingDir = projectDir.resolve("run")
+    maxHeapSize = "8G"
+    minHeapSize = "8G"
 }

@@ -67,8 +67,8 @@ suspend fun List<Frame>.handle(
  * @return frames
  */
 suspend fun List<Frame>.handleIndexed(
-    block: Image.(Int) -> Image
-) = pmapIndexed { handleImage { img -> img.block(it) } }
+    block: (Int, Image) -> Image
+) = pmapIndexed { handleImage { img -> block(it, img) } }
 
 /**
  * 处理通用参数
@@ -85,15 +85,13 @@ fun MutableList<Frame>.common(
     val width = args["w"]?.toIntOrNull()
     // 图片高度
     val height = args["h"]?.toIntOrNull()
-    // 平滑
-    val smooth = args.containsKey("smooth")
     onEach { frame ->
         duration?.let { frame.duration = it }
         if (width == null && height == null) return@onEach
         frame.handleImage {
             val w = width ?: it.width
             val h = height ?: it.height
-            it.resize(w, h, smooth)
+            it.resize(w, h, false)
         }
     }
 }
@@ -114,21 +112,27 @@ suspend fun List<Frame>.withCanvas(
     }
 }
 
+/**
+ * 增加帧数
+ *
+ * @param count 目标帧数
+ * @param block 在增加帧数之前进行的操作
+ */
 suspend fun MutableList<Frame>.replenish(
     count: Int,
     block: Frame.() -> Unit = {}
 ) = run {
     pmap(block)
+    if (size >= count) return@run this
     var i = 0
-    if (size >= count) this
-    else (0..count).map {
+    (1..count).map {
         i++
         if (i >= size) i = 0
         this[i].clone()
     }.toMutableList()
 }
 
-fun Image.toFrame() = Frame(0, this)
+fun Image.toFrame(duration: Int = 0) = Frame(duration, this)
 fun Image.toFrames() = mutableListOf(toFrame())
 
 /**

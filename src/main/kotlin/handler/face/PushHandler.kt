@@ -19,7 +19,8 @@ import top.e404.skiko.util.withCanvas
 @ImageHandler
 object PushHandler : FramesHandler {
     private const val size = 300
-    private val range = 0..14
+    private const val count = 14
+    private val range = 0..count
     private val bgList = range.map { getJarImage("statistic/push/$it.png") }
     private val ddList = DrawData.loadFromJar("statistic/push/push.yml")
     private val bgRect = Rect.makeWH(size.toFloat(), size.toFloat())
@@ -31,19 +32,21 @@ object PushHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.common(args).handle { it.round() }.replenish(14).result {
-        handleIndexed { index ->
-            val src = Rect.makeWH(width.toFloat(), height.toFloat())
-            Surface.makeRasterN32Premul(
-                this@PushHandler.size,
-                this@PushHandler.size
-            ).withCanvas {
-                val angel = index * 360F / size
-                val i = index % 15
-                val face = rotateKeepSize(angel)
-                drawRect(bgRect, paint)
-                ddList[i].draw(this, face, src)
-                drawImageRect(bgList[i], bgRect)
+    ): HandleResult {
+        return frames.common(args).handle { it.round() }.replenish(count + 1).result {
+            handleIndexed { index, image ->
+                val src = Rect.makeWH(image.width.toFloat(), image.height.toFloat())
+                Surface.makeRasterN32Premul(
+                    this@PushHandler.size,
+                    this@PushHandler.size
+                ).withCanvas {
+                    val angel = index * 360F / size
+                    val i = index % 15
+                    val face = image.rotateKeepSize(angel)
+                    drawRect(bgRect, paint)
+                    ddList[i].draw(this, face, src)
+                    drawImageRect(bgList[i], bgRect)
+                }
             }
         }
     }

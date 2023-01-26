@@ -38,7 +38,7 @@ object NotRespondingHandler : FramesHandler {
     }
 
     override val name = "NotResponding"
-    override val regex = Regex("未响应|(?i)NotResponding|wxy")
+    override val regex = Regex("未响应|无响应|(?i)NotResponding|wxy")
 
     override suspend fun handleFrames(
         frames: MutableList<Frame>,

@@ -3,7 +3,7 @@ package top.e404.skiko.handler.list
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result
-import top.e404.skiko.lowpoly.LowPoly.lowPoly
+import top.e404.skiko.lowpoly.LowPoly.lowpoly
 
 @ImageHandler
 object LowPolyHandler : FramesHandler {
@@ -18,7 +18,7 @@ object LowPolyHandler : FramesHandler {
         val pointCount = args["pc"]?.toIntOrNull()?.coerceIn(1..1000) ?: 200
         return frames.result {
             common(args).handle {
-                it.lowPoly(accuracy, pointCount)
+                it.lowpoly(accuracy, pointCount)
             }
         }
     }

@@ -5,6 +5,7 @@ package top.e404.skiko.draw
 import org.jetbrains.skia.*
 import top.e404.skiko.Colors
 import top.e404.skiko.util.bytes
+import top.e404.skiko.util.withCanvas
 import kotlin.math.max
 
 interface DrawElement {
@@ -40,7 +41,7 @@ private val debugPatin = Paint().apply {
  * @param radius 图片圆角
  * @return png格式的图片数据
  */
-fun List<DrawElement>.toImage(
+fun Iterable<DrawElement>.toImage(
     imagePadding: Int = 50,
     bgColor: Int = Colors.BG.argb,
     minWidth: Int = 500,
@@ -62,7 +63,7 @@ fun List<DrawElement>.toImage(
         isAntiAlias = true
     }
     val surface = Surface.makeRasterN32Premul(width + 2 * imagePadding, height + 2 * imagePadding)
-    surface.canvas.apply {
+    return surface.withCanvas {
         // bg
         drawRRect(
             RRect.makeXYWH(
@@ -94,8 +95,7 @@ fun List<DrawElement>.toImage(
             imagePadding = imagePadding,
             debug = debug
         )
-    }
-    return surface.bytes()
+    }.bytes()
 }
 
 data class Pointer(var x: Int, var y: Int)

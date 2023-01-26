@@ -1,6 +1,6 @@
 object Versions {
-    const val kotlin = "1.6.21"
-    const val skiko = "0.7.20"
+    const val kotlin = "1.7.22"
+    const val skiko = "0.7.37"
 }
 
 fun kotlinx(id: String, version: String = Versions.kotlin) = "org.jetbrains.kotlinx:kotlinx-$id:$version"

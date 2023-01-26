@@ -29,7 +29,7 @@ object SkipHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.handle { it.round() }.common(args).replenish(count).result {
+    ) = frames.handle { it.round() }.common(args).replenish(count + 1).result {
         pmapIndexed { index ->
             handleImage {
                 val src = Rect.makeWH(it.width.toFloat(), it.height.toFloat())

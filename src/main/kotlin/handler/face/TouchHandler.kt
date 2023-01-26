@@ -16,7 +16,8 @@ import top.e404.skiko.util.withCanvas
 object TouchHandler : FramesHandler {
     private const val w = 480
     private const val h = 270
-    private val bgList = (0..9).map { getJarImage("statistic/touch/$it.png") }
+    private const val count = 9
+    private val bgList = (0..count).map { getJarImage("statistic/touch/$it.png") }
     private val ddList = DrawData.loadFromJar("statistic/touch/touch.yml")
     private val bgRect = Rect.makeWH(w.toFloat(), h.toFloat())
     private val paint = Paint().apply { color = Colors.WHITE.argb }
@@ -27,13 +28,13 @@ object TouchHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.common(args).handle { it.round() }.replenish(10).result {
-        handleIndexed { index ->
-            val src = Rect.makeWH(width.toFloat(), height.toFloat())
+    ) = frames.common(args).handle { it.round() }.replenish(count + 1).result {
+        handleIndexed { index, image ->
+            val src = Rect.makeWH(image.width.toFloat(), image.height.toFloat())
             Surface.makeRasterN32Premul(w, h).withCanvas {
-                val i = index % 10
+                val i = index % 11
                 drawRect(bgRect, paint)
-                ddList[i].draw(this, this@handleIndexed, src)
+                ddList[i].draw(this, image, src)
                 drawImageRect(bgList[i], bgRect)
             }
         }

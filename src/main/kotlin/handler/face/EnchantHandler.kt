@@ -22,7 +22,7 @@ object EnchantHandler : FramesHandler {
         args: MutableMap<String, String>,
     ): HandleResult {
         val count = if (frames.size != 1) frames.size
-        else args["c"]?.toIntOrNull() ?: 40
+        else args["c"]?.toIntOrNull()?.coerceIn(2, 100) ?: 40
         return frames.common(args).replenish(count, Frame::limitAsGif).result {
             val image = frames.first().image
             val size = min(max(image.width, image.height), 400) * 3

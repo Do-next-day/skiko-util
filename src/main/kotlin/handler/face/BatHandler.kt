@@ -30,12 +30,12 @@ object BatHandler : FramesHandler {
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
     ): HandleResult {
-        return frames.handle { it.round() }.common(args).replenish(count, Frame::limitAsGif).result {
-            handleIndexed { index ->
-                val src = Rect.makeWH(width.toFloat(), height.toFloat())
+        return frames.handle { it.round() }.common(args).replenish(count + 1, Frame::limitAsGif).result {
+            handleIndexed { index, image ->
+                val src = Rect.makeWH(image.width.toFloat(), image.height.toFloat())
                 Surface.makeRasterN32Premul(w, h).withCanvas {
                     drawImageRect(bgList[index % 8], bgRect)
-                    ddList[index % 8].draw(this, this@handleIndexed, src)
+                    ddList[index % 8].draw(this, image, src)
                 }
             }
         }

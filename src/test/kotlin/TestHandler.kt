@@ -515,6 +515,11 @@ class TestHandler {
 
     @Test
     fun testFormulaHandler() {
-        testHandler(FormulaHandler, mutableMapOf("r" to ""))
+        testHandler(
+            FormulaHandler,
+            mutableMapOf(
+                "r" to ""
+            )
+        )
     }
 }

@@ -13,7 +13,8 @@ import top.e404.skiko.util.withCanvas
 object Hold3Handler : FramesHandler {
     private const val w = 222
     private const val h = 219
-    private val range = 0..1
+    private const val count = 1
+    private val range = 0..count
     private val cover = range.map { getJarImage("statistic/hold/3.$it.png") }
     private val dstRect = Rect.makeXYWH(53F, 143F, 95F, 95F)
 
@@ -23,7 +24,7 @@ object Hold3Handler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.common(args).replenish(2, Frame::limitAsGif).result {
+    ) = frames.common(args).replenish(count + 1, Frame::limitAsGif).result {
         handleIndexed { index, image ->
             val src = Rect.makeWH(image.width.toFloat(), image.height.toFloat())
             Surface.makeRasterN32Premul(w, h).withCanvas {

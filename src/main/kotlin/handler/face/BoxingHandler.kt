@@ -17,7 +17,7 @@ import top.e404.skiko.util.*
 @ImageHandler
 object BoxingHandler : FramesHandler {
     private const val size = 500
-    private const val count = 7
+    private const val count = 8
     private val list by lazy { Yaml.default.decodeFromString<List<BoxingData>>(readJarFile("statistic/boxing/boxing.yml")) }
     private val hand by lazy { getJarImage("statistic/boxing/fisted-hand.png") }
     private val handSrc by lazy { Rect.makeWH(hand.width.toFloat(), hand.height.toFloat()) }

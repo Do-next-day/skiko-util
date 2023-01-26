@@ -31,7 +31,7 @@ object UpHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.common(args).replenish(count).result {
+    ) = frames.common(args).replenish(count + 1).result {
         pmapIndexed { index ->
             duration = 80
             handleImage {

@@ -30,7 +30,7 @@ object CrawlHandler : FramesHandler {
         args: MutableMap<String, String>,
     ): HandleResult {
         val change = args.containsKey("c") || args.containsKey("change") // gif每帧都随机一张新的背景
-        val count = args["count"]?.toIntOrNull() ?: 10 // 对图片指定帧数
+        val count = args["count"]?.toIntOrNull()?.coerceIn(1, 50) ?: 10 // 对图片指定帧数
         if (change) return frames.replenish(count).result {
             handle {
                 val bg = getBg(range.random())

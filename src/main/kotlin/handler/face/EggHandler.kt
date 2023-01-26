@@ -31,7 +31,7 @@ object EggHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.common(args).replenish(count).result {
+    ) = frames.common(args).replenish(count + 1).result {
         pmapIndexed { index ->
             handleImage {
                 val src = Rect.makeWH(it.width.toFloat(), it.height.toFloat())

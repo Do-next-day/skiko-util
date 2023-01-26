@@ -21,10 +21,7 @@ object RgbHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.common(args).result {
         val f = args.containsKey("f") // 灰度模式
-        val size = if (size == 1) args["text"]
-            ?.toIntOrNull()
-            ?.let { if (it < 2) null else it }
-            ?: 10 else size
+        val size = if (size == 1) args["text"]?.toIntOrNull()?.coerceIn(2, 50) ?: 10 else size
         val unit = 1F / size // rgb颜色渐变的单位
         val replenish = replenish(size, Frame::limitAsGif)
         // 针对灰度图进行处理

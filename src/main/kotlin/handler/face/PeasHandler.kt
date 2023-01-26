@@ -36,7 +36,7 @@ object PeasHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.handle { it.round() }.common(args).replenish(count).result {
+    ) = frames.handle { it.round() }.common(args).replenish(count + 1).result {
         pmapIndexed { index ->
             handleImage { img ->
                 val src = Rect.makeWH(img.width.toFloat(), img.height.toFloat())

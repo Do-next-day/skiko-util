@@ -16,7 +16,8 @@ import top.e404.skiko.util.withCanvas
 object RubHandler : FramesHandler {
     private const val w = 332
     private const val h = 336
-    private val bgList = (0..4).map { getJarImage("statistic/rub/$it.png") }
+    private const val count = 4
+    private val bgList = (0..count).map { getJarImage("statistic/rub/$it.png") }
     private val ddList = DrawData.loadFromJar("statistic/rub/rub.yml")
     private val bgRect = Rect.makeWH(w.toFloat(), h.toFloat())
     private val paint = Paint().apply { color = Colors.WHITE.argb }
@@ -27,7 +28,7 @@ object RubHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.common(args).handle { it.round() }.replenish(4).result {
+    ) = frames.common(args).handle { it.round() }.replenish(count + 1).result {
         handleIndexed { index, image ->
             val src = Rect.makeWH(image.width.toFloat(), image.height.toFloat())
             val i = index % 5

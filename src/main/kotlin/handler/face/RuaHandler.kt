@@ -17,7 +17,8 @@ import top.e404.skiko.util.withCanvas
 @ImageHandler
 object RuaHandler : FramesHandler {
     private const val size = 448
-    private val bgList = (0..4).map { getJarImage("statistic/rua/$it.png") }
+    private const val count = 4
+    private val bgList = (0..count).map { getJarImage("statistic/rua/$it.png") }
     private val ddList = RuaInfo.fromJar()
     private val bgSrc = Rect.makeWH(bgList[0].width.toFloat(), bgList[0].height.toFloat())
 
@@ -27,7 +28,7 @@ object RuaHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ) = frames.common(args).handle { it.round() }.replenish(4).result {
+    ) = frames.common(args).handle { it.round() }.replenish(count + 1).result {
         handleIndexed { index, image ->
             val src = Rect.makeWH(image.width.toFloat(), image.height.toFloat())
             Surface.makeRasterN32Premul(this@RuaHandler.size, this@RuaHandler.size).withCanvas {

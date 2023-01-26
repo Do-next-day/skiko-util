@@ -11,8 +11,9 @@ import top.e404.skiko.util.*
  */
 @ImageHandler
 object FormulaHandler : FramesHandler {
+    private const val count = 67
     private val bgList by lazy {
-        (0..67).map { getJarImage("statistic/formula/$it.png") }
+        (0..count).map { getJarImage("statistic/formula/$it.png") }
     }
 
     override val name = "formula"
@@ -23,7 +24,7 @@ object FormulaHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.result {
         val r = args.containsKey("r")
-        common(args).replenish(67) { limitAsGif(300F) }.handleIndexed { index, image ->
+        common(args).replenish(count + 1) { limitAsGif(300F) }.handleIndexed { index, image ->
             val cover = bgList[if (r) 67 - index % 68 else index % 68]
             image.newSurface().withCanvas {
                 drawImage(image, 0F, 0F)

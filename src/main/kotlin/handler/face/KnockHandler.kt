@@ -1,7 +1,6 @@
 package top.e404.skiko.handler.face
 
-import org.jetbrains.skia.Paint
-import org.jetbrains.skia.Rect
+import org.jetbrains.skia.*
 import top.e404.skiko.Colors
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.Frame
@@ -29,11 +28,9 @@ object KnockHandler : FramesHandler {
         common(args).handle {
             bg.newSurface().withCanvas {
                 drawRect(bgRect, paint)
-                val face = it.subCenter()
                 drawImageRectNearest(
-                    face,
-                    Rect.makeWH(face.width.toFloat(), face.height.toFloat()),
-                    Rect.makeXYWH(20F, 114F, 100F, 100F)
+                    image = it.subCenter(),
+                    dst = Rect.makeXYWH(20F, 114F, 100F, 100F)
                 )
                 drawImage(bg, 0F, 0F)
             }

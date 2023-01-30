@@ -44,7 +44,7 @@ fun Canvas.drawImageRectNearest(
     dst,
     FilterMipmap(FilterMode.LINEAR, MipmapMode.NEAREST),
     paint?.apply(block),
-    true
+    false
 )
 
 /**

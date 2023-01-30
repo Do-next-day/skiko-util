@@ -522,4 +522,12 @@ class TestHandler {
             )
         )
     }
+
+    @Test
+    fun testLickHandler() {
+        testHandler(
+            LickHandler,
+            mutableMapOf()
+        )
+    }
 }

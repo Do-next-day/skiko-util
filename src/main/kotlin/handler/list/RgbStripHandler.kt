@@ -1,12 +1,11 @@
 package top.e404.skiko.handler.list
 
-import org.jetbrains.skia.Bitmap
-import org.jetbrains.skia.ColorAlphaType
-import org.jetbrains.skia.IRect
+import org.jetbrains.skia.*
 import top.e404.skiko.*
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result
+import top.e404.skiko.util.newBitmap
 import top.e404.skiko.util.pmapIndexed
 import top.e404.skiko.util.toBitmap
 import top.e404.skiko.util.toImage
@@ -36,10 +35,7 @@ object RgbStripHandler : FramesHandler {
                         val startY = unitHeight * (if (reverse) size - index else index) // 变换起点高度
                         handleImage {
                             val bitmap = it.toBitmap()
-                            val result = Bitmap().apply {
-                                allocPixels(it.imageInfo)
-                                setAlphaType(ColorAlphaType.PREMUL)
-                            }
+                            val result = it.newBitmap()
                             for (y in 0 until img.height) {
                                 val currentY = (y + startY) % img.height // 当前处理的y
                                 val (hr, hg, hb) = hsb(y.toFloat() / img.height, ss, bb).rgb()
@@ -64,10 +60,7 @@ object RgbStripHandler : FramesHandler {
                     val startY = unitHeight * (if (reverse) size - index else index) // 变换起点高度
                     handleImage {
                         val bitmap = it.toBitmap()
-                        val result = Bitmap().apply {
-                            allocPixels(it.imageInfo)
-                            setAlphaType(ColorAlphaType.PREMUL)
-                        }
+                        val result = it.newBitmap()
                         for (y in 0 until img.height) {
                             val currentY = (y + startY) % img.height // 当前处理的y
                             val addH = y.toFloat() / img.height // 增加的h
@@ -93,11 +86,8 @@ object RgbStripHandler : FramesHandler {
                 return@result pmapIndexed { index ->
                     val startX = unitWidth * (if (reverse) size - index else index) // 变换起点宽度
                     handleImage {
-                        val bitmap = it.toBitmap() // 原图
-                        val result = Bitmap().apply { // 画板
-                            allocPixels(it.imageInfo)
-                            setAlphaType(ColorAlphaType.PREMUL)
-                        }
+                        val bitmap = it.toBitmap()
+                        val result = it.newBitmap()
                         for (x in 0 until img.width) {
                             val currentX = (x + startX) % img.width // 当前处理的x
                             val (hr, hg, hb) = hsb(x.toFloat() / img.width, ss, bb).rgb()
@@ -123,10 +113,7 @@ object RgbStripHandler : FramesHandler {
                 val startX = unitWidth * (if (reverse) size - index else index) // 变换起点宽度
                 handleImage {
                     val bitmap = it.toBitmap() // 原图
-                    val result = Bitmap().apply { // 画板
-                        allocPixels(it.imageInfo)
-                        setAlphaType(ColorAlphaType.PREMUL)
-                    }
+                    val result = it.newBitmap()
                     for (x in 0 until img.width) {
                         val currentX = (x + startX) % img.width // 当前处理的x
                         val addH = x.toFloat() / img.width // 增加的h

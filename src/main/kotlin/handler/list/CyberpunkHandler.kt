@@ -1,8 +1,6 @@
 package top.e404.skiko.handler.list
 
-import org.jetbrains.skia.Bitmap
-import org.jetbrains.skia.IRect
-import org.jetbrains.skia.ImageInfo
+import org.jetbrains.skia.*
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.argb
 import top.e404.skiko.frame.Frame
@@ -12,6 +10,7 @@ import top.e404.skiko.frame.common
 import top.e404.skiko.frame.handle
 import top.e404.skiko.limit
 import top.e404.skiko.rgb
+import top.e404.skiko.util.newBitmap
 import top.e404.skiko.util.toBitmap
 import top.e404.skiko.util.toImage
 
@@ -29,17 +28,7 @@ object CyberpunkHandler : FramesHandler {
     ) = frames.result {
         common(args).handle {
             val old = it.toBitmap()
-            val new = Bitmap().also { bitmap ->
-                bitmap.allocPixels(
-                    ImageInfo(
-                        width = it.imageInfo.width - 2,
-                        height = it.imageInfo.height - 2,
-                        colorType = it.imageInfo.colorType,
-                        alphaType = it.imageInfo.colorAlphaType,
-                        colorSpace = it.imageInfo.colorSpace
-                    )
-                )
-            }
+            val new = it.newBitmap(-2)
             for (x in 1 until old.width - 1) for (y in 1 until old.height - 1) {
                 new.erase(old.cy(x, y), IRect.makeXYWH(x - 1, y - 1, 1, 1))
             }

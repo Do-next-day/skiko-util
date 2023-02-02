@@ -1,8 +1,6 @@
 package top.e404.skiko.handler.list
 
-import org.jetbrains.skia.Bitmap
-import org.jetbrains.skia.IRect
-import org.jetbrains.skia.ImageInfo
+import org.jetbrains.skia.*
 import top.e404.skiko.Argb
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.argb
@@ -12,6 +10,7 @@ import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.frame.common
 import top.e404.skiko.frame.handle
 import top.e404.skiko.limit
+import top.e404.skiko.util.newBitmap
 import top.e404.skiko.util.toBitmap
 import top.e404.skiko.util.toImage
 import kotlin.math.abs
@@ -29,17 +28,7 @@ object ColorfulEdgeHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.result {
         common(args).handle {
-            val rst = Bitmap().also { bitmap ->
-                bitmap.allocPixels(
-                    ImageInfo(
-                        width = it.imageInfo.width - 2,
-                        height = it.imageInfo.height - 2,
-                        colorType = it.imageInfo.colorType,
-                        alphaType = it.imageInfo.colorAlphaType,
-                        colorSpace = it.imageInfo.colorSpace
-                    )
-                )
-            }
+            val rst = it.newBitmap(-2)
             val ic = ImageColors(it.toBitmap())
             for (x in 1 until it.width - 1) for (y in 1 until it.height - 1) {
                 rst.erase(fd(ic, x, y), IRect.makeXYWH(x - 1, y - 1, 1, 1))

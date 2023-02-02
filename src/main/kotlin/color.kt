@@ -2,10 +2,8 @@
 
 package top.e404.skiko
 
-import org.jetbrains.skia.Bitmap
-import org.jetbrains.skia.ColorAlphaType
-import org.jetbrains.skia.IRect
-import org.jetbrains.skia.Image
+import org.jetbrains.skia.*
+import top.e404.skiko.util.newBitmap
 import top.e404.skiko.util.toBitmap
 import top.e404.skiko.util.toImage
 import java.awt.Color
@@ -36,10 +34,7 @@ enum class Colors(val argb: Int) {
 
 fun Image.handlePixel(block: (Int) -> Int): Image {
     val bitmap = toBitmap()
-    val result = Bitmap().apply {
-        allocPixels(this@handlePixel.imageInfo)
-        setAlphaType(ColorAlphaType.PREMUL)
-    }
+    val result = newBitmap()
     for (x in 0 until result.width) for (y in 0 until result.height) {
         val color = block(bitmap.getColor(x, y))
         result.erase(color, IRect.makeXYWH(x, y, 1, 1))
@@ -71,6 +66,7 @@ fun ahsb(a: Int, h: Float, s: Float, b: Float) = Color.HSBtoRGB(h, s, b) or (a s
 data class Ahsb(var a: Int, var h: Float, var s: Float, var b: Float) {
     fun editSaturation(block: (Float) -> Float) = ahsb(a, h, block(s), b)
 }
+
 data class Hsb(var h: Float, var s: Float, var b: Float) {
     fun editSaturation(block: (Float) -> Float) = hsb(h, block(s), b)
 }

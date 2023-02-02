@@ -1,9 +1,6 @@
 package top.e404.skiko.handler.list
 
-import org.jetbrains.skia.Bitmap
-import org.jetbrains.skia.ColorAlphaType
-import org.jetbrains.skia.IRect
-import org.jetbrains.skia.Image
+import org.jetbrains.skia.*
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result
@@ -36,10 +33,7 @@ object WarpHandler : FramesHandler {
     ): Image {
         val w = src.width
         val h = src.height
-        val dst = Bitmap().apply {
-            allocPixels(src.imageInfo)
-            setAlphaType(ColorAlphaType.PREMUL)
-        }
+        val dst = src.newBitmap()
 
         val sinTable = FloatArray(256)
         val cosTable = FloatArray(256)

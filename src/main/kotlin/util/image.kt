@@ -268,3 +268,27 @@ fun String.toImage(
     minWidth = maxWidth,
     radius = 15F
 )
+
+fun Image.newBitmap(edit: Int = 0) = Bitmap().also {
+    it.allocPixels(
+        ImageInfo(
+            width = imageInfo.width + edit,
+            height = imageInfo.height + edit,
+            colorType = ColorType.BGRA_8888,
+            alphaType = ColorAlphaType.PREMUL,
+            colorSpace = imageInfo.colorSpace
+        )
+    )
+}
+
+fun Bitmap.newBitmap(edit: Int = 0) = Bitmap().also {
+    it.allocPixels(
+        ImageInfo(
+            width = imageInfo.width + edit,
+            height = imageInfo.height + edit,
+            colorType = ColorType.BGRA_8888,
+            alphaType = ColorAlphaType.PREMUL,
+            colorSpace = imageInfo.colorSpace
+        )
+    )
+}

@@ -25,18 +25,14 @@ object LickHandler : FramesHandler {
     override suspend fun handleFrames(
         frames: MutableList<Frame>,
         args: MutableMap<String, String>,
-    ): HandleResult {
-
-        Arrays.asList("").remove("")
-        return frames.common(args).result {
-            handle { image ->
-                val center = image.subCenter(s)
-                cover.newSurface().withCanvas {
-                    setMatrix(matrix)
-                    drawImageRectNearest(center)
-                    resetMatrix()
-                    drawImage(cover, 0F, 0F)
-                }
+    ) = frames.common(args).result {
+        handle { image ->
+            val center = image.subCenter(s)
+            cover.newSurface().withCanvas {
+                setMatrix(matrix)
+                drawImageRectNearest(center)
+                resetMatrix()
+                drawImage(cover, 0F, 0F)
             }
         }
     }

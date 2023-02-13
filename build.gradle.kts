@@ -16,7 +16,7 @@ allprojects {
 
     dependencies {
         // kotlin
-        implementation(kotlinx("coroutines-core-jvm", "1.6.2"))
+        implementation(kotlinx("coroutines-core-jvm", "1.6.4"))
     }
 }
 

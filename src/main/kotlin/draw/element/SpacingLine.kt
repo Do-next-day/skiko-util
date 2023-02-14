@@ -20,13 +20,13 @@ import top.e404.skiko.draw.Pointer
  * @property spacingColor 颜色
  */
 open class SpacingLine(
-    var lineWeight: Int,
-    var udSpacing: Int,
-    var lrSpacing: Int,
+    var lineWeight: Float,
+    var udSpacing: Float,
+    var lrSpacing: Float,
     var spacingColor: Int = Colors.WHITE.argb,
 ) : DrawElement {
-    override fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int> {
-        return Pair(0, lineWeight + udSpacing * 2)
+    override fun size(minWidth: Int, maxWidth: Int): Pair<Float, Float> {
+        return 0F to lineWeight + udSpacing * 2
     }
 
     override fun drawToBoard(
@@ -39,21 +39,21 @@ open class SpacingLine(
     ) {
         canvas.drawRRect(
             RRect.makeXYWH(
-                l = imagePadding + lrSpacing.toFloat(),
-                t = pointer.y + udSpacing.toFloat(),
-                w = width - lrSpacing * 2F,
-                h = lineWeight.toFloat(),
-                radius = udSpacing / 2F
+                l = imagePadding + lrSpacing,
+                t = pointer.y + udSpacing,
+                w = width - lrSpacing * 2,
+                h = lineWeight,
+                radius = udSpacing / 2
             ), paint.apply {
                 color = spacingColor
             }
         )
         if (debug) canvas.drawRect(
             Rect.makeXYWH(
-                l = imagePadding + lrSpacing.toFloat(),
-                t = pointer.y + udSpacing.toFloat(),
-                w = width - lrSpacing * 2F,
-                h = lineWeight.toFloat(),
+                l = imagePadding + lrSpacing,
+                t = pointer.y + udSpacing,
+                w = width - lrSpacing * 2,
+                h = lineWeight,
             ), debugPaint
         )
         pointer.y += lineWeight + udSpacing * 2

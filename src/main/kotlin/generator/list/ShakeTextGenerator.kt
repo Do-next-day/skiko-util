@@ -13,8 +13,8 @@ import kotlin.random.Random
 object ShakeTextGenerator : ImageGenerator {
     private const val fontSpace = 5
     private const val padding = 10
-    private const val fontSize = 60
-    private val font = FontType.YAHEI.getSkiaFont(fontSize.toFloat())
+    private const val fontSize = 60F
+    private val font = FontType.YAHEI.getSkiaFont(fontSize)
 
     /**
      * 生成抖动gif
@@ -53,9 +53,9 @@ object ShakeTextGenerator : ImageGenerator {
         val w = fontSpace + map.values.sumOf { it.toDouble() + fontSpace }.toInt()
         return Surface.makeRasterN32Premul(
             w + 2 * (padding + shakeSize),
-            fontSize + 2 * (padding + shakeSize)
+            fontSize.toInt() + 2 * (padding + shakeSize)
         ).run {
-            val p = Pointer(padding + 5, padding + fontSize - 10)
+            val p = Pointer(padding + 5F, padding + fontSize - 10)
             val paint = Paint().apply { color = bgColor }
             withCanvas {
                 drawRect(Rect.makeXYWH(0F, 0F, width.toFloat(), height.toFloat()), paint)

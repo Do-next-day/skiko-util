@@ -9,7 +9,7 @@ import top.e404.skiko.draw.Pointer
 import top.e404.skiko.draw.splitByWidth
 
 /**
- * 代表一个带背景的文本对象
+ * 代表一个带色块背景的文本对象(类似按钮)
  *
  * @property content 文本
  * @property lineSpace 文本的行间距
@@ -17,7 +17,7 @@ import top.e404.skiko.draw.splitByWidth
  * @property color 颜色
  * @property bgColor 背景颜色
  * @property bgRadius 背景圆角
- * @property padding 背景内边距
+ * @property padding 背景块距离内部文字的边距
  * @property margin 背景外边距
  * @property center 居中
  */
@@ -33,15 +33,15 @@ open class TextLineBlock(
     var center: Boolean = true,
 ) : DrawElement {
     private var lines = listOf<TextLine>()
-    var width = 0
-    var height = 0
+    var w = 0F
+    var h = 0F
 
-    override fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int> {
+    override fun size(minWidth: Int, maxWidth: Int): Pair<Float, Float> {
         val (lines, width) = content.splitByWidth(maxWidth - (padding + margin) * 2, font, padding)
         this.lines = lines
-        this.width = width
-        height = lines.sumOf { it.descent.toDouble() - it.ascent }.toInt() + (lines.size - 1) * lineSpace
-        return Pair(width + (padding + margin) * 2, height + (margin + padding) * 2)
+        w = width
+        h = lines.map { it.descent - it.ascent }.sum() + (lines.size - 1) * lineSpace
+        return width + (padding + margin) * 2 to h + (margin + padding) * 2F
     }
 
     override fun drawToBoard(
@@ -54,25 +54,25 @@ open class TextLineBlock(
     ) {
         // bg
         canvas.drawRRect(RRect.makeXYWH(
-            if (center) (width + 2 * imagePadding - this.width - margin - this.padding) / 2F
-            else pointer.x + margin.toFloat(),
-            pointer.y + margin.toFloat(),
-            this.width + 2F * padding,
-            (height + 2 * padding).toFloat(),
+            if (center) (width + 2 * imagePadding - w - margin - padding) / 2F
+            else pointer.x + margin,
+            pointer.y + margin,
+            w + 2F * padding,
+            h + 2F * padding,
             bgRadius
         ), paint.apply { color = bgColor })
         // text
         pointer.y += padding + margin
         for (line in lines) {
-            pointer.y -= line.ascent.toInt()
+            pointer.y -= line.ascent
             canvas.drawTextLine(
                 line = line,
                 x = if (center) (width + 2 * imagePadding - line.width) / 2
-                else pointer.x.toFloat() + padding + margin,
-                y = pointer.y.toFloat(),
+                else pointer.x + padding + margin,
+                y = pointer.y,
                 paint = paint.also { it.color = color }
             )
-            pointer.y += line.descent.toInt() + lineSpace
+            pointer.y += line.descent + lineSpace
         }
         pointer.y += padding + margin - lineSpace
     }

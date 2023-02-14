@@ -17,7 +17,7 @@ import top.e404.skiko.draw.splitByWidth
  * @property content 文本
  * @property font 字体
  * @property color 字体颜色
- * @property udPadding 行间距
+ * @property udPadding 行间距, 上一个元素到首行以及末行到下一个元素的间距为1/2行间距
  * @property left 左侧边距
  * @property textIndent 若为true则启用行首缩进(两个空格的宽度)
  * @property center 居中, 若居中则忽略left
@@ -32,18 +32,14 @@ open class Text(
     var center: Boolean = true
 ) : DrawElement {
     private var lines = listOf<TextLine>()
-    var width = 0
-    var height = 0
-
-    override fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int> {
+    override fun size(minWidth: Int, maxWidth: Int): Pair<Float, Float> {
         var text = content
         if (!center && textIndent) text = "　　$text"
         val left = if (center) 0 else left
         val (lines, width) = text.splitByWidth(maxWidth - left, font, left)
         this.lines = lines
-        this.width = width
-        height = lines.sumOf { it.descent.toDouble() - it.ascent }.toInt() + (lines.size - 1) * udPadding
-        return Pair(width + left, height + udPadding)
+        val height = lines.map { it.descent - it.ascent }.sum() + lines.size * udPadding
+        return width + left to height
     }
 
     override fun drawToBoard(
@@ -54,18 +50,18 @@ open class Text(
         imagePadding: Int,
         debug: Boolean
     ) {
-        pointer.y += udPadding / 2
+        pointer.y -= udPadding / 2
         for (line in lines) {
-            pointer.y -= line.ascent.toInt()
+            pointer.y += udPadding - line.ascent
             canvas.drawTextLine(
                 line = line,
                 x = if (center) (width + imagePadding * 2 - line.width) / 2
-                else pointer.x.toFloat() + left,
-                y = pointer.y.toFloat(),
+                else pointer.x + left,
+                y = pointer.y,
                 paint = paint.also { it.color = color }
             )
-            pointer.y += line.descent.toInt() + udPadding
+            pointer.y += line.descent
         }
-        pointer.y += udPadding / 2 - udPadding
+        pointer.y += udPadding / 2
     }
 }

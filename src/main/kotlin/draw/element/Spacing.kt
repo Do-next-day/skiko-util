@@ -12,10 +12,8 @@ import top.e404.skiko.draw.Pointer
  *
  * @property height 高度
  */
-open class Spacing(var height: Int) : DrawElement {
-    override fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int> {
-        return Pair(0, height)
-    }
+open class Spacing(var height: Float) : DrawElement {
+    override fun size(minWidth: Int, maxWidth: Int) = 0F to height
 
     override fun drawToBoard(
         canvas: Canvas,

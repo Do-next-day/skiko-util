@@ -17,8 +17,7 @@ import top.e404.skiko.draw.splitByWidth
  * @property contents 文本列表
  * @property font 字体
  * @property color 字体颜色
- * @property udPadding 与上下元素的间隔
- * @property lineSpacing 行间距
+ * @property udPadding 行间距, 上一个元素到首行以及末行到下一个元素的间距为1/2行间距
  * @property left 左侧边距
  * @property index 若为null则使用数字序号(有序列表), 否则作为无序列表的列表项开头
  */
@@ -27,26 +26,22 @@ open class TextList(
     var font: Font,
     var color: Int = Colors.WHITE.argb,
     var udPadding: Int = 10,
-    var lineSpacing: Int = 10,
     var left: Int = 0,
     var index: String? = null,
 ) : DrawElement {
-    private var lines = ArrayList<TextListLine>()
-    var width = 0
-    var height = 0
-    var indexWidth = 0
+    private var lines = listOf<TextListLine>()
 
-    override fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int> {
+    override fun size(minWidth: Int, maxWidth: Int): Pair<Float, Float> {
         val length = (contents.size - 1).toString().length
-        indexWidth = TextLine.make(if (index == null) "${"0".repeat(length)}. " else index, font).width.toInt()
+        val indexWidth = TextLine.make(if (index == null) "${"0".repeat(length)}. " else index, font).width.toInt()
         fun getIndex(i: Int) = index ?: "${(i + 1).toString().padStart(length, ' ')}. "
-        lines = ArrayList(contents.withIndex().map { (index, text) ->
-            TextListLine(getIndex(index), indexWidth, text, font, color, font.size, lineSpacing, left)
-        })
-        val sizes = lines.map { it.size(minWidth, maxWidth) }
-        width = sizes.map { it.first }.maxOf { it }
-        height = sizes.map { it.second }.sumOf { it }
-        return Pair(width, height + 2 * udPadding)
+        lines = contents.withIndex().map { (index, text) ->
+            TextListLine(getIndex(index), indexWidth, text, font, color, udPadding, left)
+        }
+        val sizes = lines.map { it.size(maxWidth) }
+        val width = sizes.map { it.first }.maxOf { it }
+        val height = sizes.map { it.second }.sum() + sizes.size * udPadding
+        return width to height
     }
 
     override fun drawToBoard(
@@ -57,58 +52,71 @@ open class TextList(
         imagePadding: Int,
         debug: Boolean
     ) {
-        pointer.y += udPadding
-        for (line in lines) line.drawToBoard(canvas, pointer, paint, width, imagePadding)
-        pointer.y += udPadding
+        pointer.y += udPadding / 2
+        for ((index, line) in lines.withIndex()) line.drawToBoard(
+            i = index,
+            canvas = canvas,
+            pointer = pointer,
+            paint = paint
+        )
+        pointer.y += udPadding / 2
     }
 
+    /**
+     * 列表中的一项
+     *
+     * @property index 序号
+     * @property indexWidth 序号的宽度
+     * @property content 内容
+     * @property font 字体
+     * @property color 字体颜色
+     * @property udPadding 与其他元素的上下间距
+     * @property left 左侧边距
+     */
     class TextListLine(
         var index: String,
         var indexWidth: Int,
         var content: String,
         var font: Font,
         var color: Int,
-        var fontSize: Float,
         var udPadding: Int,
         var left: Int,
-    ) : DrawElement {
-        lateinit var lines: ArrayList<TextLine>
-        var width = 0
-        override fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int> {
+    ) {
+        lateinit var lines: MutableList<TextLine>
+        fun size(maxWidth: Int): Pair<Float, Float> {
             val pair = content.splitByWidth(maxWidth - left - indexWidth, font, left)
             lines = pair.first
-            width = pair.second
-            return Pair(width + left + indexWidth, lines.size * (fontSize + udPadding).toInt() + udPadding)
+            return pair.second + left + indexWidth to (lines.size) * (font.metrics.let { it.descent - it.ascent } + udPadding) - udPadding
         }
 
-        override fun drawToBoard(
+        fun drawToBoard(
+            i: Int,
             canvas: Canvas,
             pointer: Pointer,
-            paint: Paint,
-            width: Int,
-            imagePadding: Int,
-            debug: Boolean
+            paint: Paint
         ) {
-            pointer.y += udPadding / 2 + fontSize.toInt()
+            if (i != 0) pointer.y += udPadding
+            pointer.y -= font.metrics.ascent
+            // 序号
             val indexLine = TextLine.make(index, font)
             var x = pointer.x + left + indexWidth - indexLine.width
             canvas.drawTextLine(
                 line = indexLine,
                 x = x,
-                y = pointer.y.toFloat(),
+                y = pointer.y,
                 paint = paint.also { it.color = color }
             )
-            x = pointer.x + left + indexWidth.toFloat()
+            // 内容
+            x = pointer.x + left + indexWidth
             for (line in lines) {
                 canvas.drawTextLine(
                     line = line,
                     x = x,
-                    y = pointer.y.toFloat(),
+                    y = pointer.y,
                     paint = paint.also { it.color = color }
                 )
-                pointer.y += fontSize.toInt() + udPadding
+                pointer.y += font.metrics.descent
             }
-            pointer.y += udPadding / 2 - fontSize.toInt()
         }
     }
 }

@@ -16,14 +16,14 @@ interface DrawElement {
         }
     }
 
-    fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int>
+    fun size(minWidth: Int, maxWidth: Int): Pair<Float, Float>
     fun drawToBoard(
         canvas: Canvas,
         pointer: Pointer,
         paint: Paint,
         width: Int,
         imagePadding: Int,
-        debug: Boolean = false
+        debug: Boolean = false,
     )
 }
 
@@ -47,18 +47,18 @@ fun Iterable<DrawElement>.toImage(
     minWidth: Int = 500,
     maxWidth: Int = 1000,
     radius: Float = 50F,
-    debug: Boolean = false
+    debug: Boolean = false,
 ): ByteArray {
     var width = 0
     var height = 0
     val sizes = map { it.size(minWidth, maxWidth) }
 
     for ((w, h) in sizes) {
-        width = max(width, w)
-        height += h
+        width = max(width, w.toInt())
+        height += h.toInt()
     }
 
-    val pointer = Pointer(imagePadding, imagePadding)
+    val pointer = Pointer(imagePadding.toFloat(), imagePadding.toFloat())
     val paint = Paint().apply {
         isAntiAlias = true
     }
@@ -87,18 +87,45 @@ fun Iterable<DrawElement>.toImage(
         )
 
         // 内容
-        for (drawable in this@toImage) drawable.drawToBoard(
-            canvas = this,
-            pointer = pointer,
-            paint = paint,
-            width = width,
-            imagePadding = imagePadding,
-            debug = debug
-        )
+        for (drawable in this@toImage) {
+            if (debug) {
+                val before = pointer.copy()
+                println("\nbefore: $before")
+                drawable.drawToBoard(
+                    canvas = this,
+                    pointer = pointer,
+                    paint = paint,
+                    width = width,
+                    imagePadding = imagePadding,
+                    debug = true
+                )
+                println("after: $pointer")
+                println("move: ${pointer.copy() - before}")
+                continue
+            }
+            drawable.drawToBoard(
+                canvas = this,
+                pointer = pointer,
+                paint = paint,
+                width = width,
+                imagePadding = imagePadding,
+                debug = false
+            )
+        }
     }.bytes()
 }
 
-data class Pointer(var x: Int, var y: Int)
+data class Pointer(var x: Float, var y: Float) {
+    operator fun plus(other: Pointer) = apply {
+        x += other.x
+        y += other.y
+    }
+
+    operator fun minus(other: Pointer) = apply {
+        x -= other.x
+        y -= other.y
+    }
+}
 
 /**
  * 拆分字符串(先按\n分割, 之后按长度限制分割)
@@ -107,9 +134,9 @@ data class Pointer(var x: Int, var y: Int)
  * @param font 字体
  * @return <待绘制的文本列表, 最终宽度>
  */
-fun String.splitByWidth(maxWidth: Int, font: Font, left: Int): Pair<ArrayList<TextLine>, Int> {
-    fun String.s(maxWidth: Int, font: Font): Pair<ArrayList<TextLine>, Int> {
-        var width = 0
+fun String.splitByWidth(maxWidth: Int, font: Font, left: Int): Pair<MutableList<TextLine>, Float> {
+    fun String.s(maxWidth: Int, font: Font): Pair<MutableList<TextLine>, Float> {
+        var width = 0F
         val list = ArrayList<TextLine>()
         var text = this
         w@ while (text != "") {
@@ -118,7 +145,7 @@ fun String.splitByWidth(maxWidth: Int, font: Font, left: Int): Pair<ArrayList<Te
                 if (TextLine.make(text.substring(0, i), font).width + left > maxWidth) {
                     // 若 line + left 超出最大宽度
                     // 则设置宽度为最大宽度, 并且裁剪
-                    width = maxWidth
+                    width = maxWidth.toFloat()
                     list.add(TextLine.make(text.substring(0, i - 1), font))
                     text = text.substring(i - 1, text.length)
                     continue@w
@@ -127,18 +154,19 @@ fun String.splitByWidth(maxWidth: Int, font: Font, left: Int): Pair<ArrayList<Te
             // 这一行长度未超过最大宽度
             val line = TextLine.make(text, font)
             list.add(line)
-            width = max(width, line.width.toInt())
+            width = max(width, line.width)
             text = ""
         }
-        return Pair(list, width)
+        return list to width
     }
 
-    var width = 0
-    val lines = ArrayList(split("\n") // 按换行拆分
+    var width = 0F
+    val lines = split("\n") // 按换行拆分
         .map { it.s(maxWidth, font) } // 按最大宽度拆分
         .also { width = it.map { pair -> pair.second }.sortedDescending()[0] }
-        .flatMap { it.first })
-    return Pair(lines, width)
+        .flatMap { it.first }
+        .toMutableList()
+    return lines to width
 }
 
 /**

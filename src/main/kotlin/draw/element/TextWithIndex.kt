@@ -40,7 +40,7 @@ class TextWithIndex(
     var indexHeight = 0F
     lateinit var line: TextLine
 
-    override fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int> {
+    override fun size(minWidth: Int, maxWidth: Int): Pair<Float, Float> {
         indexLine = TextLine.make(index, font)
         indexWidth = TextLine.make("".padStart(indexLength, '0'), font).width + indexMargin * 2
         indexHeight = font.size + (indexMargin) * 2
@@ -52,10 +52,7 @@ class TextWithIndex(
             line = TextLine.make(text, font)
             width = left + line.width + indexWidth + indexMargin * 2
         } while (width > maxWidth)
-        return Pair(
-            width.toInt(),
-            (line.descent - line.ascent).toInt() + (indexMargin.toInt() + udPadding) * 2
-        )
+        return width to line.descent - line.ascent + (indexMargin + udPadding) * 2
     }
 
     override fun drawToBoard(
@@ -70,7 +67,7 @@ class TextWithIndex(
         pointer.y += udPadding
         canvas.drawRRect(
             r = RRect.makeXYWH(
-                l = pointer.x.toFloat() + left + indexMargin,
+                l = pointer.x + left + indexMargin,
                 t = pointer.y + line.descent / 2,
                 w = indexWidth,
                 h = indexHeight,
@@ -78,7 +75,7 @@ class TextWithIndex(
             ),
             paint = paint.apply { color = indexBgColor })
         // index text
-        pointer.y -= line.ascent.toInt()
+        pointer.y -= line.ascent
         canvas.drawTextLine(
             line = indexLine,
             x = left + pointer.x + indexMargin + (indexWidth - indexMargin * 2 - indexLine.width) / 2,
@@ -92,6 +89,6 @@ class TextWithIndex(
             y = pointer.y + indexMargin,
             paint = paint.also { it.color = color }
         )
-        pointer.y += line.descent.toInt() + udPadding + indexMargin.toInt() * 2
+        pointer.y += line.descent + udPadding + indexMargin * 2
     }
 }

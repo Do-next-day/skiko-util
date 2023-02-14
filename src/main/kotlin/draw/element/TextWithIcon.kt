@@ -27,7 +27,7 @@ class TextWithIcon(
 ) : DrawElement {
     lateinit var line: TextLine
 
-    override fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int> {
+    override fun size(minWidth: Int, maxWidth: Int): Pair<Float, Float> {
         var end = content.length
         var width: Float
         do {
@@ -36,7 +36,7 @@ class TextWithIcon(
             line = TextLine.make(text, font)
             width = line.width + font.size
         } while (width > maxWidth)
-        return Pair(width.toInt(), (line.descent - line.ascent).toInt() + 2 * udPadding)
+        return width to line.descent - line.ascent + 2 * udPadding
     }
 
     override fun drawToBoard(
@@ -51,7 +51,7 @@ class TextWithIcon(
         pointer.y += udPadding
         canvas.drawRRect(
             r = RRect.makeXYWH(
-                l = pointer.x.toFloat(),
+                l = pointer.x,
                 t = pointer.y + line.descent / 2,
                 w = font.size / 2,
                 h = font.size,
@@ -59,13 +59,13 @@ class TextWithIcon(
             ),
             paint = paint.apply { color = iconColor })
         // text line
-        pointer.y -= line.ascent.toInt()
+        pointer.y -= line.ascent
         canvas.drawTextLine(
             line = line,
             x = pointer.x + font.size,
-            y = pointer.y.toFloat(),
+            y = pointer.y,
             paint = paint.also { it.color = color }
         )
-        pointer.y += line.descent.toInt() + udPadding
+        pointer.y += line.descent + udPadding
     }
 }

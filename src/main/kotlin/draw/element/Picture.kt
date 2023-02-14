@@ -27,12 +27,12 @@ class Pic(
     var left: Int,
     var center: Boolean,
     var radius: Float,
-    var top: Int,
-    var bottom: Int,
+    var top: Float,
+    var bottom: Float,
 ) : DrawElement {
     var picW = pic.width
     var picH = pic.height
-    override fun size(minWidth: Int, maxWidth: Int): Pair<Int, Int> {
+    override fun size(minWidth: Int, maxWidth: Int): Pair<Float, Float> {
         val maxW = if (!center) maxWidth - left
         else maxWidth
         // 尺寸检查
@@ -41,7 +41,7 @@ class Pic(
             picH = pic.height * picW / pic.width
             pic = pic.resize(picW, picH)
         }
-        return Pair(picW + if (!center) left else 0, picH + top + bottom)
+        return picW.toFloat() + (if (!center) left else 0) to picH + top + bottom
     }
 
     override fun drawToBoard(
@@ -53,8 +53,8 @@ class Pic(
         debug: Boolean
     ) {
         val left = if (center) (width + 2 * imagePadding - picW) / 2F
-        else pointer.x + left.toFloat()
-        val t = pointer.y + top.toFloat()
+        else pointer.x + left
+        val t = pointer.y + top
         if (debug) canvas.drawRect(
             Rect.makeXYWH(
                 l = left,

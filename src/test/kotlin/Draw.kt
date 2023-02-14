@@ -25,19 +25,17 @@ class Draw {
             TextList(
                 listOf(
                     "一个列表项目, index: 1",
-                    "一个列表项目, index: 2",
-                    "一个列表项目, index: 3",
-                    "一个列表项目, index: 4",
+                    "一个列表项目, index: 2, 特别长的行, 特别长的行, 特别长的行, 特别长的行, 特别长的行, 特别长的行, 特别长的行, 特别长的行, 特别长的行, 特别长的行, 特别长的行",
                 ),
                 font = FontType.LW.getSkiaFont(20F),
             ),
-            SpacingLine(1F, 15F, 15F),
+            SpacingLine(1F, 0F, 0F),
             Text(
                 content = "text text text text text text text text text text text text text text text",
                 font = FontType.LW.getSkiaFont(20F),
             ),
             TextLineBlock("BUTTON", font = FontType.LW.getSkiaFont(20F))
-        ).toImage(30, debug = false)
+        ).toImage(0, debug = false, radius = 0F)
         outPng.writeBytes(bytes)
     }
 }

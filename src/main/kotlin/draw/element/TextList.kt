@@ -53,12 +53,14 @@ open class TextList(
         debug: Boolean
     ) {
         pointer.y += udPadding / 2
-        for ((index, line) in lines.withIndex()) line.drawToBoard(
-            i = index,
-            canvas = canvas,
-            pointer = pointer,
-            paint = paint
-        )
+        for ((index, line) in lines.withIndex()) {
+            if (index != 0) pointer.y += udPadding
+            line.drawToBoard(
+                canvas = canvas,
+                pointer = pointer,
+                paint = paint
+            )
+        }
         pointer.y += udPadding / 2
     }
 
@@ -86,16 +88,14 @@ open class TextList(
         fun size(maxWidth: Int): Pair<Float, Float> {
             val pair = content.splitByWidth(maxWidth - left - indexWidth, font, left)
             lines = pair.first
-            return pair.second + left + indexWidth to (lines.size) * (font.metrics.let { it.descent - it.ascent } + udPadding) - udPadding
+            return pair.second + left + indexWidth to lines.size * (font.metrics.let { it.descent - it.ascent } + udPadding) - udPadding
         }
 
         fun drawToBoard(
-            i: Int,
             canvas: Canvas,
             pointer: Pointer,
             paint: Paint
         ) {
-            if (i != 0) pointer.y += udPadding
             pointer.y -= font.metrics.ascent
             // 序号
             val indexLine = TextLine.make(index, font)
@@ -108,7 +108,8 @@ open class TextList(
             )
             // 内容
             x = pointer.x + left + indexWidth
-            for (line in lines) {
+            for ((index, line) in lines.withIndex()) {
+                if (index != 0) pointer.y += udPadding - font.metrics.ascent
                 canvas.drawTextLine(
                     line = line,
                     x = x,

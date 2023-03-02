@@ -24,7 +24,8 @@ object FormulaHandler : FramesHandler {
         args: MutableMap<String, String>,
     ) = frames.result {
         val r = args.containsKey("r")
-        common(args).replenish(count + 1) { limitAsGif(300F) }.handleIndexed { index, image ->
+        val single = size == 1
+        val list = common(args).replenish(count + 1) { limitAsGif(300F) }.handleIndexed { index, image ->
             val cover = bgList[if (r) 67 - index % 68 else index % 68]
             image.newSurface().withCanvas {
                 drawImage(image, 0F, 0F)
@@ -56,8 +57,8 @@ object FormulaHandler : FramesHandler {
                     ),
                 )
             }
-        }.onEach {
-            it.duration = 60
         }
+        if (single) list.forEach { it.duration = 60 }
+        list
     }
 }

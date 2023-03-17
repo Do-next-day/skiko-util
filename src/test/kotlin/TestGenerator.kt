@@ -65,4 +65,16 @@ class TestGenerator {
             "text" to "Administrator"
         ))
     }
+
+    @Test
+    fun testGraduationRecordGenerator() {
+        testGenerator(GraduationRecordGenerator, mutableMapOf(
+            "text" to """带专
+                |民科
+                |知乎大学
+                |律业
+                |2022年6月
+            """.trimMargin()
+        ))
+    }
 }

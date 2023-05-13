@@ -85,7 +85,7 @@ class Misc {
     /**
      * 生成点阵字符画
      *
-     * @param img 图片(灰度)
+     * @param src 图片(灰度)
      * @param ud 用于展示的环境的上下间隔宽度
      * @param lr 用于展示的环境的左右间隔宽度
      * @return 字符画

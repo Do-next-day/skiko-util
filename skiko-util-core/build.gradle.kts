@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.internal.KaptWithoutKotlincTask
-import java.io.File
 
 plugins {
     kotlin("jvm")

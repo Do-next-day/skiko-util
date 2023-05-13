@@ -1,7 +1,6 @@
 package top.e404.skiko.handler.list
 
-import org.jetbrains.skia.*
-import top.e404.skiko.*
+import org.jetbrains.skia.IRect
 import top.e404.skiko.apt.annotation.ImageHandler
 import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result

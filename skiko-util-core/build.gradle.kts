@@ -32,11 +32,11 @@ tasks {
     test {
         useJUnit()
         workingDir = projectDir.resolve("run")
-        maxHeapSize = "8G"
-        minHeapSize = "8G"
+//        maxHeapSize = "8G"
+//        minHeapSize = "8G"
     }
 
-    withType<KaptWithoutKotlincTask>().configureEach {
-        kaptProcessJvmArgs.add("-Xmx1G")
-    }
+//    withType<KaptWithoutKotlincTask>().configureEach {
+//        kaptProcessJvmArgs.add("-Xmx1G")
+//    }
 }

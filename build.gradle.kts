@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm") version Versions.kotlin
     kotlin("kapt") version Versions.kotlin
@@ -53,6 +55,10 @@ subprojects {
                     file.copyTo(jar.resolve(file.name), true)
                 }
             }
+        }
+
+        withType<KotlinCompile> {
+            kotlinOptions.jvmTarget = "11"
         }
     }
 }

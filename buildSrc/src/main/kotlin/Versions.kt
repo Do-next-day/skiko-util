@@ -1,4 +1,6 @@
 object Versions {
+    const val group = "top.e404"
+    const val version = "1.1.0"
     const val kotlin = "1.7.22"
     const val skiko = "0.7.37"
 }

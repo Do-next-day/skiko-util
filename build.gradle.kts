@@ -9,6 +9,9 @@ plugins {
 allprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
+    group = Versions.group
+    version = Versions.version
+
     repositories {
         mavenCentral()
         mavenLocal()

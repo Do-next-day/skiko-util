@@ -8,8 +8,8 @@ plugins {
 
 dependencies {
     // apt
-    kapt("top.e404:skiko-util-apt:0.0.1")
-    implementation("top.e404:skiko-util-apt:0.0.1")
+    kapt(project(":skiko-util-apt"))
+    implementation(project(":skiko-util-apt"))
     // util
     api(project(":skiko-util-util"))
     api(project(":skiko-util-gif-codec"))

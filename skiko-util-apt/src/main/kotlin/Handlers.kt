@@ -18,13 +18,19 @@ annotation class ImageHandler
 @SupportedAnnotationTypes("top.e404.skiko.apt.annotation.ImageHandler")
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
 class FramesHandlerProcessor : AbstractProcessor() {
+    companion object {
+        private var file: File? = null
+    }
     override fun process(
         annotations: Set<TypeElement>,
         roundEnv: RoundEnvironment,
     ): Boolean {
         val list = roundEnv.filterHasAnnotation(ImageHandler::class.java)
         if (list.isEmpty()) return true
-        File("build/resources/main/handlers.txt").writeText(list.joinToString("\n"))
+        val handlers = file ?: File(processingEnv.options["kapt.kotlin.generated"]!!)
+            .resolve("../../../../resources/main/handlers.txt")
+            .also { file = it }
+        handlers.writeText(list.joinToString("\n"))
         return true
     }
 }

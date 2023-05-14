@@ -4,8 +4,7 @@ plugins {
     kotlin("jvm") version Versions.kotlin
     kotlin("kapt") version Versions.kotlin
     kotlin("plugin.serialization") version Versions.kotlin
-    `maven-publish`
-    `java-library`
+    id("me.him188.maven-central-publish") version "1.0.0-dev-3"
 }
 
 allprojects {
@@ -15,8 +14,8 @@ allprojects {
     version = Versions.version
 
     repositories {
-        mavenCentral()
         mavenLocal()
+        mavenCentral()
     }
 
     dependencies {
@@ -26,21 +25,18 @@ allprojects {
 }
 
 subprojects {
-    apply(plugin = "org.gradle.maven-publish")
-    apply(plugin = "org.gradle.java-library")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "me.him188.maven-central-publish")
 
-    java {
-        withSourcesJar()
+    kotlin {
+        jvmToolchain(11)
     }
 
-    afterEvaluate {
-        publishing.publications.create<MavenPublication>("java") {
-            artifact(tasks.jar)
-            artifact(tasks.getByName("sourcesJar"))
-            artifactId = project.name
-            groupId = project.group.toString()
-            version = project.version.toString()
-        }
+    mavenCentralPublish {
+        useCentralS01()
+        singleDevGithubProject("4o4E", "skiko-util")
+        licenseGplV3()
+        workingDir = buildDir.resolve("publishing-tmp")
     }
 
     tasks {
@@ -60,22 +56,5 @@ subprojects {
         withType<KotlinCompile> {
             kotlinOptions.jvmTarget = "11"
         }
-    }
-}
-
-tasks {
-    create("skiko-util-publish") {
-        group = "skiko-util"
-        dependsOn(subprojects.map { it.tasks.publishToMavenLocal })
-    }
-
-    create("skiko-util-clean") {
-        group = "skiko-util"
-        dependsOn(subprojects.map { it.tasks.clean })
-    }
-
-    create("skiko-util-assemble") {
-        group = "skiko-util"
-        dependsOn(subprojects.map { it.tasks.assemble })
     }
 }

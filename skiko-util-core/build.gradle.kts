@@ -16,22 +16,23 @@ dependencies {
     api(project(":skiko-util-draw"))
     // skiko
     compileOnly(skiko("windows-x64"))
-    compileOnly(skiko("linux-x64"))
     // serialization
-    implementation(kotlinx("serialization-core-jvm", "1.3.3"))
+    implementation(kotlinx("serialization-core-jvm", "1.5.0"))
     // kaml
     implementation("com.charleskorn.kaml:kaml:0.45.0")
     // reflect
     implementation(kotlin("reflect", Versions.kotlin))
+
     // test
     testImplementation(kotlin("test", Versions.kotlin))
-    testImplementation(project(":skiko-util-util"))
+    // skiko
+    testImplementation(skiko("windows-x64"))
 }
 
 tasks {
     test {
-        useJUnit()
-        workingDir = projectDir.resolve("run")
+        useJUnitPlatform()
+        workingDir = rootProject.projectDir.resolve("run")
 //        maxHeapSize = "8G"
 //        minHeapSize = "8G"
     }

@@ -3,13 +3,13 @@ package top.e404.skiko
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.junit.Test
 import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.decodeToFrames
 import top.e404.skiko.frame.encodeToBytes
 import top.e404.skiko.handler.face.*
 import top.e404.skiko.handler.list.*
 import java.io.File
+import kotlin.test.Test
 
 class TestHandler {
 

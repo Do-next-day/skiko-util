@@ -4,13 +4,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.skia.*
-import org.junit.Test
 import top.e404.skiko.frame.Frame
 import top.e404.skiko.frame.encodeToBytes
 import top.e404.skiko.handler.handlers
 import top.e404.skiko.util.*
 import java.io.File
 import kotlin.math.sqrt
+import kotlin.test.Test
 
 class Test {
 

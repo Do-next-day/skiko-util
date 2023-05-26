@@ -1,9 +1,9 @@
 package top.e404.skiko
 
-import org.junit.Test
 import top.e404.skiko.draw.element.*
 import top.e404.skiko.draw.toImage
 import java.io.File
+import kotlin.test.Test
 
 class Draw {
 

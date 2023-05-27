@@ -8,6 +8,7 @@ skiko工具库, 包括
 - [图片处理](skiko-util-core/src/main/kotlin/handler/list)
 - [基于输入图片生成表情](skiko-util-core/src/main/kotlin/handler/face)
 - [生成图片](skiko-util-core/src/main/kotlin/generator/list)
+- [bdf点阵字体解析](skiko-util-bdf-parser/src/main/kotlin)
 
 ## 引入依赖
 

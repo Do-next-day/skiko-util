@@ -30,6 +30,7 @@ enum class FontType(name: String) {
     HEI("simhei.ttf"),
     MINECRAFT("Minecraft.ttf"),
     ZHONG_SONG("STZHONGS.TTF"),
+    GNU_UNIFONT("gnu-unifont-full.ttf"),
     LI_HEI("力黑体.otf");
 
     private val bytes by lazy { File("${fontDir}/$name").readBytes() }

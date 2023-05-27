@@ -530,4 +530,12 @@ class TestHandler {
             mutableMapOf()
         )
     }
+
+    @Test
+    fun testDotMatrixHandler() {
+        testHandler(
+            DotMatrixHandler,
+            mutableMapOf()
+        )
+    }
 }

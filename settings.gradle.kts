@@ -5,4 +5,5 @@ include(
     ":skiko-util-gif-codec",
     ":skiko-util-draw",
     ":skiko-util-util",
+    ":skiko-util-bdf-parser",
 )

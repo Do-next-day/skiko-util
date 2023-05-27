@@ -11,6 +11,7 @@ class TestGenerator {
 
     init {
         FontType.fontDir = "font"
+        BdfType.dir = "bdf"
     }
 
     private val outPng = File("out/out.png")
@@ -19,7 +20,7 @@ class TestGenerator {
         runBlocking {
             val frames = generator.generate(args)
             val f = if (frames.size == 1) outPng else outGif
-            f.writeBytes(generator.generate(args).encodeToBytes())
+            f.writeBytes(frames.encodeToBytes())
         }
     }
 
@@ -75,6 +76,13 @@ class TestGenerator {
                 |律业
                 |2022年6月
             """.trimMargin()
+        ))
+    }
+
+    @Test
+    fun testDotMatrixCharImageGenerator() {
+        testGenerator(DotMatrixCharImageGenerator, mutableMapOf(
+            "text" to "肯德基疯狂星期四\nV我50"
         ))
     }
 }

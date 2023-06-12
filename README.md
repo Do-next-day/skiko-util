@@ -1,6 +1,6 @@
 # skiko-util
 
-给予[skiko](https://github.com/JetBrains/skiko)的绘图工具库, 包括
+基于[skiko](https://github.com/JetBrains/skiko)的绘图工具库, 包括
 
 - [gif编码](skiko-util-gif-codec/src/main/kotlin/gif)(参考[cssxsh/mirai-skia-plugin](https://github.com/cssxsh/mirai-skia-plugin))
 - [封装图片处理的抽象框架](skiko-util-gif-codec/src/main/kotlin/frame)

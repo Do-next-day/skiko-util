@@ -2,7 +2,7 @@ package top.e404.skiko.handler.list
 
 import org.jetbrains.skia.Matrix33
 import org.jetbrains.skia.Surface
-import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.ksp.annotation.ImageHandler
 import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result
 import top.e404.skiko.util.drawImageRectNearest

@@ -93,15 +93,17 @@ object BdfParser {
         val version = reader.readLine().removePrefix(START_FONT).trim()
         val map = mutableMapOf<String, String>()
         var properties = mutableMapOf<String, String>()
-        var count = 0
+        val count: Int
         while (true) {
-            val line = reader.readLine()
+            var line = reader.readLine()
+            while (line.startsWith(COMMENT)) line = reader.readLine()
             // properties
             if (line.startsWith(START_PROPERTIES, true)) {
                 val size = line.substringAfterLast(" ").toInt()
                 properties = HashMap(size)
                 repeat(size) {
-                    val property = reader.readLine()
+                    var property = reader.readLine()
+                    while (property.startsWith(COMMENT)) property = reader.readLine()
                     val index = property.indexOf(" ")
                     require(index != -1)
                     properties[property.substring(0, index)] = property.substring(index + 1)

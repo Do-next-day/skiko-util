@@ -4,7 +4,7 @@ import org.jetbrains.skia.Paint
 import org.jetbrains.skia.Surface
 import org.jetbrains.skia.TextLine
 import top.e404.skiko.FontType
-import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.ksp.annotation.ImageHandler
 import top.e404.skiko.dot.binary
 import top.e404.skiko.dot.generator
 import top.e404.skiko.dot.gray

@@ -1,15 +1,13 @@
-import org.jetbrains.kotlin.gradle.internal.KaptWithoutKotlincTask
-
 plugins {
     kotlin("jvm")
-    kotlin("kapt")
+    id("com.google.devtools.ksp")
     kotlin("plugin.serialization")
 }
 
 dependencies {
     // apt
-    kapt(project(":skiko-util-apt"))
-    implementation(project(":skiko-util-apt"))
+    ksp(project(":skiko-util-ksp"))
+    implementation(project(":skiko-util-ksp"))
     // util
     api(project(":skiko-util-util"))
     api(project(":skiko-util-gif-codec"))
@@ -37,8 +35,4 @@ tasks {
 //        maxHeapSize = "8G"
 //        minHeapSize = "8G"
     }
-
-//    withType<KaptWithoutKotlincTask>().configureEach {
-//        kaptProcessJvmArgs.add("-Xmx1G")
-//    }
 }

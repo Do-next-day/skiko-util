@@ -6,7 +6,7 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.skia.*
 import top.e404.skiko.frame.Frame
 import top.e404.skiko.frame.encodeToBytes
-import top.e404.skiko.handler.handlers
+import top.e404.skiko.handler.handlerSet
 import top.e404.skiko.util.*
 import java.io.File
 import kotlin.math.sqrt
@@ -95,7 +95,7 @@ class Test {
 
     @Test
     fun list() {
-        handlers.forEach {
+        handlerSet.forEach {
             println("${it.name}: ${it.regex.pattern}")
         }
     }
@@ -201,7 +201,7 @@ class Test {
                 )
             }
             val p = gray2 / a
-            val color = p or (a shl 24)
+//            val color = p or (a shl 24)
             result.erase((gray2 / gray1 * 255) shl 24 or 0xffffff, IRect.makeXYWH(x, y, 1, 1))
         }
         File("out/out.png").writeBytes(result.toImage().bytes())

@@ -2,7 +2,7 @@ package top.e404.skiko.handler.list
 
 import org.jetbrains.skia.Bitmap
 import org.jetbrains.skia.IRect
-import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.ksp.annotation.ImageHandler
 import top.e404.skiko.util.argb
 import top.e404.skiko.frame.Frame
 import top.e404.skiko.frame.FramesHandler

@@ -3,7 +3,7 @@ package top.e404.skiko.handler.face
 import org.jetbrains.skia.Paint
 import org.jetbrains.skia.Rect
 import top.e404.skiko.util.Colors
-import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.ksp.annotation.ImageHandler
 import top.e404.skiko.frame.Frame
 import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.HandleResult.Companion.result

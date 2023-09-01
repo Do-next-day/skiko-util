@@ -8,6 +8,11 @@ import top.e404.skiko.util.bytes
 import top.e404.skiko.util.withCanvas
 import kotlin.math.max
 
+/**
+ * 一个可以被绘制的元素, 非线程安全, 不建议复用对象
+ *
+ * 使用时先调用[size]再调用[drawToBoard]
+ */
 interface DrawElement {
     companion object {
         @JvmStatic
@@ -16,7 +21,25 @@ interface DrawElement {
         }
     }
 
+    /**
+     * 计算该元素的尺寸
+     *
+     * @param minWidth 该元素允许的最小宽度
+     * @param maxWidth 该元素允许的最大宽度
+     * @return 最终计算的尺寸
+     */
     fun size(minWidth: Int, maxWidth: Int): Pair<Float, Float>
+
+    /**
+     * 实际绘制到canvas
+     *
+     * @param canvas 绘制的canvas
+     * @param pointer 传入的当前位置
+     * @param paint 传入的Paint
+     * @param width 宽度
+     * @param imagePadding padding
+     * @param debug 是否开启debug
+     */
     fun drawToBoard(
         canvas: Canvas,
         pointer: Pointer,

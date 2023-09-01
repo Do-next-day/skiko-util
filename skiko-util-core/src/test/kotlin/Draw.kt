@@ -2,6 +2,7 @@ package top.e404.skiko
 
 import top.e404.skiko.draw.element.*
 import top.e404.skiko.draw.toImage
+import top.e404.skiko.util.Colors
 import java.io.File
 import kotlin.test.Test
 
@@ -21,6 +22,15 @@ class Draw {
                 font = FontType.LW.getSkiaFont(20F),
                 center = false
             ),
+            TextColorful(
+                content = mutableListOf(
+                    "一个蓝色的多行的text, 一个蓝色的多行的text, 一个蓝色的多行的text\n这是第二行" to Colors.BLUE.argb,
+                    "一个红色的多行的text, 一个红色的多行的text, 一个红色的多行的text\n这是第二行" to Colors.RED.argb,
+                    "一个紫色的多行的text, 一个紫色的多行的text, 一个紫色的多行的text\n这是第二行" to Colors.PURPLE.argb,
+                ),
+                font = FontType.LW.getSkiaFont(20F),
+                center = false
+            ),
             TextWithIcon("Index", FontType.LW.getSkiaFont(20F)),
             TextList(
                 listOf(
@@ -35,7 +45,7 @@ class Draw {
                 font = FontType.LW.getSkiaFont(20F),
             ),
             TextLineBlock("BUTTON", font = FontType.LW.getSkiaFont(20F))
-        ).toImage(0, debug = false, radius = 0F)
+        ).toImage(50, debug = false, radius = 0F)
         outPng.writeBytes(bytes)
     }
 }

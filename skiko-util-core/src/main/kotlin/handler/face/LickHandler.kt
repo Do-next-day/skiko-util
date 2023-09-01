@@ -1,7 +1,7 @@
 package top.e404.skiko.handler.face
 
 import org.jetbrains.skia.Matrix33
-import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.ksp.annotation.ImageHandler
 import top.e404.skiko.frame.Frame
 import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.HandleResult.Companion.result

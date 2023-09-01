@@ -6,7 +6,7 @@ import org.jetbrains.skia.PaintMode
 import org.jetbrains.skia.Surface
 import top.e404.skiko.util.Colors
 import top.e404.skiko.FontType
-import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.ksp.annotation.ImageHandler
 import top.e404.skiko.draw.splitByWidth
 import top.e404.skiko.frame.*
 import top.e404.skiko.frame.HandleResult.Companion.result

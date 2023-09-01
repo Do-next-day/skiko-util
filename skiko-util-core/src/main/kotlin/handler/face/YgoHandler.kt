@@ -4,7 +4,7 @@ import org.jetbrains.skia.*
 import org.jetbrains.skia.paragraph.*
 import top.e404.skiko.util.Colors
 import top.e404.skiko.FontType
-import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.ksp.annotation.ImageHandler
 import top.e404.skiko.frame.Frame
 import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.HandleResult

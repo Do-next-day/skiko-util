@@ -8,7 +8,7 @@ import org.jetbrains.skia.Paint
 import org.jetbrains.skia.Surface
 import org.jetbrains.skia.TextLine
 import top.e404.skiko.*
-import top.e404.skiko.apt.annotation.ImageHandler
+import top.e404.skiko.ksp.annotation.ImageHandler
 import top.e404.skiko.frame.Frame
 import top.e404.skiko.frame.FramesHandler
 import top.e404.skiko.frame.HandleResult.Companion.result

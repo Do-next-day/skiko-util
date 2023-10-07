@@ -88,9 +88,15 @@ fun String.asColor(): Int? {
                 (it + 0xff000000).toInt()
             }
 
+            4 -> buildString {
+                for (c in s) repeat(2) { append(c) }
+            }.toIntOrNull(16)
+
             6 -> s.toIntOrNull(16)?.let {
                 (it + 0xff000000).toInt()
             }
+
+            8 -> s.toIntOrNull(16)
 
             else -> null
         }

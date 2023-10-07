@@ -32,6 +32,7 @@ open class TextList(
     private var lines = listOf<TextListLine>()
 
     override fun size(minWidth: Int, maxWidth: Int): Pair<Float, Float> {
+        // 计算序号字符串最大长度
         val length = (contents.size - 1).toString().length
         val indexWidth = TextLine.make(if (index == null) "${"0".repeat(length)}. " else index, font).width.toInt()
         fun getIndex(i: Int) = index ?: "${(i + 1).toString().padStart(length, ' ')}. "

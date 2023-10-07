@@ -83,20 +83,20 @@ fun String.asColor(): Int? {
         val s = removePrefix("#")
         return when (s.length) {
             3 -> buildString {
-                for (c in s) repeat(2) { append(c) }
+                for (c in s) append(c).append(c)
             }.toIntOrNull(16)?.let {
                 (it + 0xff000000).toInt()
             }
 
             4 -> buildString {
-                for (c in s) repeat(2) { append(c) }
-            }.toIntOrNull(16)
+                for (c in s) append(c).append(c)
+            }.toUIntOrNull(16)?.toInt()
 
             6 -> s.toIntOrNull(16)?.let {
                 (it + 0xff000000).toInt()
             }
 
-            8 -> s.toIntOrNull(16)
+            8 -> s.toUIntOrNull(16)?.toInt()
 
             else -> null
         }

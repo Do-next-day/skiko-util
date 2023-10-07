@@ -81,112 +81,23 @@ open class TextColorful(
             // 若l2为空, 则上一行无需拆分
             if (l2 == null) {
                 w -= font.measureTextWidth(l1.line)
+                if (l1.next) {
+                    // 重置宽度
+                    w = maxWidth.toFloat()
+                    continue
+                }
                 if (maxWidth - w > currentMaxWidth) currentMaxWidth = maxWidth - w
                 continue
             }
             // 上一行拆分了, 把当前行加入到下一行
-            lines.add(i, l1)
+            lines[i] = l1
+            lines[i + 1] = l2
             // 重置宽度
             w = maxWidth.toFloat()
         }
 
-        val height = lines.count { it.next } * (font.metrics.run { descent - ascent } + udPadding)
-        // 计算位置
-
-
+        val height = lines.count(LineInfo::next) * (font.metrics.run { descent - ascent } + udPadding)
         return currentMaxWidth + left to height
-//        // 计算每段的位置
-//        for ((text, color) in content) {
-//
-//            // 处理有换行符的
-//            if ('\n' in text) {
-//                // 没有超过最大长度, 直接绘制
-//                val w = font.measureTextWidth(text)
-//                if (pointer.x + w < currentMaxWidth) {
-//                    cache.add(LineCache(pointer.x, pointer.y, TextLine.make(text, font), color, true).also { println(it) })
-//                    if (w > currentMaxWidth) currentMaxWidth = w
-//                    pointer.x += w
-//                    // 额外换行
-//                    continue
-//                }
-//
-//                // 超过最大长度 拆分
-//                var startIndex = 0
-//                var endIndex = text.length
-//                var loop = 0
-//                while (true) {
-//                    // 从后往前减字符, 直到绘制的下
-//                    val weight = font.measureTextWidth(text.substring(startIndex, endIndex))
-//                    if (pointer.x + weight > currentMaxWidth) {
-//                        endIndex--
-//                        loop++
-//                        continue
-//                    }
-//                    // 缓存
-//                    val line = TextLine.make(text.substring(startIndex, endIndex), font)
-//                    cache.add(LineCache(pointer.x, pointer.y, line, color, endIndex == text.length).also { println(it) })
-//                    if (w > currentMaxWidth) currentMaxWidth = w
-//                    // 完成
-//                    if (endIndex == text.length) break
-//
-//                    // 设置下一段字符串范围
-//                    startIndex = endIndex
-//                    endIndex = text.length
-//                    // 位置换行
-//                    if (loop != 0) {
-//                        pointer.x = left.toFloat()
-//                        pointer.y += font.metrics.run { descent - ascent }
-//                        loop = 0
-//                    } else {
-//                        pointer.x += weight
-//                    }
-//                }
-//                continue
-//            }
-//
-//            // 没有超过最大长度, 直接绘制
-//            val w = font.measureTextWidth(text)
-//            if (pointer.x + w < currentMaxWidth) {
-//                cache.add(LineCache(pointer.x, pointer.y, TextLine.make(text, font), color, false).also { println(it) })
-//                if (w > currentMaxWidth) currentMaxWidth = w
-//                pointer.x += w
-//                continue
-//            }
-//
-//            // 超过最大长度 拆分
-//            var startIndex = 0
-//            var endIndex = text.length
-//            var loop = 0
-//            while (true) {
-//                // 从后往前减字符, 直到绘制的下
-//                val weight = font.measureTextWidth(text.substring(startIndex, endIndex))
-//                if (pointer.x + weight > currentMaxWidth) {
-//                    endIndex--
-//                    loop++
-//                    continue
-//                }
-//                // 缓存
-//                val line = TextLine.make(text.substring(startIndex, endIndex), font)
-//                cache.add(LineCache(pointer.x, pointer.y, line, color, false).also { println(it) })
-//                if (w > currentMaxWidth) currentMaxWidth = w
-//                // 完成
-//                if (endIndex == text.length) break
-//                // 设置下一段字符串范围
-//                startIndex = endIndex
-//                endIndex = text.length
-//                // 位置换行
-//                if (loop != 0) {
-//                    pointer.x = left.toFloat()
-//                    pointer.y += font.metrics.run { descent - ascent }
-//                    loop = 0
-//                } else {
-//                    pointer.x += weight
-//                }
-//            }
-//        }
-//
-//        val height = pointer.y
-//        return currentMaxWidth + left to height
     }
 
     override fun drawToBoard(

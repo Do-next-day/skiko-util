@@ -1,75 +1,60 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm") version Versions.kotlin
     kotlin("kapt") version Versions.kotlin
     kotlin("plugin.serialization") version Versions.kotlin
-    `maven-publish`
-    `java-library`
+    id("me.him188.maven-central-publish") version "1.0.0-dev-3"
 }
 
 allprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
+    group = Versions.group
+    version = Versions.version
+
     repositories {
-        mavenCentral()
         mavenLocal()
+        mavenCentral()
     }
 
     dependencies {
         // kotlin
-        implementation(kotlinx("coroutines-core-jvm", "1.6.2"))
+        implementation(kotlinx("coroutines-core-jvm", "1.6.4"))
     }
 }
 
-dependencies {
-    // apt
-    kapt("top.e404:skiko-util-apt:0.0.1")
-    implementation("top.e404:skiko-util-apt:0.0.1")
-    // skiko
-    api(skiko("windows-x64"))
-    api(skiko("linux-x64"))
-    // serialization
-    implementation(kotlinx("serialization-core-jvm", "1.3.3"))
-    // kaml
-    implementation("com.charleskorn.kaml:kaml:0.45.0")
-    // reflect
-    implementation(kotlin("reflect", Versions.kotlin))
-    // test
-    testImplementation(kotlin("test", Versions.kotlin))
-}
+subprojects {
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "me.him188.maven-central-publish")
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
-afterEvaluate {
-    publishing.publications.create<MavenPublication>("java") {
-        from(components["kotlin"])
-        artifact(tasks.getByName("sourcesJar"))
-        artifact(tasks.getByName("javadocJar"))
-        artifactId = "skiko-util"
-        groupId = project.group.toString()
-        version = project.version.toString()
+    kotlin {
+        jvmToolchain(11)
     }
-}
 
-tasks.withType<org.jetbrains.kotlin.gradle.internal.KaptWithoutKotlincTask>()
-    .configureEach { kaptProcessJvmArgs.add("-Xmx1G") }
+    mavenCentralPublish {
+        useCentralS01()
+        singleDevGithubProject("4o4E", "skiko-util")
+        licenseGplV3()
+        workingDir = buildDir.resolve("publishing-tmp")
+    }
 
-tasks.jar {
-    doLast {
-        println("==== copy ====")
-        for (file in File("build/libs").listFiles() ?: emptyArray()) {
-            if ("source" in file.name || "javadoc" in file.name) continue
-            println("正在复制`${file.path}`")
-            file.copyTo(File("jar/${file.name}"), true)
+    tasks {
+        assemble {
+            doLast {
+                val jar = rootProject.projectDir.resolve("jar")
+                jar.mkdir()
+                println("==== copy ====")
+                for (file in project.buildDir.resolve("libs").listFiles() ?: emptyArray()) {
+                    if ("source" in file.name) continue
+                    println("正在复制`${file.path}`")
+                    file.copyTo(jar.resolve(file.name), true)
+                }
+            }
+        }
+
+        withType<KotlinCompile> {
+            kotlinOptions.jvmTarget = "11"
         }
     }
-}
-
-tasks.test {
-    useJUnit()
-    workingDir = projectDir.resolve("run")
-    maxHeapSize = "8G"
-    minHeapSize = "8G"
 }

@@ -1,6 +1,6 @@
 pluginManagement {
     plugins {
-        id("com.google.devtools.ksp") version "1.8.21-1.0.11"
+        id("com.google.devtools.ksp") version "2.2.21-2.0.4"
     }
     repositories {
         gradlePluginPortal()
@@ -10,10 +10,12 @@ pluginManagement {
 
 rootProject.name = "skiko-util"
 include(
-    ":skiko-util-ksp",
-    ":skiko-util-core",
-    ":skiko-util-gif-codec",
-    ":skiko-util-draw",
-    ":skiko-util-util",
-    ":skiko-util-bdf-parser",
+    ":annotation",
+    ":ksp",
+    ":bdf-parser",
+    ":gif-codec",
+    ":draw",
+    ":core",
+    ":util",
+    ":http-server",
 )
